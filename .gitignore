@@ -44,3 +44,6 @@ wheels/
 *.log
 tsc_out.txt
 tsc_errors.txt
+
+# Tooling
+.kiro/

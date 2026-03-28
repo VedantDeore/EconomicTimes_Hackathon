@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import api from "@/lib/api";
 import { formatCurrency, formatPercent } from "@/lib/utils";
-import { PieChart, Upload, Sparkles, TrendingUp, AlertTriangle, RefreshCw, BarChart3 } from "lucide-react";
+import { PieChart, Upload, Sparkles, TrendingUp, RefreshCw, BarChart3 } from "lucide-react";
 
 interface Holding {
   fund_name: string;
@@ -46,9 +46,11 @@ export default function MFXRayPage() {
 
   const fetchExisting = async () => {
     try {
-      const res = await api.get("/mf/portfolio");
+      const res = await api.get<Portfolio & { error?: string }>("/mf/portfolio");
       if (res.data && !res.data.error) setPortfolio(res.data);
-    } catch { /* handle */ }
+    } catch {
+      /* optional */
+    }
   };
 
   return (
@@ -118,6 +120,25 @@ export default function MFXRayPage() {
               </div>
             ))}
           </div>
+
+          {/* Overlap (illustrative in local mode) */}
+          {portfolio.overlap_analysis?.length > 0 && (
+            <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700/50">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <TrendingUp size={18} className="text-amber-400" /> Overlap snapshot
+              </h3>
+              <div className="space-y-2">
+                {portfolio.overlap_analysis.map((o, i) => (
+                  <div key={i} className="p-3 rounded-xl bg-slate-900/40 border border-slate-700/30 text-sm">
+                    <p className="text-white font-medium">{o.stock_name}</p>
+                    <p className="text-slate-500 text-xs mt-1">
+                      Funds: {o.funds_holding.join(", ")} · ~{o.total_weight_pct.toFixed(1)}% combined weight
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Holdings Table */}
           {portfolio.holdings?.length > 0 && (

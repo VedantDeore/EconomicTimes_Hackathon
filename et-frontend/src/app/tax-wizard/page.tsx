@@ -20,7 +20,7 @@ export default function TaxWizardPage() {
     capital_gains: { short_term: 0, long_term: 0 },
   });
 
-  const [deductions, setDeductions] = useState({
+  const [deductions] = useState({
     section_80c: { epf: 21600, ppf: 50000, elss: 0, life_insurance: 25000, children_tuition: 0, home_loan_principal: 0, nsc: 0, total: 96600 },
     section_80d: { self_premium: 15000, parents_premium: 0, preventive_health: 5000, total: 20000 },
     nps_80ccd_1b: 0,
@@ -41,7 +41,12 @@ export default function TaxWizardPage() {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) await uploadForm16(file);
+    if (!file) return;
+    const data = await uploadForm16(file);
+    const g = data?.suggested_gross_salary;
+    if (typeof g === "number" && g > 0) {
+      setIncome((prev) => ({ ...prev, gross_salary: g }));
+    }
   };
 
   return (
@@ -116,9 +121,10 @@ export default function TaxWizardPage() {
           <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700/50">
             <h3 className="text-lg font-semibold text-white mb-4">Old vs New Regime</h3>
             <div className="grid grid-cols-2 gap-6">
-              {["old_regime", "new_regime"].map((regime) => {
-                const data = analysis.regime_comparison[regime as keyof typeof analysis.regime_comparison] as { taxable_income: number; total_tax: number };
-                const isRecommended = analysis.regime_comparison.recommended_regime === regime.replace("_regime", "");
+              {(["old_regime", "new_regime"] as const).map((regime) => {
+                const data = analysis.regime_comparison[regime] as { taxable_income: number; total_tax: number };
+                const regimeKey = regime === "old_regime" ? "old" : "new";
+                const isRecommended = analysis.regime_comparison.recommended_regime === regimeKey;
                 return (
                   <div key={regime} className={`p-5 rounded-xl border ${isRecommended ? "border-emerald-500/50 bg-emerald-500/5" : "border-slate-700/50 bg-slate-900/30"}`}>
                     <div className="flex items-center justify-between mb-3">

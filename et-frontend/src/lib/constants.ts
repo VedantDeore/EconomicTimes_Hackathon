@@ -2,12 +2,12 @@
  * Money Health Score dimensions
  */
 export const HEALTH_DIMENSIONS = [
-  { key: "savings", label: "Savings Rate", icon: "💰" },
-  { key: "debt", label: "Debt Management", icon: "🏦" },
-  { key: "insurance", label: "Insurance Coverage", icon: "🛡️" },
-  { key: "investments", label: "Investment Diversification", icon: "📈" },
-  { key: "emergency", label: "Emergency Fund", icon: "🚨" },
-  { key: "tax_efficiency", label: "Tax Efficiency", icon: "📋" },
+  { key: "emergency", label: "Emergency preparedness", icon: "🚨" },
+  { key: "insurance", label: "Insurance coverage", icon: "🛡️" },
+  { key: "investments", label: "Investment diversification", icon: "📈" },
+  { key: "debt", label: "Debt health", icon: "🏦" },
+  { key: "tax_efficiency", label: "Tax efficiency", icon: "📋" },
+  { key: "savings", label: "Retirement readiness", icon: "🏖️" },
 ];
 
 /**
@@ -37,6 +37,7 @@ export const RISK_PROFILES = [
  * Life Event types
  */
 export const LIFE_EVENTS = [
+  { value: "bonus", label: "🎉 Bonus / Windfall", icon: "🎉" },
   { value: "marriage", label: "💍 Marriage", icon: "💍" },
   { value: "child_birth", label: "👶 Child Birth", icon: "👶" },
   { value: "home_purchase", label: "🏠 Home Purchase", icon: "🏠" },

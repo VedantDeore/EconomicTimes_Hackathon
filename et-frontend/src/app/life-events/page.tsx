@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import api from "@/lib/api";
+import { isLocalEngineMode } from "@/lib/config";
+import { computeLifeEventAdvice } from "@/lib/engine/lifeEvents";
 import { formatCurrency } from "@/lib/utils";
 import { LIFE_EVENTS } from "@/lib/constants";
 import { Calendar, Sparkles, Check, Clock } from "lucide-react";
@@ -28,17 +30,27 @@ export default function LifeEventsPage() {
     if (!selectedEvent) return;
     setLoading(true);
     try {
-      const createRes = await api.post("/events", {
+      if (isLocalEngineMode()) {
+        setAdvice(
+          computeLifeEventAdvice({
+            event_type: selectedEvent,
+            event_date: eventDate || new Date().toISOString().split("T")[0],
+            amount,
+            description,
+          })
+        );
+        return;
+      }
+      const createRes = await api.post<{ id: string }>("/events", {
         event_type: selectedEvent,
         event_date: eventDate || new Date().toISOString().split("T")[0],
         amount,
         description,
       });
-      const eventId = createRes.data.id;
-      const adviceRes = await api.post(`/events/${eventId}/advise`);
+      const adviceRes = await api.post<EventAdvice>(`/events/${createRes.data.id}/advise`);
       setAdvice(adviceRes.data);
     } catch {
-      // handle error
+      /* optional toast */
     } finally {
       setLoading(false);
     }

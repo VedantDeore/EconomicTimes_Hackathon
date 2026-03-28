@@ -2,30 +2,53 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import api from "@/lib/api";
+import { isLocalEngineMode } from "@/lib/config";
+import { computeHealthReport, profileToHealthInputs } from "@/lib/engine/health";
+import { useProfileStore } from "@/store/profileStore";
 import { formatCurrency, getScoreColor } from "@/lib/utils";
 import {
-  Flame, Heart, Calculator, PieChart, TrendingUp,
-  Target, Shield, ArrowUpRight, Sparkles,
+  Flame,
+  Heart,
+  Calculator,
+  PieChart,
+  TrendingUp,
+  Target,
+  ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 
 interface QuickStat {
   label: string;
   value: string;
-  change?: string;
   icon: React.ReactNode;
   color: string;
   href: string;
 }
 
 export default function DashboardPage() {
-  const { user, isLoading } = useAuth();
+  const { isLoading } = useAuth();
+  const localMode = isLocalEngineMode();
+  const { fetchProfile } = useProfileStore();
   const [healthScore, setHealthScore] = useState<number | null>(null);
   const [totalInvestments, setTotalInvestments] = useState(0);
   const [monthlyIncome, setMonthlyIncome] = useState(0);
 
   useEffect(() => {
-    async function fetchDashboardData() {
+    async function load() {
+      if (localMode) {
+        await fetchProfile();
+        const p = useProfileStore.getState().profile;
+        if (p) {
+          setMonthlyIncome((p.annual_income?.net || 0) / 12);
+          const inv = p.existing_investments || {};
+          setTotalInvestments(
+            Object.values(inv).reduce((sum: number, v) => sum + (typeof v === "number" ? v : 0), 0)
+          );
+          setHealthScore(computeHealthReport(profileToHealthInputs(p)).overall_score);
+        }
+        return;
+      }
       try {
         const [profileRes, healthRes] = await Promise.allSettled([
           api.get("/profile"),
@@ -33,22 +56,26 @@ export default function DashboardPage() {
         ]);
 
         if (profileRes.status === "fulfilled" && profileRes.value.data) {
-          const p = profileRes.value.data;
+          const p = profileRes.value.data as {
+            annual_income?: { net?: number };
+            existing_investments?: Record<string, number>;
+          };
           setMonthlyIncome((p.annual_income?.net || 0) / 12);
           const inv = p.existing_investments || {};
           setTotalInvestments(
             Object.values(inv).reduce((sum: number, v) => sum + (typeof v === "number" ? v : 0), 0)
           );
         }
-        if (healthRes.status === "fulfilled" && healthRes.value.data?.overall_score) {
-          setHealthScore(healthRes.value.data.overall_score);
+        if (healthRes.status === "fulfilled" && healthRes.value.data) {
+          const h = healthRes.value.data as { overall_score?: number };
+          if (h.overall_score != null) setHealthScore(h.overall_score);
         }
       } catch {
-        // Dashboard loads gracefully even if APIs fail
+        /* graceful */
       }
     }
-    if (!isLoading) fetchDashboardData();
-  }, [isLoading]);
+    if (!isLoading) void load();
+  }, [isLoading, fetchProfile, localMode]);
 
   if (isLoading) {
     return (
@@ -74,7 +101,7 @@ export default function DashboardPage() {
       href: "/mf-xray",
     },
     {
-      label: "Monthly Income",
+      label: "Monthly Income (net/12)",
       value: formatCurrency(monthlyIncome),
       icon: <Target size={22} />,
       color: "#6366f1",
@@ -122,7 +149,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {quickStats.map((stat) => (
           <Link
@@ -138,10 +164,7 @@ export default function DashboardPage() {
                   {stat.value}
                 </p>
               </div>
-              <div
-                className="p-2.5 rounded-xl"
-                style={{ backgroundColor: `${stat.color}15`, color: stat.color }}
-              >
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: `${stat.color}15`, color: stat.color }}>
                 {stat.icon}
               </div>
             </div>
@@ -153,21 +176,20 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* AI Mentor Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600/20 via-cyan-600/20 to-blue-600/20
-        border border-emerald-500/20 p-6">
-        <div className="relative z-10 flex items-center justify-between">
+      <div
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600/20 via-cyan-600/20 to-blue-600/20
+        border border-emerald-500/20 p-6"
+      >
+        <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={20} className="text-emerald-400" />
               <span className="text-sm font-medium text-emerald-400">AI Finance Mentor</span>
             </div>
-            <h3 className="text-xl font-bold text-white">
-              Get personalized financial advice, instantly
-            </h3>
+            <h3 className="text-xl font-bold text-white">Personalized planning — runs on-device in local mode</h3>
             <p className="text-sm text-slate-400 mt-1 max-w-lg">
-              Ask anything about investments, tax planning, insurance, or financial goals.
-              Powered by AI, tailored to your portfolio.
+              Use Life Events for bonus, marriage, and more. Set{" "}
+              <code className="text-slate-500">NEXT_PUBLIC_USE_LOCAL_ENGINE=false</code> to point at your API.
             </p>
           </div>
           <Link
@@ -175,14 +197,13 @@ export default function DashboardPage() {
             className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500
               text-slate-900 font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
           >
-            Start Chat
+            Life event advisor
           </Link>
         </div>
         <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl" />
       </div>
 
-      {/* Feature Cards */}
       <div>
         <h3 className="text-lg font-semibold text-white mb-4">Financial Tools</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -194,13 +215,9 @@ export default function DashboardPage() {
                 hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300"
             >
               <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${f.gradient} text-white shadow-lg`}>
-                  {f.icon}
-                </div>
+                <div className={`p-3 rounded-xl bg-gradient-to-br ${f.gradient} text-white shadow-lg`}>{f.icon}</div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
-                    {f.title}
-                  </h4>
+                  <h4 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">{f.title}</h4>
                   <p className="text-sm text-slate-500 mt-1">{f.desc}</p>
                 </div>
                 <ArrowUpRight

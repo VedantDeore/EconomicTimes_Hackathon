@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import api from "@/lib/api";
+import { isLocalEngineMode } from "@/lib/config";
+import { computeFirePlan, type FirePlanInput, type FirePlanResult } from "@/lib/engine/fire";
 
 interface Goal {
   id?: string;
@@ -14,20 +16,8 @@ interface Goal {
   status?: string;
 }
 
-interface FirePlan {
-  fire_number: number;
-  years_to_fire: number;
-  monthly_sip_needed: number;
-  asset_allocation: Record<string, number>;
-  insurance_gaps: Array<Record<string, string>>;
-  tax_saving_moves: Array<Record<string, string>>;
-  emergency_fund_target: number;
-  ai_summary: string;
-  goals: Goal[];
-}
-
 interface FirePlannerState {
-  plan: FirePlan | null;
+  plan: FirePlanResult | null;
   goals: Goal[];
   isGenerating: boolean;
   generatePlan: (data: Record<string, unknown>) => Promise<void>;
@@ -42,8 +32,13 @@ export const useFirePlannerStore = create<FirePlannerState>((set) => ({
   generatePlan: async (data) => {
     set({ isGenerating: true });
     try {
-      const res = await api.post("/fire/generate", data);
-      set({ plan: res.data, goals: res.data.goals, isGenerating: false });
+      if (isLocalEngineMode()) {
+        const plan = computeFirePlan(data as unknown as FirePlanInput);
+        set({ plan, goals: plan.goals as Goal[], isGenerating: false });
+        return;
+      }
+      const res = await api.post<FirePlanResult>("/fire/generate", data);
+      set({ plan: res.data, goals: res.data.goals as Goal[], isGenerating: false });
     } catch {
       set({ isGenerating: false });
       throw new Error("Failed to generate FIRE plan");
@@ -52,10 +47,11 @@ export const useFirePlannerStore = create<FirePlannerState>((set) => ({
 
   fetchRoadmap: async () => {
     try {
-      const res = await api.get("/fire/roadmap");
+      if (isLocalEngineMode()) return;
+      const res = await api.get<{ goals: Goal[] }>("/fire/roadmap");
       set({ goals: res.data.goals });
     } catch {
-      // silently fail
+      /* optional */
     }
   },
 }));

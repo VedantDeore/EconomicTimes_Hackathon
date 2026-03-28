@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useFirePlannerStore } from "@/store/firePlannerStore";
 import { formatCurrency } from "@/lib/utils";
-import { GOAL_CATEGORIES, RISK_PROFILES } from "@/lib/constants";
+import { GOAL_CATEGORIES } from "@/lib/constants";
 import { Flame, Plus, Trash2, Sparkles, Target, TrendingUp, Shield, Wallet } from "lucide-react";
 
 interface GoalInput {
@@ -189,6 +189,26 @@ export default function FirePlannerPage() {
               })}
             </div>
           </div>
+
+          {/* Goals & SIP */}
+          {plan.goals && plan.goals.length > 0 && (
+            <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700/50">
+              <h4 className="text-lg font-semibold text-white mb-4">Goal SIPs (model)</h4>
+              <div className="space-y-2 text-sm">
+                {plan.goals.map((g, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-slate-900/40 border border-slate-700/30"
+                  >
+                    <span className="text-white font-medium">{g.name || g.category}</span>
+                    <span className="text-emerald-400">
+                      SIP ~{formatCurrency(g.sip_required || 0)}/mo
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* AI Summary */}
           <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20">

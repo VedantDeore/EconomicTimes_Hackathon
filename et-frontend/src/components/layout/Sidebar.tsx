@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import {
   LayoutDashboard, Flame, Heart, Calendar, Calculator,
-  Users, PieChart, LogOut, Menu, X, ChevronRight,
+  Users, PieChart, LogOut, X, ChevronRight,
 } from "lucide-react";
 import { useState } from "react";
 

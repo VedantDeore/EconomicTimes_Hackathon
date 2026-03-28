@@ -1,19 +1,9 @@
-# Environments
+# ── Environment & Secrets ──
 .env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+.env.*
+!.env.example
 
-# Logs
-*.log
-
-# Node
-node_modules/
-
-# Python
+# ── Python ──
 __pycache__/
 *.py[cod]
 *$py.class
@@ -25,8 +15,9 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# Only ignore lib at root or venv level, not src/lib
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -35,15 +26,47 @@ wheels/
 .installed.cfg
 *.egg
 .pytest_cache/
+.venv/
+venv/
+env/
+ENV/
 
-# IDE
+# ── Node / Frontend ──
+node_modules/
+.next/
+out/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+*.tsbuildinfo
+next-env.d.ts
+
+# ── IDE ──
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 
-# Build files
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Logs ──
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Build artifacts ──
 tsc_out.txt
 tsc_errors.txt
+coverage/
 
-# Tooling
+# ── Tooling ──
 .kiro/
+.vercel/

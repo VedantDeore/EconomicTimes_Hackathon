@@ -10,7 +10,7 @@ app = FastAPI(title="ET AI Service", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
-    allow_methods=["POST"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 

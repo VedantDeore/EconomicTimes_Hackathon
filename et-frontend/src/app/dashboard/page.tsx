@@ -15,8 +15,11 @@ import {
   Target,
   ArrowUpRight,
   Sparkles,
+  Users,
+  CalendarHeart,
 } from "lucide-react";
 import Link from "next/link";
+import { useMentorStore } from "@/store/mentorStore";
 
 interface QuickStat {
   label: string;
@@ -118,8 +121,22 @@ export default function DashboardPage() {
 
   const features = [
     {
+      title: "Tax Wizard",
+      desc: "Step-by-step old vs new regime, missed deductions, HRA auto-calc, tax-saving instruments ranked by risk & liquidity",
+      icon: <Calculator size={28} />,
+      gradient: "from-amber-500 to-orange-500",
+      href: "/tax-wizard",
+    },
+    {
+      title: "MF Portfolio X-Ray",
+      desc: "True XIRR, stock-level overlap detection, expense ratio drag, STCG-aware rebalancing with tax context",
+      icon: <PieChart size={28} />,
+      gradient: "from-violet-500 to-purple-500",
+      href: "/mf-xray",
+    },
+    {
       title: "FIRE Path Planner",
-      desc: "Build your month-by-month roadmap to financial independence",
+      desc: "Build your month-by-month roadmap to financial independence with SIP targets",
       icon: <Flame size={28} />,
       gradient: "from-orange-500 to-red-500",
       href: "/fire-planner",
@@ -132,18 +149,18 @@ export default function DashboardPage() {
       href: "/money-health",
     },
     {
-      title: "Tax Wizard",
-      desc: "Find missed deductions & compare old vs new regime",
-      icon: <Calculator size={28} />,
-      gradient: "from-amber-500 to-orange-500",
-      href: "/tax-wizard",
+      title: "Life Event Advisor",
+      desc: "AI guidance for marriage, baby, home purchase, job change & more",
+      icon: <CalendarHeart size={28} />,
+      gradient: "from-cyan-500 to-blue-500",
+      href: "/life-events",
     },
     {
-      title: "MF Portfolio X-Ray",
-      desc: "Upload CAMS statement for XIRR, overlap & rebalancing",
-      icon: <PieChart size={28} />,
-      gradient: "from-violet-500 to-purple-500",
-      href: "/mf-xray",
+      title: "Couples Planner",
+      desc: "Optimize finances as a couple — HRA, deductions, joint planning",
+      icon: <Users size={28} />,
+      gradient: "from-pink-500 to-violet-500",
+      href: "/couples-planner",
     },
   ];
 
@@ -186,19 +203,18 @@ export default function DashboardPage() {
               <Sparkles size={20} className="text-emerald-400" />
               <span className="text-sm font-medium text-emerald-400">AI Finance Mentor</span>
             </div>
-            <h3 className="text-xl font-bold text-white">Personalized planning — runs on-device in local mode</h3>
+            <h3 className="text-xl font-bold text-white">Your personal finance guide — ask anything</h3>
             <p className="text-sm text-slate-400 mt-1 max-w-lg">
-              Use Life Events for bonus, marriage, and more. Set{" "}
-              <code className="text-slate-500">NEXT_PUBLIC_USE_LOCAL_ENGINE=false</code> to point at your API.
+              Ask about taxes, mutual funds, SIPs, insurance, FIRE planning, or any financial concept. Get clear, jargon-free answers instantly.
             </p>
           </div>
-          <Link
-            href="/life-events"
+          <button
+            onClick={() => useMentorStore.getState().toggle()}
             className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500
               text-slate-900 font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
           >
-            Life event advisor
-          </Link>
+            Chat with AI Mentor
+          </button>
         </div>
         <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl" />
@@ -206,7 +222,7 @@ export default function DashboardPage() {
 
       <div>
         <h3 className="text-lg font-semibold text-white mb-4">Financial Tools</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map((f) => (
             <Link
               key={f.title}

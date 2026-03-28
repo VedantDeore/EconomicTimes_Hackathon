@@ -3,12 +3,13 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional
 
-from app.ai_client import generate_json
+from app.ai_client import generate_json, generate
 from app.prompts.fire_prompts import FIRE_SYSTEM_PROMPT, FIRE_PLAN_PROMPT
 from app.prompts.health_prompts import HEALTH_SYSTEM_PROMPT, HEALTH_SCORE_PROMPT
 from app.prompts.tax_prompts import TAX_SYSTEM_PROMPT, TAX_ANALYSIS_PROMPT
 from app.prompts.event_prompts import EVENT_SYSTEM_PROMPT, EVENT_ADVICE_PROMPT
 from app.prompts.mf_prompts import MF_SYSTEM_PROMPT, MF_REBALANCE_PROMPT
+from app.prompts.mentor_prompts import MENTOR_SYSTEM_PROMPT, MENTOR_CHAT_PROMPT
 from app.calculators.sip_calculator import calculate_sip
 from app.calculators.asset_allocator import get_allocation_by_age
 from app.calculators.tax_calculator import calculate_tax_old, calculate_tax_new
@@ -401,3 +402,22 @@ async def mf_analyze(req: MFRequest):
         "rebalancing_suggestions": rebalancing,
         "ai_summary": ai_summary,
     }
+
+
+# ── AI Mentor Chat ──────────────────────────────────────────────────
+
+
+class MentorRequest(BaseModel):
+    message: str
+    context: dict = {}
+
+
+@router.post("/ai/mentor/chat")
+async def mentor_chat(req: MentorRequest):
+    prompt = MENTOR_CHAT_PROMPT.format(
+        user_message=req.message,
+        context=json.dumps(req.context, indent=2) if req.context else "No financial data provided yet.",
+    )
+
+    response = await generate(prompt, MENTOR_SYSTEM_PROMPT)
+    return {"response": response}

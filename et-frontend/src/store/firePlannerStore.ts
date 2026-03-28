@@ -12,8 +12,11 @@ interface Goal {
   target_date: string;
   priority: string;
   sip_required?: number;
+  months_to_goal?: number;
+  assumed_annual_return_pct?: number;
   recommended_asset_allocation?: Record<string, number>;
   status?: string;
+  funding_note?: string;
 }
 
 interface FirePlannerState {

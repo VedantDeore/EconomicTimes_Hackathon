@@ -8,6 +8,9 @@ export type ProfileLike = {
   existing_investments?: Record<string, number>;
   emergency_fund?: { current_amount?: number };
   risk_profile?: string;
+  age?: number | null;
+  retirement_age?: number | null;
+  money_profile_snapshot?: Record<string, unknown> | null;
 } | null;
 
 export function sumMonthlyExpenses(monthly: Record<string, number> | undefined): number {
@@ -50,6 +53,10 @@ export function fireDefaultsFromProfile(profile: ProfileLike): {
   monthly_expenses: number;
   monthly_income: number;
   expected_return_rate: number;
+  age: number | null;
+  retirement_age: number | null;
+  risk_profile: string | null;
+  goals: Array<{ name: string; category: string; target_amount: number; target_date: string }>;
 } | null {
   if (!profile) return null;
   const existing_corpus = investableCorpusFromProfile(profile);
@@ -57,10 +64,18 @@ export function fireDefaultsFromProfile(profile: ProfileLike): {
   const monthly_income = monthlyIncomeFromProfile(profile);
   const expected_return_rate = defaultReturnFromRisk(profile.risk_profile);
   if (existing_corpus <= 0 && monthly_expenses <= 0 && monthly_income <= 0) return null;
+
+  const snap = profile.money_profile_snapshot;
+  const snapGoals = Array.isArray(snap?.goals) ? (snap.goals as Array<{ name: string; category: string; target_amount: number; target_date: string }>) : [];
+
   return {
     existing_corpus: Math.max(0, existing_corpus),
     monthly_expenses: Math.max(0, monthly_expenses),
     monthly_income: Math.max(0, monthly_income),
     expected_return_rate,
+    age: typeof profile.age === "number" && profile.age > 0 ? profile.age : null,
+    retirement_age: typeof profile.retirement_age === "number" && profile.retirement_age > 0 ? profile.retirement_age : null,
+    risk_profile: profile.risk_profile ?? null,
+    goals: snapGoals,
   };
 }

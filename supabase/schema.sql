@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   risk_profile TEXT DEFAULT 'moderate',
   employment_type TEXT DEFAULT 'salaried',
   tax_regime TEXT DEFAULT 'new',
+  money_profile JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );

@@ -24,6 +24,7 @@ interface TaxWizardState {
   uploadForm16: (file: File) => Promise<Record<string, unknown>>;
   saveToHistory: (income: Record<string, unknown>, deductions: Record<string, unknown>) => void;
   loadHistory: () => void;
+  resetTaxState: () => void;
 }
 
 const HISTORY_KEY = "tax_history";
@@ -202,5 +203,9 @@ export const useTaxWizardStore = create<TaxWizardState>((set, get) => ({
     } catch {
       // localStorage unavailable
     }
+  },
+
+  resetTaxState: () => {
+    set({ analysis: null, isAnalyzing: false, history: [] });
   },
 }));

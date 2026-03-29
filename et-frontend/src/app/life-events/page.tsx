@@ -228,8 +228,15 @@ export default function LifeEventsPage() {
   const contextLine = useMemo(() => {
     const inc = profileHasIncome ? (profile?.annual_income?.gross ?? annualIncome) : annualIncome;
     const risk = profileHasRisk ? profile!.risk_profile : riskProfile;
-    if (!inc && !risk) return "";
-    return ` Context: annual income ${formatCurrency(inc || 0)}, risk ${risk}.`;
+    const parts: string[] = [];
+    if (inc) parts.push(`annual income ${formatCurrency(inc)}`);
+    if (risk) parts.push(`risk ${risk}`);
+    if (profile?.city) parts.push(`city ${profile.city}`);
+    if (profile?.marital_status && profile.marital_status !== "single") parts.push(`marital status ${profile.marital_status}`);
+    if (profile?.dependents && profile.dependents > 0) parts.push(`${profile.dependents} dependent(s)`);
+    if (profile?.age && profile.age > 0) parts.push(`age ${profile.age}`);
+    if (parts.length === 0) return "";
+    return ` Context: ${parts.join(", ")}.`;
   }, [profile, profileHasIncome, profileHasRisk, annualIncome, riskProfile]);
 
   const descriptionPlaceholder =

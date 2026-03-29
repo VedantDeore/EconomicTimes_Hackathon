@@ -25,6 +25,7 @@ interface FirePlannerState {
   isGenerating: boolean;
   generatePlan: (data: Record<string, unknown>) => Promise<void>;
   fetchRoadmap: () => Promise<void>;
+  resetFireState: () => void;
 }
 
 export const useFirePlannerStore = create<FirePlannerState>((set) => ({
@@ -56,5 +57,9 @@ export const useFirePlannerStore = create<FirePlannerState>((set) => ({
     } catch {
       /* optional */
     }
+  },
+
+  resetFireState: () => {
+    set({ plan: null, goals: [], isGenerating: false });
   },
 }));

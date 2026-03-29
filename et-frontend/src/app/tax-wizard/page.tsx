@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
   History,
+  Save,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTaxWizardStore } from "@/store/taxWizardStore";
@@ -312,6 +313,8 @@ export default function TaxWizardPage() {
     if (!p) return;
     const gross = p.annual_income?.gross ?? 0;
     const ss = p.salary_structure;
+    const snap = p.money_profile_snapshot as Record<string, unknown> | null | undefined;
+
     setIncome((prev) => ({
       ...prev,
       gross_salary: gross > 0 ? gross : prev.gross_salary,
@@ -319,8 +322,64 @@ export default function TaxWizardPage() {
       hra_received: ss?.hra != null && ss.hra > 0 ? ss.hra : prev.hra_received,
       special_allowance:
         ss?.special_allowance != null && ss.special_allowance > 0 ? ss.special_allowance : prev.special_allowance,
+      other_income: ss?.other_income != null && ss.other_income > 0 ? ss.other_income : prev.other_income,
       rent_paid: p.monthly_expenses?.rent != null && p.monthly_expenses.rent > 0 ? p.monthly_expenses.rent : prev.rent_paid,
+      is_metro: p.is_metro ?? prev.is_metro,
+      professional_tax: typeof snap?.professional_tax === "number" && snap.professional_tax > 0 ? snap.professional_tax : prev.professional_tax,
     }));
+
+    if (p.risk_profile && ["conservative", "moderate", "aggressive"].includes(p.risk_profile)) {
+      setRiskProfile(p.risk_profile as RiskProfile);
+    }
+
+    if (snap) {
+      const s80c = snap.section_80c as { epf?: number; ppf?: number; elss?: number; life_insurance?: number; total?: number } | undefined;
+      const s80d = snap.section_80d as { self_premium?: number; parents_premium?: number; preventive_health?: number; total?: number } | undefined;
+      setDeductions((prev) => ({
+        ...prev,
+        section_80c: s80c?.total ? { epf: s80c.epf ?? 0, ppf: s80c.ppf ?? 0, elss: s80c.elss ?? 0, life_insurance: s80c.life_insurance ?? 0, total: s80c.total } : prev.section_80c,
+        section_80d: s80d?.total ? { self_premium: s80d.self_premium ?? 0, parents_premium: s80d.parents_premium ?? 0, preventive_health: s80d.preventive_health ?? 0, total: s80d.total } : prev.section_80d,
+        nps_80ccd_1b: typeof snap.nps_80ccd_1b === "number" && snap.nps_80ccd_1b > 0 ? snap.nps_80ccd_1b : prev.nps_80ccd_1b,
+        home_loan_interest_24b: typeof snap.home_loan_interest_24b === "number" && snap.home_loan_interest_24b > 0 ? snap.home_loan_interest_24b : prev.home_loan_interest_24b,
+        education_loan_80e: typeof snap.education_loan_80e === "number" ? snap.education_loan_80e : prev.education_loan_80e,
+        donations_80g: typeof snap.donations_80g === "number" ? snap.donations_80g : prev.donations_80g,
+        savings_interest_80tta: typeof snap.savings_interest_80tta === "number" && snap.savings_interest_80tta > 0 ? snap.savings_interest_80tta : prev.savings_interest_80tta,
+      }));
+    }
+  };
+
+  const [savingToProfile, setSavingToProfile] = useState(false);
+  const [saveProfileMsg, setSaveProfileMsg] = useState<string | null>(null);
+  const patchMoneyProfile = useProfileStore((s) => s.patchMoneyProfile);
+
+  const handleSaveToProfile = async () => {
+    setSavingToProfile(true);
+    setSaveProfileMsg(null);
+    try {
+      await patchMoneyProfile({
+        monthly_income: Math.round(income.gross_salary / 12),
+        basic_salary: Math.round(income.basic_salary / 12),
+        hra_received: Math.round(income.hra_received / 12),
+        other_income: Math.round(income.other_income / 12),
+        rent_paid: income.rent_paid,
+        is_metro: income.is_metro,
+        professional_tax: income.professional_tax,
+        tax_regime: analysis?.regime_comparison?.recommended_regime ?? undefined,
+        section_80c: deductions.section_80c,
+        section_80d: deductions.section_80d,
+        nps_80ccd_1b: deductions.nps_80ccd_1b,
+        home_loan_interest_24b: deductions.home_loan_interest_24b,
+        education_loan_80e: deductions.education_loan_80e,
+        donations_80g: deductions.donations_80g,
+        savings_interest_80tta: deductions.savings_interest_80tta,
+      });
+      setSaveProfileMsg("Saved to profile!");
+      setTimeout(() => setSaveProfileMsg(null), 4000);
+    } catch {
+      setSaveProfileMsg("Could not save to profile.");
+    } finally {
+      setSavingToProfile(false);
+    }
   };
 
   const handleTrySampleData = () => {
@@ -664,6 +723,18 @@ export default function TaxWizardPage() {
               )}
               Analyze
             </button>
+            <button
+              type="button"
+              onClick={() => void handleSaveToProfile()}
+              disabled={savingToProfile || income.gross_salary <= 0}
+              className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20 disabled:opacity-50"
+            >
+              <Save className="h-4 w-4" />
+              {savingToProfile ? "Saving…" : "Save to Profile"}
+            </button>
+            {saveProfileMsg && (
+              <span className={cn("text-xs", saveProfileMsg.includes("Saved") ? "text-emerald-400" : "text-amber-400")}>{saveProfileMsg}</span>
+            )}
             <span className="text-xs text-slate-500">
               Leave gross salary empty to run a full demo scenario.
             </span>

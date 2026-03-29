@@ -160,7 +160,7 @@ export default function MoneyHealthPage() {
     [baseInputs, tweaks]
   );
 
-  const userAge = 34;
+  const userAge = (profile?.age && profile.age > 0) ? profile.age : 34;
 
   const runLocalReport = useCallback(() => {
     setReport(computeHealthReport(mergedInputs));

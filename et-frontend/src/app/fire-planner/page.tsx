@@ -31,6 +31,7 @@ import {
   Sparkles,
   Table,
   SlidersHorizontal,
+  Save,
 } from "lucide-react";
 
 type RiskKey = "conservative" | "moderate" | "aggressive";
@@ -207,6 +208,10 @@ export default function FirePlannerPage() {
     setForm((f) => ({ ...f, expected_return_rate: rate }));
   }, []);
 
+  const patchMoneyProfile = useProfileStore((s) => s.patchMoneyProfile);
+  const [savingGoals, setSavingGoals] = useState(false);
+  const [saveGoalsMsg, setSaveGoalsMsg] = useState<string | null>(null);
+
   const fillFromProfile = async () => {
     setIsFilling(true);
     setSyncMsg(null);
@@ -220,17 +225,51 @@ export default function FirePlannerPage() {
       }
       setForm((f) => ({
         ...f,
+        age: d.age != null && d.age > 0 ? d.age : f.age,
+        retirement_age: d.retirement_age != null && d.retirement_age > 0 ? d.retirement_age : f.retirement_age,
         existing_corpus: d.existing_corpus > 0 ? d.existing_corpus : f.existing_corpus,
         monthly_expenses: d.monthly_expenses > 0 ? d.monthly_expenses : f.monthly_expenses,
         monthly_income: d.monthly_income > 0 ? d.monthly_income : f.monthly_income,
         expected_return_rate: d.expected_return_rate,
       }));
-      setSyncMsg("Loaded corpus and cashflow from your saved profile.");
+      if (d.risk_profile && ["conservative", "moderate", "aggressive"].includes(d.risk_profile)) {
+        setRisk(d.risk_profile as RiskKey);
+      }
+      if (d.goals.length > 0) {
+        setGoals(d.goals.map((g) => ({
+          ...g,
+          current_savings: 0,
+          priority: "medium",
+        })));
+      }
+      setSyncMsg("Loaded from your saved profile (income, corpus, age, goals).");
       setTimeout(() => setSyncMsg(null), 5000);
     } catch {
       setSyncMsg("Could not read profile.");
     } finally {
       setIsFilling(false);
+    }
+  };
+
+  const handleSaveGoals = async () => {
+    setSavingGoals(true);
+    setSaveGoalsMsg(null);
+    try {
+      await patchMoneyProfile({
+        goals: goals.filter((g) => g.name.trim() && g.target_amount > 0).map((g) => ({
+          name: g.name,
+          category: g.category,
+          target_amount: g.target_amount,
+          target_date: g.target_date,
+        })),
+        retirement_age: form.retirement_age,
+      });
+      setSaveGoalsMsg("Goals saved to profile!");
+      setTimeout(() => setSaveGoalsMsg(null), 4000);
+    } catch {
+      setSaveGoalsMsg("Could not save.");
+    } finally {
+      setSavingGoals(false);
     }
   };
 
@@ -625,13 +664,25 @@ export default function FirePlannerPage() {
                   </div>
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={() => setGoals((g) => [...g, emptyGoal()])}
-                className="text-xs text-cyan-400 hover:text-cyan-300"
-              >
-                + Add goal
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setGoals((g) => [...g, emptyGoal()])}
+                  className="text-xs text-cyan-400 hover:text-cyan-300"
+                >
+                  + Add goal
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleSaveGoals()}
+                  disabled={savingGoals}
+                  className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 disabled:opacity-50"
+                >
+                  <Save size={13} />
+                  {savingGoals ? "Saving…" : "Save to Profile"}
+                </button>
+              </div>
+              {saveGoalsMsg && <p className="text-xs text-emerald-300">{saveGoalsMsg}</p>}
             </div>
 
             <button

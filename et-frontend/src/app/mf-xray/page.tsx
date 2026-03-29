@@ -38,6 +38,7 @@ import FileUpload from "@/components/shared/FileUpload";
 import AnimatedCounter from "@/components/shared/AnimatedCounter";
 import AlgorithmExplanation from "@/components/shared/AlgorithmExplanation";
 import { getMfHistory, saveMfPortfolio } from "@/lib/supabaseHistory";
+import { useProfileStore } from "@/store/profileStore";
 
 // --- Types ---
 
@@ -354,6 +355,7 @@ function emptyFund(): FundRow {
 
 export default function MFXRayPage() {
   useAuth();
+  const { fetchProfile } = useProfileStore();
   const [funds, setFunds] = useState<FundRow[]>(DEMO_FUNDS);
   const [analyzed, setAnalyzed] = useState<PortfolioComputed | null>(() =>
     computePortfolio(DEMO_FUNDS)
@@ -460,6 +462,32 @@ export default function MFXRayPage() {
     setPdfNotice(null);
   }, []);
 
+  const loadFromProfile = useCallback(async () => {
+    await fetchProfile();
+    const p = useProfileStore.getState().profile;
+    if (!p) return;
+    const snap = p.money_profile_snapshot as Record<string, unknown> | null | undefined;
+    const invArr = Array.isArray(snap?.investments) ? (snap.investments as Array<{ type: string; name: string; value: number }>) : [];
+    const mfRows = invArr.filter((i) => {
+      const t = i.type.toLowerCase();
+      return t === "mutual_fund" || t === "mutual_funds" || t === "elss";
+    });
+    if (mfRows.length === 0) {
+      setPdfNotice("No mutual fund entries found in your profile. Add investments in Money Profile first.");
+      return;
+    }
+    const newFunds: FundRow[] = mfRows.map((i) => ({
+      id: uid(),
+      fund_name: i.name || (i.type === "elss" ? "ELSS Fund" : "Mutual Fund"),
+      category: i.type.toLowerCase() === "elss" ? "ELSS" : "Flexi Cap",
+      invested_amount: i.value,
+      current_value: Math.round(i.value * 1.12),
+      expense_ratio: 1.0,
+    }));
+    setFunds(newFunds);
+    void analyzePortfolio(newFunds);
+  }, [fetchProfile, analyzePortfolio]);
+
   const sortedRows = useMemo(() => {
     if (!analyzed) return [];
     const rows = [...analyzed.perFund];
@@ -554,6 +582,14 @@ export default function MFXRayPage() {
             className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Load Sample Portfolio
+          </button>
+          <button
+            type="button"
+            onClick={() => void loadFromProfile()}
+            disabled={parsing}
+            className="rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Load from Profile
           </button>
           <button
             type="button"

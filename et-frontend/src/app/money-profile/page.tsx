@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -28,6 +28,7 @@ import {
   getDefaultLocalProfile,
   useProfileStore,
   type FinancialProfile as StoreFinancialProfile,
+  type MoneyProfileWizardPayload,
 } from "@/store/profileStore";
 
 const WIZARD_STORAGE_KEY = "et_finance_money_wizard_v1";
@@ -213,10 +214,16 @@ function wizardToStoreProfile(w: FinancialProfile): StoreFinancialProfile {
     },
     risk_profile: w.risk_profile,
     tax_regime: "new",
+    age: w.age,
+    city: w.city,
+    is_metro: w.is_metro,
+    marital_status: w.marital_status,
+    dependents: w.dependents,
+    retirement_age: w.retirement_age,
     salary_structure: {
-      basic_salary: w.basic_salary,
-      hra_received: w.hra_received,
-      other_income: w.other_income,
+      basic: Math.round((w.basic_salary || 0) * 12),
+      hra: Math.round((w.hra_received || 0) * 12),
+      other_income: Math.round((w.other_income || 0) * 12),
     },
   };
 }
@@ -270,9 +277,9 @@ const inputClass =
 const labelClass = "block text-xs font-medium text-slate-400";
 
 export default function MoneyProfilePage() {
-  useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const { fetchProfile, saveFullProfile, isLoading, dbConnected, lastSyncedAt } = useProfileStore();
+  const { profile, fetchProfile, saveFullProfile, isLoading, dbConnected, lastSyncedAt } = useProfileStore();
 
   const [draft, setDraft] = useState<FinancialProfile>(getDefaultWizardProfile);
   const [step, setStep] = useState(1);
@@ -280,6 +287,7 @@ export default function MoneyProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedFlash, setSavedFlash] = useState(false);
+  const cloudHydratedRef = useRef(false);
 
   useEffect(() => {
     void fetchProfile();
@@ -290,6 +298,22 @@ export default function MoneyProfilePage() {
     if (stored) setDraft(stored);
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated || !isAuthenticated || cloudHydratedRef.current) return;
+    const snap = profile?.money_profile_snapshot;
+    if (!snap || typeof snap !== "object") return;
+    const s = snap as Partial<FinancialProfile>;
+    const base = getDefaultWizardProfile();
+    setDraft({
+      ...base,
+      ...s,
+      expense_breakdown: { ...base.expense_breakdown, ...(s.expense_breakdown || {}) },
+      investments: Array.isArray(s.investments) ? s.investments : base.investments,
+      goals: Array.isArray(s.goals) ? s.goals : base.goals,
+    });
+    cloudHydratedRef.current = true;
+  }, [hydrated, isAuthenticated, profile?.money_profile_snapshot]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -404,11 +428,12 @@ export default function MoneyProfilePage() {
     persistWizardLocal(draft);
     try {
       const storeProfile = wizardToStoreProfile(draft);
-      await saveFullProfile(storeProfile);
+      await saveFullProfile(storeProfile, draft as unknown as MoneyProfileWizardPayload);
       setSavedFlash(true);
       router.push("/dashboard");
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Could not sync. Your answers are saved in this browser.";
+      const raw = e instanceof Error ? e.message : typeof e === "object" && e !== null && "message" in e ? String((e as { message: unknown }).message) : "";
+      const msg = raw || "Could not sync. Your answers are saved in this browser.";
       setError(msg);
     } finally {
       setIsSaving(false);
@@ -421,8 +446,10 @@ export default function MoneyProfilePage() {
   };
 
   const syncLabel = dbConnected
-    ? `Synced to database${lastSyncedAt ? ` · ${new Date(lastSyncedAt).toLocaleTimeString()}` : ""}`
-    : "Offline — saving to browser only";
+    ? `Connected to Supabase — profile & income saved${lastSyncedAt ? ` · ${new Date(lastSyncedAt).toLocaleTimeString("en-IN")}` : ""}`
+    : isAuthenticated
+      ? "Could not sync — check internet or run the SQL below for money_profile column"
+      : "Log in to save your Money Profile to Supabase (browser-only until then)";
 
   if (!hydrated) {
     return (
@@ -445,7 +472,7 @@ export default function MoneyProfilePage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight">DhanGuru Money Profile</h1>
             <p className="text-sm text-slate-400 mt-1">
-              Step-by-step setup for your AI Money Mentor. Data is saved in this browser and can sync when the API is available.
+              Step-by-step setup for DhanGuru. When you are logged in, your answers are saved to Supabase (profiles, income, goals, investments, insurance, debts).
             </p>
           </div>
         </div>

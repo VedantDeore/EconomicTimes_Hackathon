@@ -161,6 +161,7 @@ const ALGO_SECTIONS = [
 export default function MentorPage() {
   useAuth();
   const profile = useProfileStore((s) => s.profile);
+  const fetchProfile = useProfileStore((s) => s.fetchProfile);
   const analysis = useTaxWizardStore((s) => s.analysis);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hi! I'm **DhanGuru AI Mentor**. Ask about investments, tax, insurance, or retirement planning. Use the quick actions or type your question.", timestamp: new Date() },
@@ -175,6 +176,7 @@ export default function MentorPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  useEffect(() => { void fetchProfile(); }, [fetchProfile]);
   useEffect(() => { scrollToBottom(); }, [messages, isTyping, scrollToBottom]);
   useEffect(() => { inputRef.current?.focus(); }, []);
 

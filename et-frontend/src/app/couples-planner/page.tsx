@@ -136,7 +136,7 @@ function ProgressBar({ pct, color = "#10b981" }: { pct: number; color?: string }
 
 export default function CouplesPlannerPage() {
   const { isAuthenticated } = useAuth();
-  const { profile } = useProfileStore();
+  const { profile, fetchProfile } = useProfileStore();
 
   const [a, setA] = useState<CouplesPartnerFieldsExt>(defaultA);
   const [b, setB] = useState<CouplesPartnerFieldsExt>(defaultB);
@@ -175,25 +175,43 @@ export default function CouplesPlannerPage() {
     } catch { /* ignore */ }
   }, []);
 
-  const prefillFromProfile = useCallback(() => {
-    if (!profile) return;
+  useEffect(() => { void fetchProfile(); }, [fetchProfile]);
+
+  const prefillFromProfile = useCallback(async () => {
+    await fetchProfile();
+    const p = useProfileStore.getState().profile;
+    if (!p) return;
+    const snap = p.money_profile_snapshot as Record<string, unknown> | null | undefined;
+    const sipTotal = Array.isArray(snap?.investments)
+      ? (snap.investments as Array<{ monthly_sip?: number }>).reduce((s, i) => s + (i.monthly_sip ?? 0), 0)
+      : 0;
+    const sec80c = (snap?.section_80c as { total?: number } | undefined)?.total ?? 0;
+
     setA((prev) => ({
       ...prev,
       name: "You",
-      gross_salary: profile.annual_income?.gross || prev.gross_salary,
-      basic_salary: profile.salary_structure?.basic || prev.basic_salary,
-      hra_received: profile.salary_structure?.hra || prev.hra_received,
-      total_investments: Object.values(profile.existing_investments || {}).reduce(
+      gross_salary: p.annual_income?.gross || prev.gross_salary,
+      basic_salary: p.salary_structure?.basic || prev.basic_salary,
+      hra_received: p.salary_structure?.hra || prev.hra_received,
+      sec_80c: sec80c > 0 ? sec80c : prev.sec_80c,
+      total_investments: Object.values(p.existing_investments || {}).reduce(
         (s, v) => s + (typeof v === "number" ? v : 0), 0,
       ) || prev.total_investments,
-      total_debts: (profile.debts || []).reduce((s, d) => {
-        const nums = Object.values(d).filter((v): v is number => typeof v === "number");
-        return s + (nums[0] ?? 0);
+      total_debts: (p.debts || []).reduce((s, d) => {
+        const emi = Number(d.emi) || 0;
+        const outstanding = Number(d.outstanding) || 0;
+        return s + (emi > 0 ? emi * 12 : outstanding);
       }, 0) || prev.total_debts,
-      monthly_expenses: profile.monthly_expenses?.total || prev.monthly_expenses,
-      emergency_fund: profile.emergency_fund?.current_amount || prev.emergency_fund,
+      monthly_expenses: p.monthly_expenses?.total || prev.monthly_expenses,
+      emergency_fund: p.emergency_fund?.current_amount || prev.emergency_fund,
+      age: typeof p.age === "number" && p.age > 0 ? p.age : prev.age,
+      risk_profile: p.risk_profile && ["conservative", "moderate", "aggressive"].includes(p.risk_profile) ? p.risk_profile as "conservative" | "moderate" | "aggressive" : prev.risk_profile,
+      monthly_sip: sipTotal > 0 ? sipTotal : prev.monthly_sip,
     }));
-  }, [profile]);
+    if (p.monthly_expenses?.rent && p.monthly_expenses.rent > 0) {
+      setMonthlyRent(p.monthly_expenses.rent);
+    }
+  }, [fetchProfile]);
 
   const optimize = useCallback(async () => {
     setLoading(true);
@@ -663,7 +681,7 @@ export default function CouplesPlannerPage() {
           Reset Defaults
         </button>
         {profile && (
-          <button type="button" onClick={prefillFromProfile}
+          <button type="button" onClick={() => void prefillFromProfile()}
             className="rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2.5 text-sm font-medium text-cyan-200 transition-colors hover:bg-cyan-500/20">
             <Users className="mr-1.5 inline h-3.5 w-3.5" />Pre-fill from My Profile
           </button>

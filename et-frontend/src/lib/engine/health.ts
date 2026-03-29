@@ -8,6 +8,7 @@ export type ProfileLike = {
     health?: { has_cover?: boolean; family_floater?: boolean; self_cover?: boolean };
   };
   annual_income?: { net?: number; gross?: number };
+  monthly_expenses?: Record<string, number>;
   tax_regime?: string;
 } | null;
 
@@ -55,14 +56,21 @@ export function profileToHealthInputs(profile: ProfileLike): HealthInputs {
   const hi = profile.insurance?.health || {};
   const health_insurance_ok = Boolean(hi.has_cover || hi.family_floater || hi.self_cover);
 
+  const expTotal = profile.monthly_expenses?.total ?? 0;
+  const annualExpenses = expTotal > 0 ? expTotal * 12 : 0;
+  let savingsRate = defaultInputs.retirement_savings_rate_pct;
+  if (netAnnual > 0 && annualExpenses > 0 && annualExpenses < netAnnual) {
+    savingsRate = Math.min(50, Math.max(0, Math.round(((netAnnual - annualExpenses) / netAnnual) * 100)));
+  }
+
   return {
     emergency_months: Math.min(12, Math.max(0, months)),
     has_term_insurance,
     health_insurance_ok,
     investment_types_count,
     debt_to_income_pct,
-    uses_80c: profile.tax_regime !== "new" || defaultInputs.uses_80c,
-    retirement_savings_rate_pct: defaultInputs.retirement_savings_rate_pct,
+    uses_80c: profile.tax_regime === "old",
+    retirement_savings_rate_pct: savingsRate,
   };
 }
 

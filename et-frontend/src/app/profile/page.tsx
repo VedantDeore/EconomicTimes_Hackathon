@@ -3,13 +3,14 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { User, Mail, Phone, Calendar, Shield, Heart, TrendingUp, Wallet, Edit, MapPin } from "lucide-react";
+import { Mail, Phone, Calendar, Shield, Heart, TrendingUp, Wallet, Edit, MapPin } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
 import { useProfileStore } from "@/store/profileStore";
 import { formatCurrency } from "@/lib/utils";
 import { getLatestHealthScore, getLatestTaxAnalysis, getLatestFirePlan } from "@/lib/supabaseHistory";
 import { supabase } from "@/lib/supabase";
+import EditableProfileSummary from "@/components/EditableProfileSummary";
 
 function sumInvestments(inv: Record<string, number> | undefined): number {
   if (!inv) return 0;
@@ -111,34 +112,8 @@ export default function ProfilePage() {
         ))}
       </motion.div>
 
-      {/* Financial profile summary */}
-      {profile && (profile.annual_income?.gross > 0 || sumInvestments(profile.existing_investments) > 0) && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}
-          className="rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-md p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <User size={18} className="text-emerald-400" /> Financial Profile Summary
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Income & Expenses</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-slate-400">Annual Gross Income</span><span className="text-white font-medium">{formatCurrency(profile.annual_income?.gross || 0)}</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Monthly Expenses</span><span className="text-white font-medium">{formatCurrency(profile.monthly_expenses?.total || 0)}</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Risk Profile</span><span className="text-emerald-300 font-medium capitalize">{profile.risk_profile}</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Tax Regime</span><span className="text-cyan-300 font-medium capitalize">{profile.tax_regime}</span></div>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Emergency & Insurance</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-slate-400">Emergency Fund</span><span className="text-white font-medium">{formatCurrency(profile.emergency_fund?.current_amount || 0)}</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Months Covered</span><span className="text-white font-medium">{profile.emergency_fund?.months_covered || 0} mo</span></div>
-                <div className="flex justify-between"><span className="text-slate-400">Total Investments</span><span className="text-emerald-300 font-medium">{formatCurrency(sumInvestments(profile.existing_investments))}</span></div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
+      {/* Financial profile summary — inline editable */}
+      <EditableProfileSummary />
 
       {/* Quick links */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}

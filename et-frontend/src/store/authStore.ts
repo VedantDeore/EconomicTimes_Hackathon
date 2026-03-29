@@ -1,5 +1,9 @@
 import { create } from "zustand";
 import { supabase } from "@/lib/supabase";
+import { clearAllUserLocalData, ensureLocalDataBelongsToUser } from "@/lib/localKeys";
+import { useProfileStore } from "@/store/profileStore";
+import { useTaxWizardStore } from "@/store/taxWizardStore";
+import { useFirePlannerStore } from "@/store/firePlannerStore";
 
 interface User {
   id: string;
@@ -25,8 +29,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: true,
 
   login: async (email, password) => {
+    clearAllUserLocalData();
+
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error || !data.user) throw new Error(error?.message || "Login failed");
+
+    ensureLocalDataBelongsToUser(data.user.id);
 
     const user: User = {
       id: data.user.id,
@@ -39,6 +47,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   register: async (formData) => {
+    clearAllUserLocalData();
+
     const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
@@ -53,6 +63,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
     if (error || !data.user) throw new Error(error?.message || "Registration failed");
 
+    ensureLocalDataBelongsToUser(data.user.id);
+
     const user: User = {
       id: data.user.id,
       email: data.user.email ?? formData.email,
@@ -64,6 +76,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: () => {
     void supabase.auth.signOut();
+    clearAllUserLocalData();
+    useProfileStore.getState().resetProfile();
+    useTaxWizardStore.getState().resetTaxState();
+    useFirePlannerStore.getState().resetFireState();
     set({ user: null, isAuthenticated: false });
     if (typeof window !== "undefined") window.location.href = "/login";
   },
@@ -76,6 +92,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         return;
       }
       const u = session.user;
+
+      ensureLocalDataBelongsToUser(u.id);
+
       set({
         user: {
           id: u.id,

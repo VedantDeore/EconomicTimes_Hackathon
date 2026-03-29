@@ -12,11 +12,13 @@ import {
 import KPICard from "@/components/shared/KPICard";
 import DonutChart from "@/components/charts/DonutChart";
 import AnimatedCounter from "@/components/shared/AnimatedCounter";
+import EditableProfileSummary from "@/components/EditableProfileSummary";
 import { useAuthStore } from "@/store/authStore";
 import { useProfileStore } from "@/store/profileStore";
 import type { FinancialProfile } from "@/store/profileStore";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import { getLatestHealthScore, getLatestTaxAnalysis, getLatestFirePlan } from "@/lib/supabaseHistory";
+import { computeHealthReport, profileToHealthInputs } from "@/lib/engine/health";
 
 function sumInvestments(inv: FinancialProfile["existing_investments"] | undefined): number {
   if (!inv) return 0;
@@ -95,10 +97,21 @@ export default function DashboardPage() {
     });
   }, [isAuthenticated, fetchProfile]);
 
+  // Fallback: compute health score from profile if no Supabase history exists
+  useEffect(() => {
+    if (healthScore !== null || !profile) return;
+    const inputs = profileToHealthInputs(profile);
+    const hasData = (profile.annual_income?.net ?? 0) > 0 || (profile.emergency_fund?.months_covered ?? 0) > 0;
+    if (hasData) {
+      const report = computeHealthReport(inputs);
+      setHealthScore(report.overall_score);
+    }
+  }, [healthScore, profile]);
+
   useEffect(() => {
     if (!isAuthenticated || fireNumber === null || fireNumber <= 0) return;
-    const totalInv = sumInvestments(profile?.existing_investments);
-    setFireProgress(Math.min(100, (totalInv / fireNumber) * 100));
+    const totalCorpus = sumInvestments(profile?.existing_investments) + (profile?.emergency_fund?.current_amount ?? 0);
+    setFireProgress(Math.min(100, (totalCorpus / fireNumber) * 100));
   }, [isAuthenticated, profile, fireNumber]);
 
   const hasProfile = useMemo(() => {
@@ -281,9 +294,14 @@ export default function DashboardPage() {
             <p className="mt-1 text-sm text-slate-400">
               Risk Profile: <span className="font-semibold text-emerald-300 capitalize">{profile?.risk_profile || "—"}</span>
             </p>
+            <p className="mt-1 text-sm text-slate-400">
+              Tax Regime: <span className="font-semibold text-cyan-300 capitalize">{profile?.tax_regime || "—"}</span>
+            </p>
           </div>
         </motion.div>
       </div>
+
+      <EditableProfileSummary />
 
       <motion.section initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }} transition={{ duration: 0.45 }}>

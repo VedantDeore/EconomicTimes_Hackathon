@@ -284,10 +284,14 @@ async def health_score(req: HealthRequest):
     # Deterministic scoring
     emergency_score = min(100, (req.emergency_months / 6) * 100) if req.emergency_months > 0 else min(100, (req.emergency_fund / max(req.monthly_expenses * 6, 1)) * 100)
 
-    ideal_life_cover = req.monthly_income * 12 * max(60 - req.age, 10)
+    # Life cover: 10x annual income + dependents factor (higher need with kids)
+    dependents_multiplier = 1 + (req.dependents * 0.25)  # 25% more per dependent
+    ideal_life_cover = req.monthly_income * 12 * 10 * dependents_multiplier
     life_score = min(50, (req.life_cover / max(ideal_life_cover, 1)) * 50) if req.has_life_insurance else 0
+    # Health: 25 for having cover, +25 for adequate cover (₹5L+ base, scaled by dependents)
     health_score_val = 25 if req.has_health_insurance else 0
-    health_adequate = 25 if req.health_cover >= 500000 else (req.health_cover / 500000) * 25
+    health_target = max(500000, 300000 * max(req.dependents + 1, 1))  # Scale health target by family size
+    health_adequate = 25 if req.health_cover >= health_target else (req.health_cover / health_target) * 25
     insurance_score = life_score + health_score_val + health_adequate
 
     n_classes = len(req.investment_breakdown) if req.investment_breakdown else (1 if req.total_investments > 0 else 0)
@@ -484,7 +488,11 @@ async def mf_analyze(req: MFRequest):
 
     total_invested = sum(h.invested_amount for h in req.holdings)
     total_current = sum(h.current_value for h in req.holdings)
-    overall_xirr = ((total_current / max(total_invested, 1)) - 1) * 100
+    # Approximate annualized return (CAGR-style) — more meaningful than simple return %
+    # Assume average holding period of 2 years for a reasonable annualization
+    simple_return = (total_current / max(total_invested, 1)) - 1
+    avg_holding_years = 2.0  # Reasonable assumption for portfolio-level
+    overall_xirr = ((1 + simple_return) ** (1 / avg_holding_years) - 1) * 100 if simple_return > -1 else 0
     expense_drag = sum(h.expense_ratio * h.current_value / 100 for h in req.holdings)
 
     category_map: dict[str, list[str]] = {}

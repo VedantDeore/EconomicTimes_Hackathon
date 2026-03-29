@@ -1,6 +1,8 @@
-"""AI client — Groq only (Mixtral-8x7B)."""
+"""AI client — Groq (Mixtral-8x7B) with proper async wrapping."""
 
 import json
+import asyncio
+from functools import partial
 from app.config import get_settings
 
 settings = get_settings()
@@ -14,7 +16,8 @@ if settings.GROQ_API_KEY:
         _groq_client = None
 
 
-async def _groq_generate(prompt: str, system_prompt: str = "", json_mode: bool = False) -> str:
+def _groq_generate_sync(prompt: str, system_prompt: str = "", json_mode: bool = False) -> str:
+    """Synchronous Groq call — will be wrapped in executor for async."""
     if not _groq_client:
         raise RuntimeError("Groq client not configured — set GROQ_API_KEY in .env")
 
@@ -36,6 +39,15 @@ async def _groq_generate(prompt: str, system_prompt: str = "", json_mode: bool =
     return response.choices[0].message.content or ""
 
 
+async def _groq_generate(prompt: str, system_prompt: str = "", json_mode: bool = False) -> str:
+    """Async wrapper that runs Groq in executor to avoid blocking the event loop."""
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(
+        None,
+        partial(_groq_generate_sync, prompt, system_prompt, json_mode)
+    )
+
+
 async def generate(prompt: str, system_prompt: str = "") -> str:
     if _groq_client:
         try:
@@ -55,43 +67,59 @@ async def generate_json(prompt: str, system_prompt: str = "") -> str:
     return "{}"
 
 
-async def generate_with_tools(
+def _generate_with_tools_sync(
     messages: list[dict],
     tools: list[dict],
     system_prompt: str = "",
 ) -> dict:
-    """Generate a response with tool-calling support (Groq native)."""
+    """Synchronous tool-calling generation."""
     if not _groq_client:
-        return {"type": "text", "content": await generate(messages[-1].get("content", ""), system_prompt)}
+        return {"type": "text", "content": "No AI provider configured."}
 
     all_messages = []
     if system_prompt:
         all_messages.append({"role": "system", "content": system_prompt})
     all_messages.extend(messages)
 
-    try:
-        response = _groq_client.chat.completions.create(
-            model="mixtral-8x7b-32768",
-            messages=all_messages,
-            tools=tools,
-            tool_choice="auto",
-            temperature=0.3,
-            max_tokens=4096,
-        )
+    response = _groq_client.chat.completions.create(
+        model="mixtral-8x7b-32768",
+        messages=all_messages,
+        tools=tools,
+        tool_choice="auto",
+        temperature=0.3,
+        max_tokens=4096,
+    )
 
-        choice = response.choices[0]
-        if choice.message.tool_calls:
-            return {
-                "type": "tool_calls",
-                "tool_calls": [
-                    {
-                        "id": tc.id,
-                        "function": tc.function.name,
-                        "arguments": json.loads(tc.function.arguments),
-                    }
-                    for tc in choice.message.tool_calls
-                ],
-            }
-        return {"type": "text", "content": choice.message.content or ""}
+    choice = response.choices[0]
+    if choice.message.tool_calls:
+        return {
+            "type": "tool_calls",
+            "tool_calls": [
+                {
+                    "id": tc.id,
+                    "function": tc.function.name,
+                    "arguments": json.loads(tc.function.arguments),
+                }
+                for tc in choice.message.tool_calls
+            ],
+        }
+    return {"type": "text", "content": choice.message.content or ""}
+
+
+async def generate_with_tools(
+    messages: list[dict],
+    tools: list[dict],
+    system_prompt: str = "",
+) -> dict:
+    """Generate a response with tool-calling support (Groq native), properly async."""
+    if not _groq_client:
+        return {"type": "text", "content": await generate(messages[-1].get("content", ""), system_prompt)}
+
+    try:
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            None,
+            partial(_generate_with_tools_sync, messages, tools, system_prompt)
+        )
     except Exception:
         return {"type": "text", "content": await generate(messages[-1].get("content", ""), system_prompt)}

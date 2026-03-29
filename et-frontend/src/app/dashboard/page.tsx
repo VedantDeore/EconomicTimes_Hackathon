@@ -312,6 +312,8 @@ export default function DashboardPage() {
             { href: "/fire-planner", title: "FIRE Planner", desc: "Path and milestones to independence", icon: Flame, gradient: "from-orange-500 to-rose-600" },
             { href: "/mf-xray", title: "MF X-Ray", desc: "Portfolio overlap and cost drag", icon: PieChart, gradient: "from-violet-500 to-indigo-600" },
             { href: "/money-health", title: "Money Health", desc: "Six-dimension financial wellness score", icon: Heart, gradient: "from-pink-500 to-rose-600" },
+            { href: "/life-events", title: "Life Events", desc: "Financial advice for major life changes", icon: AlertTriangle, gradient: "from-cyan-500 to-blue-600" },
+            { href: "/couples-planner", title: "Couples Planner", desc: "Joint tax, FIRE, and spending optimization", icon: Users, gradient: "from-purple-500 to-pink-600" },
           ].map((card, i) => (
             <motion.div key={card.href} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: 0.05 * i, duration: 0.4 }}>

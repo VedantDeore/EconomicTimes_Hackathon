@@ -282,7 +282,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
 
         const profile: FinancialProfile = {
           employment_type: row?.employment_type || "salaried",
-          annual_income: { gross, net: gross > 0 ? Math.round(gross * 0.9) : 0 },
+          annual_income: { gross, net: gross > 0 ? gross : 0 },
           monthly_expenses: eb,
           salary_structure: {
             basic: incomeRow?.basic_salary || 0,

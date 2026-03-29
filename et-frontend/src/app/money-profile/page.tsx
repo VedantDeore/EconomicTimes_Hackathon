@@ -181,7 +181,7 @@ function wizardToStoreProfile(w: FinancialProfile): StoreFinancialProfile {
     employment_type: "salaried",
     annual_income: {
       gross: grossAnnual,
-      net: Math.round(grossAnnual * 0.85),
+      net: grossAnnual,
     },
     monthly_expenses: {
       rent: w.rent_paid,

@@ -5,4 +5,5 @@ export const LOCAL_KEYS = {
   profile: "et_finance_local_profile",
   coupleInvite: "et_finance_couple_invite",
   coupleLinked: "et_finance_couple_linked",
+  couplePlan: "et_finance_couple_plan",
 } as const;

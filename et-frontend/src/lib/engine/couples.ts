@@ -81,6 +81,14 @@ export interface CouplesPartnerFields {
   total_debts: number;
 }
 
+export interface CouplesPartnerFieldsExt extends CouplesPartnerFields {
+  age: number;
+  monthly_expenses: number;
+  monthly_sip: number;
+  risk_profile: "conservative" | "moderate" | "aggressive";
+  emergency_fund: number;
+}
+
 export interface CouplesPlannerOptimization {
   combined_net_worth: number;
   income_split_a_pct: number;
@@ -220,5 +228,367 @@ export function computeCouplesPlannerOptimization(
     combined_optimal_tax: combinedOptimal,
     naive_combined_tax: naiveCombined,
     total_savings_vs_naive: Math.max(0, naiveCombined - combinedOptimal),
+  };
+}
+
+/* ================================================================== */
+/*  Money Compatibility Score (6-dimension radar)                      */
+/* ================================================================== */
+
+export interface CompatibilityDimension {
+  label: string;
+  score: number;
+  insight: string;
+}
+
+export interface MoneyCompatibilityResult {
+  overall_score: number;
+  grade: string;
+  dimensions: CompatibilityDimension[];
+  strengths: string[];
+  growth_areas: string[];
+}
+
+export function computeMoneyCompatibility(
+  a: CouplesPartnerFieldsExt,
+  b: CouplesPartnerFieldsExt,
+  taxResult: CouplesPlannerOptimization,
+): MoneyCompatibilityResult {
+  const maxInc = Math.max(a.gross_salary, b.gross_salary, 1);
+  const incRatio = Math.min(a.gross_salary, b.gross_salary) / maxInc;
+  const incomeBalance = Math.round(incRatio * 80 + 20);
+
+  const totalDebt = a.total_debts + b.total_debts;
+  const totalIncome = a.gross_salary + b.gross_salary;
+  const dti = totalIncome > 0 ? totalDebt / totalIncome : 1;
+  const debtHealth = Math.round(Math.max(0, Math.min(100, (1 - dti * 2.5) * 100)));
+
+  const invA = a.total_investments / Math.max(a.gross_salary, 1);
+  const invB = b.total_investments / Math.max(b.gross_salary, 1);
+  const investmentScore = Math.round(Math.min(100, ((invA + invB) / 2) * 250));
+
+  const taxEff = totalIncome > 0
+    ? Math.min(100, (taxResult.total_savings_vs_naive / totalIncome) * 1200 + 40)
+    : 50;
+
+  const monthlyIncome = totalIncome / 12;
+  const totalExp = a.monthly_expenses + b.monthly_expenses;
+  const savRate = monthlyIncome > 0 ? Math.max(0, (monthlyIncome - totalExp) / monthlyIncome) : 0;
+  const savingsScore = Math.round(Math.min(100, savRate * 200));
+
+  const totalEmg = a.emergency_fund + b.emergency_fund;
+  const emgMonths = totalExp > 0 ? totalEmg / totalExp : 0;
+  const emergencyScore = Math.round(Math.min(100, (emgMonths / 6) * 100));
+
+  const dimensions: CompatibilityDimension[] = [
+    {
+      label: "Income Balance",
+      score: incomeBalance,
+      insight: incRatio > 0.7
+        ? "Well-balanced earning power reduces single-income risk"
+        : "Consider cross-skilling or income diversification strategies",
+    },
+    {
+      label: "Debt Health",
+      score: debtHealth,
+      insight: dti < 0.15
+        ? "Very low debt burden — strong financial foundation"
+        : dti < 0.35
+          ? "Manageable debt — accelerating payoff frees cash flow"
+          : "High combined debt — prioritize aggressive repayment",
+    },
+    {
+      label: "Investment Rate",
+      score: investmentScore,
+      insight: (invA + invB) / 2 > 0.3
+        ? "Strong investment-to-income ratio — keep compounding"
+        : "Room to grow — aim for 25-30% of annual income invested",
+    },
+    {
+      label: "Tax Efficiency",
+      score: Math.round(taxEff),
+      insight: taxResult.total_savings_vs_naive > 50000
+        ? "Significant tax optimization unlocked by joint planning"
+        : "Already fairly optimized — small tweaks possible",
+    },
+    {
+      label: "Savings Rate",
+      score: savingsScore,
+      insight: savRate > 0.3
+        ? "Excellent combined savings discipline"
+        : savRate > 0.15
+          ? "Good start — target 30%+ for accelerated wealth building"
+          : "Low savings rate — review expense categories together",
+    },
+    {
+      label: "Emergency Buffer",
+      score: emergencyScore,
+      insight: emgMonths >= 6
+        ? "Healthy emergency fund covers 6+ months"
+        : `Build ${Math.max(1, Math.ceil(6 - emgMonths))} more months of coverage`,
+    },
+  ];
+
+  const overall = Math.round(dimensions.reduce((s, d) => s + d.score, 0) / dimensions.length);
+
+  const grade =
+    overall >= 85 ? "Power Couple"
+      : overall >= 70 ? "Strong Together"
+        : overall >= 55 ? "Growing Together"
+          : overall >= 40 ? "Building Foundation"
+            : "Early Days";
+
+  return {
+    overall_score: overall,
+    grade,
+    dimensions,
+    strengths: dimensions.filter((d) => d.score >= 70).map((d) => d.insight),
+    growth_areas: dimensions.filter((d) => d.score < 55).map((d) => d.insight),
+  };
+}
+
+/* ================================================================== */
+/*  Joint FIRE Calculator (Monte Carlo + milestones)                   */
+/* ================================================================== */
+
+export interface JointFireMilestone {
+  year: number;
+  corpus: number;
+  pct: number;
+  label: string;
+}
+
+export interface JointFireResult {
+  fire_number: number;
+  lean_fire: number;
+  fat_fire: number;
+  coast_fire: number;
+  years_to_fire: number;
+  current_corpus: number;
+  monthly_sip_needed: number;
+  sip_split_a: number;
+  sip_split_b: number;
+  projected_corpus: number;
+  success_probability: number;
+  milestones: JointFireMilestone[];
+}
+
+export function computeJointFire(
+  a: CouplesPartnerFieldsExt,
+  b: CouplesPartnerFieldsExt,
+): JointFireResult {
+  const annualExp = (a.monthly_expenses + b.monthly_expenses) * 12;
+  const currentCorpus = a.total_investments + b.total_investments;
+  const annualSip = (a.monthly_sip + b.monthly_sip) * 12;
+  const nominalReturn = 0.12;
+  const inflationRate = 0.06;
+  const realReturn = (1 + nominalReturn) / (1 + inflationRate) - 1;
+  const swr = 0.04;
+
+  const fireNumber = Math.round(annualExp / swr);
+  const leanFire = Math.round((annualExp * 0.7) / swr);
+  const fatFire = Math.round((annualExp * 1.3) / swr);
+
+  let years = 0;
+  let corpus = currentCorpus;
+  while (corpus < fireNumber && years < 50) {
+    corpus = corpus * (1 + realReturn) + annualSip;
+    years++;
+  }
+  if (years >= 50) years = 50;
+
+  const targetYears = Math.max(10, Math.min(35, 55 - Math.min(a.age, b.age)));
+  const mr = realReturn / 12;
+  const months = targetYears * 12;
+  const fvFactor = months > 0 ? (Math.pow(1 + mr, months) - 1) / mr : 1;
+  const corpusGrowth = currentCorpus * Math.pow(1 + mr, months);
+  const sipNeeded = Math.max(0, Math.round((fireNumber - corpusGrowth) / fvFactor));
+
+  const totalIncome = a.gross_salary + b.gross_salary;
+  const splitRatio = totalIncome > 0 ? a.gross_salary / totalIncome : 0.5;
+
+  const projectedCorpus = Math.round(
+    currentCorpus * Math.pow(1 + realReturn, years) +
+    annualSip * (years > 0 ? (Math.pow(1 + realReturn, years) - 1) / realReturn : 0),
+  );
+
+  let successes = 0;
+  const sims = 1000;
+  for (let s = 0; s < sims; s++) {
+    let sim = currentCorpus;
+    let hit = false;
+    for (let y = 0; y < targetYears; y++) {
+      const r = realReturn + (Math.random() + Math.random() + Math.random() - 1.5) * 0.12;
+      sim = sim * (1 + r) + annualSip;
+      if (sim >= fireNumber) { hit = true; break; }
+    }
+    if (hit) successes++;
+  }
+
+  const coastFire = Math.round(fireNumber / Math.pow(1 + realReturn, targetYears));
+
+  const milestones: JointFireMilestone[] = [];
+  let running = currentCorpus;
+  let leanHit = false, fireHit = false, fatHit = false;
+  for (let y = 1; y <= Math.min(years + 5, 45); y++) {
+    running = running * (1 + realReturn) + annualSip;
+    const pct = Math.min(100, Math.round((running / fireNumber) * 100));
+    if (!leanHit && running >= leanFire) {
+      milestones.push({ year: y, corpus: Math.round(running), pct, label: "Lean FIRE" });
+      leanHit = true;
+    } else if (!fireHit && running >= fireNumber) {
+      milestones.push({ year: y, corpus: Math.round(running), pct: 100, label: "FIRE" });
+      fireHit = true;
+    } else if (!fatHit && running >= fatFire) {
+      milestones.push({ year: y, corpus: Math.round(running), pct, label: "Fat FIRE" });
+      fatHit = true;
+    } else if (y % 5 === 0) {
+      milestones.push({ year: y, corpus: Math.round(running), pct, label: `Year ${y}` });
+    }
+  }
+
+  return {
+    fire_number: fireNumber,
+    lean_fire: leanFire,
+    fat_fire: fatFire,
+    coast_fire: coastFire,
+    years_to_fire: years,
+    current_corpus: currentCorpus,
+    monthly_sip_needed: sipNeeded,
+    sip_split_a: Math.round(sipNeeded * splitRatio),
+    sip_split_b: Math.round(sipNeeded * (1 - splitRatio)),
+    projected_corpus: projectedCorpus,
+    success_probability: Math.round((successes / sims) * 100),
+    milestones,
+  };
+}
+
+/* ================================================================== */
+/*  Fair Split Calculator (proportional vs equal)                      */
+/* ================================================================== */
+
+export interface FairSplitCategory {
+  category: string;
+  total: number;
+  equal_a: number;
+  equal_b: number;
+  prop_a: number;
+  prop_b: number;
+}
+
+export interface FairSplitResult {
+  ratio_a: number;
+  ratio_b: number;
+  recommended: "proportional" | "equal";
+  categories: FairSplitCategory[];
+  total_monthly: number;
+  prop_a_total: number;
+  prop_b_total: number;
+  equal_each: number;
+  disposable_a: number;
+  disposable_b: number;
+  insight: string;
+}
+
+export function computeFairSplit(
+  a: CouplesPartnerFieldsExt,
+  b: CouplesPartnerFieldsExt,
+  monthlyRent: number,
+): FairSplitResult {
+  const mA = a.gross_salary / 12;
+  const mB = b.gross_salary / 12;
+  const mTotal = mA + mB;
+  const rA = mTotal > 0 ? mA / mTotal : 0.5;
+  const rB = 1 - rA;
+
+  const shared = a.monthly_expenses + b.monthly_expenses;
+  const raw: { category: string; total: number }[] = [
+    { category: "Rent", total: monthlyRent },
+    { category: "Groceries & Food", total: Math.round(shared * 0.25) },
+    { category: "Utilities & Bills", total: Math.round(shared * 0.10) },
+    { category: "Transport", total: Math.round(shared * 0.10) },
+    { category: "Entertainment", total: Math.round(shared * 0.08) },
+    { category: "Insurance", total: Math.round(shared * 0.05) },
+    { category: "Miscellaneous", total: Math.round(shared * 0.07) },
+  ];
+
+  const categories: FairSplitCategory[] = raw.map((c) => ({
+    ...c,
+    equal_a: Math.round(c.total / 2),
+    equal_b: c.total - Math.round(c.total / 2),
+    prop_a: Math.round(c.total * rA),
+    prop_b: c.total - Math.round(c.total * rA),
+  }));
+
+  const totalMonthly = categories.reduce((s, c) => s + c.total, 0);
+  const propATotal = categories.reduce((s, c) => s + c.prop_a, 0);
+  const propBTotal = categories.reduce((s, c) => s + c.prop_b, 0);
+  const equalEach = Math.round(totalMonthly / 2);
+
+  const dispA = Math.round(mA - propATotal);
+  const dispB = Math.round(mB - propBTotal);
+
+  const pctA = mA > 0 ? (mA - propATotal) / mA : 0;
+  const pctB = mB > 0 ? (mB - propBTotal) / mB : 0;
+  const eqPctA = mA > 0 ? (mA - equalEach) / mA : 0;
+  const eqPctB = mB > 0 ? (mB - equalEach) / mB : 0;
+
+  const recommended: "proportional" | "equal" =
+    Math.abs(pctA - pctB) <= Math.abs(eqPctA - eqPctB) ? "proportional" : "equal";
+
+  const insight =
+    Math.abs(rA - 0.5) > 0.1
+      ? `With a ${Math.round(rA * 100)}:${Math.round(rB * 100)} income split, proportional sharing ensures both retain similar discretionary-income percentages.`
+      : "Incomes are fairly balanced, so equal splitting is practical and fair.";
+
+  return {
+    ratio_a: Math.round(rA * 100),
+    ratio_b: Math.round(rB * 100),
+    recommended,
+    categories,
+    total_monthly: totalMonthly,
+    prop_a_total: propATotal,
+    prop_b_total: propBTotal,
+    equal_each: equalEach,
+    disposable_a: dispA,
+    disposable_b: dispB,
+    insight,
+  };
+}
+
+/* ================================================================== */
+/*  Full Combined Analysis (runs all engines)                          */
+/* ================================================================== */
+
+export interface CouplesFullResult {
+  tax: CouplesPlannerOptimization;
+  compatibility: MoneyCompatibilityResult;
+  fire: JointFireResult;
+  fairSplit: FairSplitResult;
+  partnerA: CouplesPartnerFieldsExt;
+  partnerB: CouplesPartnerFieldsExt;
+  monthlyRent: number;
+  timestamp: string;
+}
+
+export function computeFullCouplesAnalysis(
+  a: CouplesPartnerFieldsExt,
+  b: CouplesPartnerFieldsExt,
+  monthlyRent: number,
+): CouplesFullResult {
+  const tax = computeCouplesPlannerOptimization(a, b, monthlyRent);
+  const compatibility = computeMoneyCompatibility(a, b, tax);
+  const fire = computeJointFire(a, b);
+  const fairSplit = computeFairSplit(a, b, monthlyRent);
+
+  return {
+    tax,
+    compatibility,
+    fire,
+    fairSplit,
+    partnerA: { ...a },
+    partnerB: { ...b },
+    monthlyRent,
+    timestamp: new Date().toISOString(),
   };
 }

@@ -82,19 +82,24 @@ export default function DashboardPage() {
     if (!isLoading && !isAuthenticated) router.push("/login");
   }, [isLoading, isAuthenticated, router]);
   useEffect(() => {
-    if (isAuthenticated) {
-      void fetchProfile();
-      void getLatestHealthScore().then((r) => { if (r) setHealthScore(r.overall_score); });
-      void getLatestTaxAnalysis().then((r) => { if (r) setTaxSavings(r.savings_potential); });
-      void getLatestFirePlan().then((r) => {
-        if (r) {
-          setFireNumber(r.fire_number);
-          const totalInv = sumInvestments(profile?.existing_investments);
-          if (r.fire_number > 0) setFireProgress(Math.min(100, (totalInv / r.fire_number) * 100));
-        }
-      });
-    }
-  }, [fetchProfile, isAuthenticated, profile?.existing_investments]);
+    if (!isAuthenticated) return;
+    void fetchProfile();
+    void getLatestHealthScore().then((r) => {
+      if (r) setHealthScore(r.overall_score);
+    });
+    void getLatestTaxAnalysis().then((r) => {
+      if (r) setTaxSavings(r.savings_potential);
+    });
+    void getLatestFirePlan().then((r) => {
+      if (r) setFireNumber(r.fire_number);
+    });
+  }, [isAuthenticated, fetchProfile]);
+
+  useEffect(() => {
+    if (!isAuthenticated || fireNumber === null || fireNumber <= 0) return;
+    const totalInv = sumInvestments(profile?.existing_investments);
+    setFireProgress(Math.min(100, (totalInv / fireNumber) * 100));
+  }, [isAuthenticated, profile, fireNumber]);
 
   const hasProfile = useMemo(() => {
     if (!profile) return false;

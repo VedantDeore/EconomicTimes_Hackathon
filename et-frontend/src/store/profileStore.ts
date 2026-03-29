@@ -85,13 +85,13 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
           .from("profiles")
           .select("*")
           .eq("id", userId)
-          .single();
+          .maybeSingle();
 
         const { data: incomeRow } = await supabase
           .from("income")
           .select("*")
           .eq("user_id", userId)
-          .single();
+          .maybeSingle();
 
         if (row) {
           const profile: FinancialProfile = {

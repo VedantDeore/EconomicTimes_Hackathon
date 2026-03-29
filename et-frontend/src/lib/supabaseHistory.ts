@@ -108,6 +108,46 @@ export async function saveChatMessage(role: string, content: string, toolUsed?: 
   });
 }
 
+/* ---------- Couple Plans (uses existing `couples` table) ---------- */
+
+export async function saveCouplePlan(result: Record<string, unknown>) {
+  const userId = await getUserId();
+  if (!userId) return;
+  const tax = result.tax as Record<string, unknown> | undefined;
+  const { error } = await supabase.from("couples").insert({
+    partner_a: userId,
+    status: "analyzed",
+    optimization_results: result,
+    combined_net_worth: (tax?.combined_net_worth as number) ?? 0,
+  });
+  if (error) throw error;
+}
+
+export async function getCouplePlanHistory() {
+  const userId = await getUserId();
+  if (!userId) return [];
+  const { data } = await supabase.from("couples")
+    .select("*")
+    .eq("partner_a", userId)
+    .eq("status", "analyzed")
+    .order("created_at", { ascending: false })
+    .limit(10);
+  return data || [];
+}
+
+export async function getLatestCouplePlan() {
+  const userId = await getUserId();
+  if (!userId) return null;
+  const { data } = await supabase.from("couples")
+    .select("*")
+    .eq("partner_a", userId)
+    .eq("status", "analyzed")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return data;
+}
+
 export async function getChatHistory() {
   const userId = await getUserId();
   if (!userId) return [];
@@ -122,7 +162,7 @@ export async function getLatestHealthScore() {
   if (!userId) return null;
   const { data } = await supabase.from("health_scores")
     .select("*").eq("user_id", userId)
-    .order("calculated_at", { ascending: false }).limit(1).single();
+    .order("calculated_at", { ascending: false }).limit(1).maybeSingle();
   return data;
 }
 
@@ -131,7 +171,7 @@ export async function getLatestTaxAnalysis() {
   if (!userId) return null;
   const { data } = await supabase.from("tax_analyses")
     .select("*").eq("user_id", userId)
-    .order("analyzed_at", { ascending: false }).limit(1).single();
+    .order("analyzed_at", { ascending: false }).limit(1).maybeSingle();
   return data;
 }
 
@@ -140,6 +180,6 @@ export async function getLatestFirePlan() {
   if (!userId) return null;
   const { data } = await supabase.from("fire_plans")
     .select("*").eq("user_id", userId)
-    .order("generated_at", { ascending: false }).limit(1).single();
+    .order("generated_at", { ascending: false }).limit(1).maybeSingle();
   return data;
 }

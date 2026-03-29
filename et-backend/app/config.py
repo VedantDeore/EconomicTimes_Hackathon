@@ -18,11 +18,7 @@ class Settings(BaseModel):
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     HF_TOKEN: str = os.getenv("HF_TOKEN", "")
     AI_SERVICE_URL: str = os.getenv("AI_SERVICE_URL", os.getenv("AI_PORT", "http://127.0.0.1:8000"))
-    CORS_ORIGINS: list[str] = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:3001",
-    ]
+    CORS_ORIGINS: list[str] = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,*").split(",")
 
 
 @lru_cache()

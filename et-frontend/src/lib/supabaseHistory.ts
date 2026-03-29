@@ -76,14 +76,15 @@ export async function getFireHistory() {
 export async function saveMfPortfolio(analysis: Record<string, unknown>) {
   const userId = await getUserId();
   if (!userId) return;
+  const summary = (analysis.portfolio_summary || analysis) as Record<string, unknown>;
   await supabase.from("mf_portfolios").insert({
     user_id: userId,
-    total_invested: analysis.totalInvested,
-    current_value: analysis.totalCurrent,
-    xirr: analysis.portfolioXirr,
-    holdings: analysis.perFund || [],
-    overlap_matrix: analysis.overlapMatrix || [],
-    rebalancing_plan: analysis.rebalance || {},
+    total_invested: summary.total_invested ?? (analysis as Record<string, unknown>).totalInvested ?? 0,
+    current_value: summary.total_current_value ?? (analysis as Record<string, unknown>).totalCurrent ?? 0,
+    xirr: summary.overall_xirr ?? (analysis as Record<string, unknown>).portfolioXirr ?? 0,
+    holdings: analysis.holdings || (analysis as Record<string, unknown>).perFund || [],
+    overlap_matrix: analysis.overlap_matrix || (analysis as Record<string, unknown>).overlapMatrix || [],
+    rebalancing_plan: analysis.rebalancing_suggestions || (analysis as Record<string, unknown>).rebalance || {},
   });
 }
 
@@ -93,6 +94,30 @@ export async function getMfHistory() {
   const { data } = await supabase.from("mf_portfolios")
     .select("*").eq("user_id", userId)
     .order("analyzed_at", { ascending: false }).limit(10);
+  return data || [];
+}
+
+/* ---------- Life Events ---------- */
+
+export async function saveLifeEvent(input: Record<string, unknown>, advice: Record<string, unknown>) {
+  const userId = await getUserId();
+  if (!userId) return;
+  await supabase.from("life_events").insert({
+    user_id: userId,
+    event_type: input.event_type || "other",
+    event_date: input.event_date || new Date().toISOString(),
+    amount: input.amount || 0,
+    description: input.description || "",
+    advice,
+  });
+}
+
+export async function getLifeEventHistory() {
+  const userId = await getUserId();
+  if (!userId) return [];
+  const { data } = await supabase.from("life_events")
+    .select("*").eq("user_id", userId)
+    .order("created_at", { ascending: false }).limit(10);
   return data || [];
 }
 

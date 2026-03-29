@@ -104,10 +104,11 @@ def _find_target_sip(
     years_post_fire = max(life_expectancy - target_fire_age, 1)
     total_years = years_to_fire + years_post_fire
 
-    for _ in range(20):
+    for i in range(20):
         mid = (lo + hi) / 2
         annual_sip = mid * 12
-        returns = np.random.normal(mean_return, vol, (n_sims, total_years))
+        rng = np.random.RandomState(42 + i)  # Deterministic per iteration
+        returns = rng.normal(mean_return, vol, (n_sims, total_years))
         corpus = np.full(n_sims, current_corpus)
 
         for yr in range(years_to_fire):

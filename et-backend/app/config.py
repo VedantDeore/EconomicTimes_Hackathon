@@ -4,8 +4,14 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-_ENV_FILE = Path(__file__).resolve().parent.parent.parent / ".env"
-load_dotenv(_ENV_FILE)
+# Load .env from multiple possible locations
+_APP_DIR = Path(__file__).resolve().parent
+_BACKEND_DIR = _APP_DIR.parent
+_PROJECT_ROOT = _BACKEND_DIR.parent
+
+for _env_path in [_BACKEND_DIR / ".env", _PROJECT_ROOT / ".env"]:
+    if _env_path.exists():
+        load_dotenv(_env_path)
 
 
 class Settings(BaseModel):
@@ -15,6 +21,7 @@ class Settings(BaseModel):
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://localhost:3001",
     ]
 
 

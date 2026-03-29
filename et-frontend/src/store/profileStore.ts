@@ -205,12 +205,16 @@ async function syncRelatedTables(userId: string, w: MoneyProfileWizardPayload) {
 
 async function readInvestmentsAgg(userId: string): Promise<FinancialProfile["existing_investments"]> {
   const base = getDefaultLocalProfile().existing_investments;
-  const { data } = await supabase.from("investments").select("type,current_value").eq("user_id", userId);
+  const { data } = await supabase.from("investments").select("type,current_value,monthly_sip").eq("user_id", userId);
   if (!data?.length) return base;
   const out = { ...base };
   for (const r of data) {
     const k = mapInvType(String(r.type || "other"));
-    (out as Record<string, number>)[k] = ((out as Record<string, number>)[k] || 0) + (Number(r.current_value) || 0);
+    const val = Number(r.current_value) || 0;
+    const sip = Number(r.monthly_sip) || 0;
+    // SIP-active investments with 0 current value still count as present (marker value 1)
+    const effective = val > 0 ? val : sip > 0 ? 1 : 0;
+    (out as Record<string, number>)[k] = ((out as Record<string, number>)[k] || 0) + effective;
   }
   return out;
 }

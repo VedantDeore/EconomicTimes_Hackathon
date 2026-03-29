@@ -20,7 +20,7 @@ import { getHealthHistory, saveHealthScore } from "@/lib/supabaseHistory";
 import ScoreGauge from "@/components/shared/ScoreGauge";
 import RadarChart from "@/components/charts/RadarChart";
 import AlgorithmExplanation from "@/components/shared/AlgorithmExplanation";
-import { Activity, RefreshCw, Sparkles, ListChecks, History } from "lucide-react";
+import { Activity, RefreshCw, Sparkles, ListChecks, History, Download, AlertCircle, CheckCircle2 } from "lucide-react";
 
 const DIMENSION_TITLES: Record<string, string> = {
   emergency: "Emergency Preparedness",
@@ -140,6 +140,8 @@ export default function MoneyHealthPage() {
   const [tweaks, setTweaks] = useState<Partial<HealthInputs>>({});
   const [aiActions, setAiActions] = useState<string[]>([]);
   const [scoreHistory, setScoreHistory] = useState<HealthScoreRow[]>([]);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileMsg, setProfileMsg] = useState<{ type: "success" | "warn" | "error"; text: string } | null>(null);
 
   const derived = useMemo(() => profileToHealthInputs(profile), [profile]);
 
@@ -237,8 +239,45 @@ export default function MoneyHealthPage() {
   };
 
   const loadFromProfile = async () => {
-    setTweaks({});
-    await fetchProfile();
+    setProfileLoading(true);
+    setProfileMsg(null);
+    setError(null);
+    try {
+      setTweaks({});
+      await fetchProfile();
+      // After fetch, check if profile now has meaningful data
+      const p = useProfileStore.getState().profile;
+      const net = p?.annual_income?.net ?? 0;
+      const gross = p?.annual_income?.gross ?? 0;
+      const inv = Object.values(p?.existing_investments || {}).reduce((s, v) => s + (typeof v === "number" ? v : 0), 0);
+      const ef = p?.emergency_fund?.current_amount ?? 0;
+      const hasData = (net > 0 || gross > 0 || inv > 0 || ef > 0);
+
+      if (!hasData) {
+        setProfileMsg({
+          type: "warn",
+          text: "No financial data found in your profile. Complete the Money Profile wizard first, then come back here.",
+        });
+      } else {
+        // Force recalculate with fresh profile data
+        const freshInputs = profileToHealthInputs(p);
+        const freshReport = computeHealthReport(freshInputs);
+        setReport(freshReport);
+        setProfileMsg({
+          type: "success",
+          text: `Profile loaded! Score updated with your real data (₹${((gross || net) / 100000).toFixed(1)}L income, ${inv > 0 ? Object.keys(p?.existing_investments || {}).filter((k) => (p?.existing_investments?.[k] ?? 0) > 0).length : 0} investment types).`,
+        });
+      }
+    } catch {
+      setProfileMsg({
+        type: "error",
+        text: "Could not load profile. Please check your login and try again.",
+      });
+    } finally {
+      setProfileLoading(false);
+      // Auto-dismiss message after 8 seconds
+      setTimeout(() => setProfileMsg(null), 8000);
+    }
   };
 
   const trySampleData = () => {
@@ -292,27 +331,60 @@ export default function MoneyHealthPage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="flex flex-col sm:flex-row flex-wrap gap-3"
+        className="flex flex-col gap-3"
       >
-        <button
-          type="button"
-          onClick={() => void loadFromProfile()}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm
-            bg-gradient-to-r from-emerald-500/20 to-cyan-500/15 border border-emerald-500/40 text-emerald-100
-            hover:border-emerald-400/60 hover:from-emerald-500/30 hover:to-cyan-500/25 transition-all shadow-md shadow-emerald-950/30"
-        >
-          Load from Profile
-        </button>
-        <button
-          type="button"
-          onClick={trySampleData}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm
-            bg-gradient-to-r from-sky-500/25 to-cyan-500/20 border border-cyan-400/45 text-cyan-100
-            hover:border-sky-400/60 hover:from-sky-500/35 hover:to-cyan-500/30 transition-all shadow-md shadow-cyan-950/30"
-        >
-          <Sparkles size={16} className="text-cyan-300 shrink-0" />
-          Try Sample Data
-        </button>
+        <div className="flex flex-row flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => void loadFromProfile()}
+            disabled={profileLoading}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm
+              bg-gradient-to-r from-emerald-500/20 to-cyan-500/15 border border-emerald-500/40 text-emerald-100
+              hover:border-emerald-400/60 hover:from-emerald-500/30 hover:to-cyan-500/25 transition-all shadow-md shadow-emerald-950/30
+              disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {profileLoading ? (
+              <RefreshCw size={16} className="animate-spin text-emerald-300 shrink-0" />
+            ) : (
+              <Download size={16} className="text-emerald-300 shrink-0" />
+            )}
+            {profileLoading ? "Loading…" : "Load from Profile"}
+          </button>
+          <button
+            type="button"
+            onClick={trySampleData}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm
+              bg-gradient-to-r from-sky-500/25 to-cyan-500/20 border border-cyan-400/45 text-cyan-100
+              hover:border-sky-400/60 hover:from-sky-500/35 hover:to-cyan-500/30 transition-all shadow-md shadow-cyan-950/30"
+          >
+            <Sparkles size={16} className="text-cyan-300 shrink-0" />
+            Try Sample Data
+          </button>
+        </div>
+
+        {profileMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className={`flex items-start gap-2 rounded-xl px-4 py-3 text-sm border ${
+              profileMsg.type === "success"
+                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-200"
+                : profileMsg.type === "warn"
+                  ? "bg-amber-500/10 border-amber-500/30 text-amber-200"
+                  : "bg-red-500/10 border-red-500/30 text-red-200"
+            }`}
+          >
+            {profileMsg.type === "success" ? (
+              <CheckCircle2 size={18} className="shrink-0 mt-0.5 text-emerald-400" />
+            ) : profileMsg.type === "warn" ? (
+              <AlertCircle size={18} className="shrink-0 mt-0.5 text-amber-400" />
+            ) : (
+              <AlertCircle size={18} className="shrink-0 mt-0.5 text-red-400" />
+            )}
+            <span>{profileMsg.text}</span>
+          </motion.div>
+        )}
       </motion.div>
 
       {localMode && (

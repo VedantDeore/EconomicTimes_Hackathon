@@ -272,9 +272,9 @@ function wizardCompletenessPercent(w: FinancialProfile): number {
 }
 
 const inputClass =
-  "mt-1 w-full px-3 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/50";
+  "mt-1 w-full px-3 py-2.5 rounded-xl bg-white border border-gray-300 text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00D09C]/40 focus:border-[#00D09C]/50";
 
-const labelClass = "block text-xs font-medium text-slate-400";
+const labelClass = "block text-xs font-medium text-gray-500";
 
 export default function MoneyProfilePage() {
   const { isAuthenticated } = useAuth();
@@ -453,25 +453,25 @@ export default function MoneyProfilePage() {
 
   if (!hydrated) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh] bg-slate-950 text-white">
+      <div className="flex items-center justify-center min-h-[50vh] bg-gray-50 text-gray-900">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
-          <p className="text-sm text-slate-500">Loading Money Profile…</p>
+          <Loader2 className="w-8 h-8 text-[#00D09C] animate-spin" />
+          <p className="text-sm text-gray-400">Loading Money Profile…</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white pb-16">
+    <div className="min-h-screen bg-gray-50 text-gray-900 pb-16">
       <div className="max-w-2xl mx-auto px-4 pt-8 space-y-6">
         <div className="flex items-start gap-3">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-600 text-white shadow-lg shrink-0">
+          <div className="p-3 rounded-xl bg-[#00D09C] text-white shadow-sm shrink-0">
             <Wallet className="w-6 h-6" />
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">DhanGuru Money Profile</h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               Step-by-step setup for DhanGuru. When you are logged in, your answers are saved to Supabase (profiles, income, goals, investments, insurance, debts).
             </p>
           </div>
@@ -480,7 +480,7 @@ export default function MoneyProfilePage() {
         <div
           className={cn(
             "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium border",
-            dbConnected ? "bg-emerald-500/10 border-emerald-500/25 text-emerald-300" : "bg-amber-500/10 border-amber-500/25 text-amber-300"
+            dbConnected ? "bg-[#00D09C]/10 border-[#00D09C]/20 text-[#00D09C]" : "bg-amber-50 border-amber-200 text-amber-600"
           )}
         >
           {dbConnected ? <Database className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
@@ -496,33 +496,33 @@ export default function MoneyProfilePage() {
           </button>
         </div>
 
-        <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-800/50 backdrop-blur border border-slate-700/50">
+        <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-gray-200">
           <div
-            className="relative w-16 h-16 rounded-full border-4 border-slate-700 flex items-center justify-center shrink-0"
+            className="relative w-16 h-16 rounded-full border-4 border-gray-300 flex items-center justify-center shrink-0"
             style={{
-              background: `conic-gradient(rgb(52 211 153) ${completeness * 3.6}deg, rgb(30 41 59) 0deg)`,
+              background: `conic-gradient(#00D09C ${completeness * 3.6}deg, #e5e7eb 0deg)`,
             }}
           >
-            <div className="absolute inset-1 rounded-full bg-slate-900 flex items-center justify-center">
-              <span className="text-sm font-bold text-emerald-400">{completeness}%</span>
+            <div className="absolute inset-1 rounded-full bg-white flex items-center justify-center">
+              <span className="text-sm font-bold text-[#00D09C]">{completeness}%</span>
             </div>
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-slate-500 uppercase tracking-wide">Profile completeness</p>
-            <p className="text-sm font-medium text-white">Fill each step to improve accuracy of insights.</p>
+            <p className="text-xs text-gray-400 uppercase tracking-wide">Profile completeness</p>
+            <p className="text-sm font-medium text-gray-900">Fill each step to improve accuracy of insights.</p>
           </div>
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-between text-xs text-slate-500">
+          <div className="flex justify-between text-xs text-gray-400">
             <span>
               Step {step} of 6
             </span>
             <span>{Math.round((step / 6) * 100)}% through</span>
           </div>
-          <div className="h-2 rounded-full bg-slate-800 overflow-hidden border border-slate-700/50">
+          <div className="h-2 rounded-full bg-gray-200 overflow-hidden border border-gray-200">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500"
+              className="h-full rounded-full bg-[#00D09C]"
               initial={false}
               animate={{ width: `${(step / 6) * 100}%` }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -531,10 +531,10 @@ export default function MoneyProfilePage() {
         </div>
 
         {error && (
-          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm">{error}</div>
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>
         )}
         {savedFlash && (
-          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-[#00D09C]/10 border border-[#00D09C]/20 text-[#00D09C] text-sm flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
             Opening dashboard…
           </div>
@@ -550,12 +550,12 @@ export default function MoneyProfilePage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -28 }}
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-2xl bg-slate-800/50 backdrop-blur border border-slate-700/50 p-6 shadow-xl shadow-black/20"
+              className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm"
             >
               {step === 1 && (
                 <div className="space-y-5">
-                  <div className="flex items-center gap-2 text-white font-semibold">
-                    <User className="w-5 h-5 text-cyan-400" />
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
+                    <User className="w-5 h-5 text-[#00D09C]" />
                     Basics
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -582,17 +582,17 @@ export default function MoneyProfilePage() {
                       />
                     </label>
                   </div>
-                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/40 border border-slate-700/40">
+                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
                     <div>
-                      <p className="text-sm font-medium text-white">Metro city</p>
-                      <p className="text-xs text-slate-500">Auto-detected from common metros; you can override.</p>
+                      <p className="text-sm font-medium text-gray-900">Metro city</p>
+                      <p className="text-xs text-gray-400">Auto-detected from common metros; you can override.</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => setDraft((d) => ({ ...d, is_metro: !d.is_metro }))}
                       className={cn(
                         "relative h-9 w-14 rounded-full transition-colors",
-                        draft.is_metro ? "bg-emerald-600" : "bg-slate-700"
+                        draft.is_metro ? "bg-[#00D09C]" : "bg-gray-300"
                       )}
                       aria-pressed={draft.is_metro}
                     >
@@ -617,7 +617,7 @@ export default function MoneyProfilePage() {
                           <option value="married">Married</option>
                           <option value="divorced">Divorced</option>
                         </select>
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                       </div>
                     </label>
                     <label className={labelClass}>
@@ -636,8 +636,8 @@ export default function MoneyProfilePage() {
 
               {step === 2 && (
                 <div className="space-y-5">
-                  <div className="flex items-center gap-2 text-white font-semibold">
-                    <TrendingUp className="w-5 h-5 text-emerald-400" />
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
+                    <TrendingUp className="w-5 h-5 text-[#00D09C]" />
                     Income
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -687,7 +687,7 @@ export default function MoneyProfilePage() {
 
               {step === 3 && (
                 <div className="space-y-5">
-                  <div className="flex items-center gap-2 text-white font-semibold">
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
                     <Building2 className="w-5 h-5 text-amber-400" />
                     Expenses
                   </div>
@@ -735,7 +735,7 @@ export default function MoneyProfilePage() {
                       />
                     </label>
                   </div>
-                  <p className="text-xs text-slate-500">Optional breakdown (helps planning; totals may differ from the headline expense figure).</p>
+                  <p className="text-xs text-gray-400">Optional breakdown (helps planning; totals may differ from the headline expense figure).</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {(
                       [
@@ -772,14 +772,14 @@ export default function MoneyProfilePage() {
               {step === 4 && (
                 <div className="space-y-5">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 text-white font-semibold">
-                      <TrendingUp className="w-5 h-5 text-emerald-400" />
+                    <div className="flex items-center gap-2 text-gray-900 font-semibold">
+                      <TrendingUp className="w-5 h-5 text-[#00D09C]" />
                       Investments
                     </div>
                     <button
                       type="button"
                       onClick={addInvestment}
-                      className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400 hover:text-emerald-300"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-[#00D09C] hover:text-[#00D09C]"
                     >
                       <Plus className="w-4 h-4" />
                       Add investment
@@ -797,12 +797,12 @@ export default function MoneyProfilePage() {
                   </label>
                   <div className="space-y-3">
                     {draft.investments.length === 0 && (
-                      <p className="text-sm text-slate-500">No rows yet. Add mutual funds, PPF, NPS, or other holdings.</p>
+                      <p className="text-sm text-gray-400">No rows yet. Add mutual funds, PPF, NPS, or other holdings.</p>
                     )}
                     {draft.investments.map((inv, idx) => (
                       <div
                         key={idx}
-                        className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-3 rounded-xl bg-slate-900/40 border border-slate-700/40"
+                        className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-3 rounded-xl bg-gray-50 border border-gray-200"
                       >
                         <label className={cn(labelClass, "sm:col-span-3")}>
                           Type
@@ -818,7 +818,7 @@ export default function MoneyProfilePage() {
                                 </option>
                               ))}
                             </select>
-                            <ChevronDown className="absolute right-2 top-[calc(50%+6px)] -translate-y-1/2 w-3.5 h-3.5 text-slate-500 pointer-events-none" />
+                            <ChevronDown className="absolute right-2 top-[calc(50%+6px)] -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
                           </div>
                         </label>
                         <label className={cn(labelClass, "sm:col-span-4")}>
@@ -857,7 +857,7 @@ export default function MoneyProfilePage() {
                           <button
                             type="button"
                             onClick={() => removeInvestment(idx)}
-                            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10"
+                            className="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50"
                             aria-label="Remove investment"
                           >
                             <Minus className="w-4 h-4" />
@@ -871,7 +871,7 @@ export default function MoneyProfilePage() {
 
               {step === 5 && (
                 <div className="space-y-5">
-                  <div className="flex items-center gap-2 text-white font-semibold">
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
                     <Shield className="w-5 h-5 text-violet-400" />
                     Insurance
                   </div>
@@ -897,17 +897,17 @@ export default function MoneyProfilePage() {
                       />
                     </label>
                   </div>
-                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/40 border border-slate-700/40">
+                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
                     <div>
-                      <p className="text-sm font-medium text-white">Term plan</p>
-                      <p className="text-xs text-slate-500">I have an active term life policy.</p>
+                      <p className="text-sm font-medium text-gray-900">Term plan</p>
+                      <p className="text-xs text-gray-400">I have an active term life policy.</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => setDraft((d) => ({ ...d, has_term_plan: !d.has_term_plan }))}
                       className={cn(
                         "relative h-9 w-14 rounded-full transition-colors",
-                        draft.has_term_plan ? "bg-emerald-600" : "bg-slate-700"
+                        draft.has_term_plan ? "bg-[#00D09C]" : "bg-gray-300"
                       )}
                       aria-pressed={draft.has_term_plan}
                     >
@@ -924,12 +924,12 @@ export default function MoneyProfilePage() {
 
               {step === 6 && (
                 <div className="space-y-5">
-                  <div className="flex items-center gap-2 text-white font-semibold">
-                    <Goal className="w-5 h-5 text-cyan-400" />
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
+                    <Goal className="w-5 h-5 text-[#00D09C]" />
                     Goals and risk
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 mb-2">Risk profile</p>
+                    <p className="text-xs text-gray-400 mb-2">Risk profile</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {(
                         [
@@ -945,15 +945,15 @@ export default function MoneyProfilePage() {
                           className={cn(
                             "text-left p-4 rounded-xl border transition-colors",
                             draft.risk_profile === r.id
-                              ? "border-emerald-500/60 bg-emerald-500/10"
-                              : "border-slate-700/50 bg-slate-900/30 hover:border-slate-600"
+                              ? "border-[#00D09C] bg-[#00D09C]/8"
+                              : "border-gray-200 bg-gray-50 hover:border-gray-400"
                           )}
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <span className="text-sm font-semibold text-white">{r.title}</span>
-                            {draft.risk_profile === r.id && <Check className="w-4 h-4 text-emerald-400" />}
+                            <span className="text-sm font-semibold text-gray-900">{r.title}</span>
+                            {draft.risk_profile === r.id && <Check className="w-4 h-4 text-[#00D09C]" />}
                           </div>
-                          <p className="text-xs text-slate-500 mt-1">{r.desc}</p>
+                          <p className="text-xs text-gray-400 mt-1">{r.desc}</p>
                         </button>
                       ))}
                     </div>
@@ -968,29 +968,29 @@ export default function MoneyProfilePage() {
                       onChange={(e) => setDraft((d) => ({ ...d, retirement_age: Number(e.target.value) }))}
                       className={inputClass}
                     />
-                    <span className="text-[11px] text-slate-600 mt-1 block">
+                    <span className="text-[11px] text-gray-400 mt-1 block">
                       Suggested from your age: {defaultRetirementAge(draft.age)} (you can change anytime).
                     </span>
                   </label>
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium text-white">Financial goals</p>
+                    <p className="text-sm font-medium text-gray-900">Financial goals</p>
                     <button
                       type="button"
                       onClick={addGoal}
-                      className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400 hover:text-emerald-300"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-[#00D09C] hover:text-[#00D09C]"
                     >
                       <Plus className="w-4 h-4" />
                       Add goal
                     </button>
                   </div>
                   {draft.goals.length === 0 && (
-                    <p className="text-sm text-slate-500">Add at least one goal to finish.</p>
+                    <p className="text-sm text-gray-400">Add at least one goal to finish.</p>
                   )}
                   <div className="space-y-3">
                     {draft.goals.map((g, idx) => (
                       <div
                         key={idx}
-                        className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-3 rounded-xl bg-slate-900/40 border border-slate-700/40"
+                        className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-3 rounded-xl bg-gray-50 border border-gray-200"
                       >
                         <label className={cn(labelClass, "sm:col-span-4")}>
                           Name
@@ -1016,7 +1016,7 @@ export default function MoneyProfilePage() {
                                 </option>
                               ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-[calc(50%+6px)] -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-[calc(50%+6px)] -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                           </div>
                         </label>
                         <label className={cn(labelClass, "sm:col-span-2")}>
@@ -1042,7 +1042,7 @@ export default function MoneyProfilePage() {
                           <button
                             type="button"
                             onClick={() => removeGoal(idx)}
-                            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10"
+                            className="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50"
                             aria-label="Remove goal"
                           >
                             <Minus className="w-4 h-4" />
@@ -1065,8 +1065,8 @@ export default function MoneyProfilePage() {
             className={cn(
               "inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border text-sm font-medium transition-colors",
               step <= 1
-                ? "border-slate-800 text-slate-600 cursor-not-allowed"
-                : "border-slate-700 text-slate-200 hover:bg-slate-800/80"
+                ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                : "border-gray-300 text-gray-700 hover:bg-gray-200/80"
             )}
           >
             <ArrowLeft className="w-4 h-4" />
@@ -1081,8 +1081,8 @@ export default function MoneyProfilePage() {
                 className={cn(
                   "inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors",
                   stepValid
-                    ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 hover:shadow-lg hover:shadow-emerald-500/20"
-                    : "bg-slate-800 text-slate-500 cursor-not-allowed"
+                    ? "bg-[#00D09C] text-slate-950 hover:shadow-md"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 )}
               >
                 Next
@@ -1096,8 +1096,8 @@ export default function MoneyProfilePage() {
                 className={cn(
                   "inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors",
                   stepValid && !isSaving
-                    ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 hover:shadow-lg hover:shadow-emerald-500/20"
-                    : "bg-slate-800 text-slate-500 cursor-not-allowed"
+                    ? "bg-[#00D09C] text-slate-950 hover:shadow-md"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 )}
               >
                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}

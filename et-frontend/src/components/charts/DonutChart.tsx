@@ -8,7 +8,7 @@ export interface DonutSlice {
   color?: string;
 }
 
-const DEFAULT_COLORS = ["#10b981", "#06b6d4", "#f59e0b", "#8b5cf6"];
+const DEFAULT_COLORS = ["#00D09C", "#00D09C", "#f59e0b", "#8b5cf6"];
 
 export interface DonutChartProps {
   data: DonutSlice[];
@@ -20,7 +20,7 @@ export default function DonutChart({ data, centerLabel, centerValue }: DonutChar
   const total = data.reduce((s, d) => s + d.value, 0) || 1;
 
   return (
-    <div className="h-[min(22rem,55vh)] w-full rounded-xl bg-slate-900/80 p-4 text-white">
+    <div className="h-[min(22rem,55vh)] w-full rounded-xl bg-gray-50 p-4 text-gray-900">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart margin={{ top: 8, right: 108, bottom: 8, left: 8 }}>
           <Pie
@@ -32,7 +32,7 @@ export default function DonutChart({ data, centerLabel, centerValue }: DonutChar
             paddingAngle={2}
             dataKey="value"
             nameKey="name"
-            stroke="#0f172a"
+            stroke="#e5e7eb"
             strokeWidth={2}
             isAnimationActive
             animationDuration={750}
@@ -47,10 +47,10 @@ export default function DonutChart({ data, centerLabel, centerValue }: DonutChar
           </Pie>
           <Tooltip
             contentStyle={{
-              backgroundColor: "#0f172a",
-              border: "1px solid #334155",
+              backgroundColor: "#ffffff",
+              border: "1px solid #e5e7eb",
               borderRadius: "8px",
-              color: "#f8fafc",
+              color: "#1e2330",
             }}
             formatter={(value, _name, item) => {
               const v = typeof value === "number" ? value : Number(value ?? 0);
@@ -74,12 +74,12 @@ export default function DonutChart({ data, centerLabel, centerValue }: DonutChar
           {(centerLabel != null || centerValue != null) && (
             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">
               {centerLabel != null && (
-                <tspan x="50%" dy={centerValue != null ? "-0.55em" : "0"} fill="#94a3b8" fontSize={11}>
+                <tspan x="50%" dy={centerValue != null ? "-0.55em" : "0"} fill="#6b7280" fontSize={11}>
                   {centerLabel}
                 </tspan>
               )}
               {centerValue != null && (
-                <tspan x="50%" dy={centerLabel != null ? "1.15em" : "0"} fill="#f8fafc" fontSize={17} fontWeight={600}>
+                <tspan x="50%" dy={centerLabel != null ? "1.15em" : "0"} fill="#1e2330" fontSize={17} fontWeight={600}>
                   {centerValue}
                 </tspan>
               )}

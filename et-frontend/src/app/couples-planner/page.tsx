@@ -73,7 +73,7 @@ const TABS: { key: TabKey; label: string; icon: typeof Heart }[] = [
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">{label}</label>
+      <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-400">{label}</label>
       {children}
     </div>
   );
@@ -82,11 +82,11 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 function RupeeInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className="relative">
-      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">₹</span>
+      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">₹</span>
       <input
         {...props}
         className={cn(
-          "w-full rounded-xl border border-slate-700/50 bg-slate-900/60 py-2.5 pl-8 pr-3 text-sm text-white placeholder:text-slate-600 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/20",
+          "w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-8 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#00D09C]/50 focus:outline-none",
           props.className,
         )}
       />
@@ -99,7 +99,7 @@ function NumberInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={cn(
-        "w-full rounded-xl border border-slate-700/50 bg-slate-900/60 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/20",
+        "w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#00D09C]/50 focus:outline-none",
         props.className,
       )}
     />
@@ -108,17 +108,17 @@ function NumberInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
 
 function Badge({ children, color = "emerald" }: { children: ReactNode; color?: "emerald" | "cyan" | "amber" | "rose" }) {
   const cls = {
-    emerald: "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",
-    cyan: "bg-cyan-500/15 text-cyan-300 ring-cyan-500/30",
-    amber: "bg-amber-500/15 text-amber-300 ring-amber-500/30",
-    rose: "bg-rose-500/15 text-rose-300 ring-rose-500/30",
+    emerald: "bg-[#00D09C]/15 text-[#00D09C]",
+    cyan: "bg-[#00D09C]/15 text-[#00D09C]",
+    amber: "bg-amber-50 text-amber-800",
+    rose: "bg-red-50 text-red-600",
   }[color];
-  return <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1", cls)}>{children}</span>;
+  return <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold", cls)}>{children}</span>;
 }
 
-function ProgressBar({ pct, color = "#10b981" }: { pct: number; color?: string }) {
+function ProgressBar({ pct, color = "#00D09C" }: { pct: number; color?: string }) {
   return (
-    <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-800 ring-1 ring-slate-700/50">
+    <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-100 border border-gray-200">
       <motion.div
         initial={{ width: 0 }}
         animate={{ width: `${Math.min(100, pct)}%` }}
@@ -281,15 +281,15 @@ export default function CouplesPlannerPage() {
     gradient: string,
   ) {
     return (
-      <div className="space-y-3 rounded-xl border border-slate-700/40 bg-slate-900/30 p-5">
+      <div className="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-5">
         <div className="flex items-center gap-2">
           <div className={cn("h-2 w-2 rounded-full", gradient)} />
-          <p className="text-sm font-semibold text-slate-200">{label}</p>
+          <p className="text-sm font-semibold text-gray-700">{label}</p>
         </div>
         <Field label="Name">
           <input type="text" value={data.name}
             onChange={(e) => set((d) => ({ ...d, name: e.target.value }))}
-            className="w-full rounded-xl border border-slate-700/50 bg-slate-900/60 px-3 py-2.5 text-sm text-white focus:border-emerald-500/50 focus:outline-none"
+            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-[#00D09C]/50 focus:outline-none"
           />
         </Field>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -326,7 +326,7 @@ export default function CouplesPlannerPage() {
         </div>
         <Field label="Risk profile">
           <select value={data.risk_profile} onChange={(e) => set((d) => ({ ...d, risk_profile: e.target.value as CouplesPartnerFieldsExt["risk_profile"] }))}
-            className="w-full rounded-xl border border-slate-700/50 bg-slate-900/60 px-3 py-2.5 text-sm text-white focus:border-emerald-500/50 focus:outline-none">
+            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-[#00D09C]/50 focus:outline-none">
             <option value="conservative">Conservative</option>
             <option value="moderate">Moderate</option>
             <option value="aggressive">Aggressive</option>
@@ -345,12 +345,12 @@ export default function CouplesPlannerPage() {
         {/* Compatibility Hero */}
         <div className="grid gap-6 lg:grid-cols-2">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center gap-4 rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-800/80 via-slate-800/50 to-emerald-900/20 p-8 backdrop-blur-md">
+            className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
             <ScoreGauge score={c.overall_score} size={160} label="Money Compatibility" grade={c.grade} />
             <Badge color={c.overall_score >= 70 ? "emerald" : c.overall_score >= 50 ? "amber" : "rose"}>
               {c.grade}
             </Badge>
-            <p className="text-center text-xs leading-relaxed text-slate-400">
+            <p className="text-center text-xs leading-relaxed text-gray-500">
               Based on 6 financial dimensions: income balance, debt health,
               investment rate, tax efficiency, savings discipline, and emergency preparedness.
             </p>
@@ -364,15 +364,15 @@ export default function CouplesPlannerPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           {c.strengths.length > 0 && (
             <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-              className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 backdrop-blur-md">
+              className="rounded-2xl border border-[#00D09C]/20 bg-[#00D09C]/5 p-5">
               <div className="mb-3 flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                <h3 className="text-sm font-semibold text-emerald-300">Strengths</h3>
+                <CheckCircle2 className="h-4 w-4 text-[#00D09C]" />
+                <h3 className="text-sm font-semibold text-[#00D09C]">Strengths</h3>
               </div>
               <ul className="space-y-2">
                 {c.strengths.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-slate-300">
-                    <ChevronRight className="mt-0.5 h-3 w-3 shrink-0 text-emerald-500" />{s}
+                  <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-gray-700">
+                    <ChevronRight className="mt-0.5 h-3 w-3 shrink-0 text-[#00D09C]" />{s}
                   </li>
                 ))}
               </ul>
@@ -380,15 +380,15 @@ export default function CouplesPlannerPage() {
           )}
           {c.growth_areas.length > 0 && (
             <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}
-              className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5 backdrop-blur-md">
+              className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
               <div className="mb-3 flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-amber-400" />
-                <h3 className="text-sm font-semibold text-amber-300">Growth Areas</h3>
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                <h3 className="text-sm font-semibold text-amber-800">Growth Areas</h3>
               </div>
               <ul className="space-y-2">
                 {c.growth_areas.map((g, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-slate-300">
-                    <ChevronRight className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />{g}
+                  <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-gray-700">
+                    <ChevronRight className="mt-0.5 h-3 w-3 shrink-0 text-amber-600" />{g}
                   </li>
                 ))}
               </ul>
@@ -401,15 +401,15 @@ export default function CouplesPlannerPage() {
           {c.dimensions.map((d, i) => (
             <motion.div key={d.label} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * i }}
-              className="rounded-xl border border-slate-700/40 bg-slate-800/50 p-4 backdrop-blur-md">
+              className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300">{d.label}</span>
+                <span className="text-xs font-semibold text-gray-700">{d.label}</span>
                 <span className={cn("text-sm font-bold tabular-nums",
-                  d.score >= 70 ? "text-emerald-400" : d.score >= 45 ? "text-amber-400" : "text-rose-400"
+                  d.score >= 70 ? "text-[#00D09C]" : d.score >= 45 ? "text-amber-500" : "text-red-600"
                 )}>{d.score}</span>
               </div>
-              <ProgressBar pct={d.score} color={d.score >= 70 ? "#10b981" : d.score >= 45 ? "#f59e0b" : "#f43f5e"} />
-              <p className="mt-2 text-[11px] leading-relaxed text-slate-500">{d.insight}</p>
+              <ProgressBar pct={d.score} color={d.score >= 70 ? "#00D09C" : d.score >= 45 ? "#f59e0b" : "#f43f5e"} />
+              <p className="mt-2 text-[11px] leading-relaxed text-gray-400">{d.insight}</p>
             </motion.div>
           ))}
         </div>
@@ -441,13 +441,13 @@ export default function CouplesPlannerPage() {
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {optCards.map((c, i) => (
             <motion.div key={c.key} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5 backdrop-blur-md">
+              className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
               <div className="mb-2 flex items-center gap-2">
-                <c.icon className="h-4 w-4 text-emerald-400" />
-                <h3 className="text-sm font-semibold text-white">{c.title}</h3>
+                <c.icon className="h-4 w-4 text-[#00D09C]" />
+                <h3 className="text-sm font-semibold text-gray-900">{c.title}</h3>
               </div>
-              <p className="text-xs leading-relaxed text-slate-400">{c.body}</p>
-              <p className="mt-3 text-sm font-semibold text-cyan-300">Potential savings ~ {formatCurrency(c.savings)}</p>
+              <p className="text-xs leading-relaxed text-gray-500">{c.body}</p>
+              <p className="mt-3 text-sm font-semibold text-[#00D09C]">Potential savings ~ {formatCurrency(c.savings)}</p>
             </motion.div>
           ))}
         </div>
@@ -458,13 +458,13 @@ export default function CouplesPlannerPage() {
             { name: nameA, d: r.tax_a, color: "emerald" as const },
             { name: nameB, d: r.tax_b, color: "cyan" as const },
           ]).map((p) => (
-            <div key={p.name} className="rounded-xl border border-slate-700/40 bg-slate-900/40 p-5">
-              <p className={cn("text-sm font-semibold", p.color === "emerald" ? "text-emerald-300" : "text-cyan-300")}>{p.name}</p>
-              <div className="mt-3 space-y-1 text-xs text-slate-400">
-                <p>Old regime: <span className="text-white">{formatCurrency(p.d.old)}</span> (taxable {formatCurrency(p.d.taxable_old)})</p>
-                <p>New regime: <span className="text-white">{formatCurrency(p.d.new)}</span> (taxable {formatCurrency(p.d.taxable_new)})</p>
+            <div key={p.name} className="rounded-xl border border-gray-200 bg-gray-50 p-5">
+              <p className={cn("text-sm font-semibold", p.color === "emerald" ? "text-[#00D09C]" : "text-[#00D09C]")}>{p.name}</p>
+              <div className="mt-3 space-y-1 text-xs text-gray-500">
+                <p>Old regime: <span className="text-gray-900">{formatCurrency(p.d.old)}</span> (taxable {formatCurrency(p.d.taxable_old)})</p>
+                <p>New regime: <span className="text-gray-900">{formatCurrency(p.d.new)}</span> (taxable {formatCurrency(p.d.taxable_new)})</p>
               </div>
-              <p className="mt-3 text-sm text-white">
+              <p className="mt-3 text-sm text-gray-900">
                 Best: <Badge color={p.color}>{p.d.best === "old" ? "Old Regime" : "New Regime"}</Badge>
               </p>
             </div>
@@ -482,18 +482,18 @@ export default function CouplesPlannerPage() {
         {/* FIRE Variants */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {([
-            { label: "Lean FIRE", value: f.lean_fire, desc: "70% expenses", color: "text-cyan-400" },
-            { label: "FIRE Target", value: f.fire_number, desc: "Full expenses", color: "text-emerald-400" },
+            { label: "Lean FIRE", value: f.lean_fire, desc: "70% expenses", color: "text-[#00D09C]" },
+            { label: "FIRE Target", value: f.fire_number, desc: "Full expenses", color: "text-[#00D09C]" },
             { label: "Fat FIRE", value: f.fat_fire, desc: "130% expenses", color: "text-amber-400" },
             { label: "Coast FIRE", value: f.coast_fire, desc: "No more SIP needed", color: "text-violet-400" },
           ]).map((v) => (
             <motion.div key={v.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5 backdrop-blur-md">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{v.label}</p>
+              className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{v.label}</p>
               <p className={cn("mt-1 text-xl font-bold tabular-nums", v.color)}>
                 <AnimatedCounter value={v.value} prefix="₹" duration={0.9} />
               </p>
-              <p className="mt-1 text-[11px] text-slate-500">{v.desc}</p>
+              <p className="mt-1 text-[11px] text-gray-400">{v.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -507,28 +507,28 @@ export default function CouplesPlannerPage() {
 
         {/* SIP needed */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-900/20 to-slate-800/50 p-6 backdrop-blur-md">
-          <h3 className="text-sm font-semibold text-emerald-300">Recommended Monthly SIP</h3>
-          <p className="mt-2 text-3xl font-bold text-white">
+          className="rounded-2xl border border-[#00D09C]/20 bg-[#00D09C]/5 p-6">
+          <h3 className="text-sm font-semibold text-[#00D09C]">Recommended Monthly SIP</h3>
+          <p className="mt-2 text-3xl font-bold text-gray-900">
             <AnimatedCounter value={f.monthly_sip_needed} prefix="₹" duration={1} />
           </p>
-          <p className="mt-1 text-xs text-slate-400">To reach FIRE in optimal timeframe</p>
-          <div className="mt-4 flex flex-wrap gap-4 border-t border-slate-700/40 pt-4">
+          <p className="mt-1 text-xs text-gray-500">To reach FIRE in optimal timeframe</p>
+          <div className="mt-4 flex flex-wrap gap-4 border-t border-gray-200 pt-4">
             <div>
-              <p className="text-[11px] uppercase tracking-wide text-slate-500">{nameA}&apos;s share</p>
-              <p className="text-sm font-semibold text-emerald-300">{formatCurrency(f.sip_split_a)}/mo</p>
+              <p className="text-[11px] uppercase tracking-wide text-gray-400">{nameA}&apos;s share</p>
+              <p className="text-sm font-semibold text-[#00D09C]">{formatCurrency(f.sip_split_a)}/mo</p>
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-wide text-slate-500">{nameB}&apos;s share</p>
-              <p className="text-sm font-semibold text-cyan-300">{formatCurrency(f.sip_split_b)}/mo</p>
+              <p className="text-[11px] uppercase tracking-wide text-gray-400">{nameB}&apos;s share</p>
+              <p className="text-sm font-semibold text-[#00D09C]">{formatCurrency(f.sip_split_b)}/mo</p>
             </div>
           </div>
         </motion.div>
 
         {/* Milestones timeline */}
         {f.milestones.length > 0 && (
-          <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 backdrop-blur-md">
-            <h3 className="mb-4 text-sm font-semibold text-white">FIRE Milestones</h3>
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 className="mb-4 text-sm font-semibold text-gray-900">FIRE Milestones</h3>
             <div className="space-y-3">
               {f.milestones.map((m, i) => {
                 const isKey = m.label === "Lean FIRE" || m.label === "FIRE" || m.label === "Fat FIRE";
@@ -536,20 +536,20 @@ export default function CouplesPlannerPage() {
                   <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
                     className={cn("flex items-center gap-4 rounded-xl p-3",
-                      isKey ? "border border-emerald-500/20 bg-emerald-500/5" : "bg-slate-900/30")}>
+                      isKey ? "border border-[#00D09C]/20 bg-[#00D09C]/5" : "bg-gray-50")}>
                     <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-                      isKey ? "bg-emerald-500/20 text-emerald-300" : "bg-slate-700/50 text-slate-400")}>
+                      isKey ? "bg-[#00D09C]/20 text-[#00D09C]" : "bg-gray-100 text-gray-500")}>
                       Y{m.year}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className={cn("text-sm font-semibold", isKey ? "text-emerald-300" : "text-slate-300")}>{m.label}</span>
+                        <span className={cn("text-sm font-semibold", isKey ? "text-[#00D09C]" : "text-gray-700")}>{m.label}</span>
                         {isKey && <Badge color="emerald">{m.pct}%</Badge>}
                       </div>
-                      <p className="text-xs text-slate-500">{formatCurrency(m.corpus)}</p>
+                      <p className="text-xs text-gray-400">{formatCurrency(m.corpus)}</p>
                     </div>
                     <div className="w-24">
-                      <ProgressBar pct={m.pct} color={isKey ? "#10b981" : "#475569"} />
+                      <ProgressBar pct={m.pct} color={isKey ? "#00D09C" : "#94a3b8"} />
                     </div>
                   </motion.div>
                 );
@@ -568,23 +568,23 @@ export default function CouplesPlannerPage() {
       <div className="space-y-8">
         {/* Income ratio bar */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 backdrop-blur-md">
-          <h3 className="mb-3 text-sm font-semibold text-white">Income Contribution</h3>
-          <div className="flex h-12 overflow-hidden rounded-xl bg-slate-900/80 ring-1 ring-slate-700/50">
+          className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h3 className="mb-3 text-sm font-semibold text-gray-900">Income Contribution</h3>
+          <div className="flex h-12 overflow-hidden rounded-xl bg-gray-100 border border-gray-200">
             <motion.div initial={{ width: 0 }} animate={{ width: `${s.ratio_a}%` }}
               transition={{ duration: 0.7, ease: "easeOut" }}
-              className="flex items-center justify-center bg-gradient-to-r from-emerald-600/90 to-emerald-500/70 text-sm font-bold text-white">
+              className="flex items-center justify-center bg-[#00D09C] text-sm font-bold text-white">
               {s.ratio_a}%
             </motion.div>
             <motion.div initial={{ width: 0 }} animate={{ width: `${s.ratio_b}%` }}
               transition={{ duration: 0.7, ease: "easeOut" }}
-              className="flex items-center justify-center bg-gradient-to-r from-cyan-600/80 to-cyan-500/60 text-sm font-bold text-white">
+              className="flex items-center justify-center bg-[#00D09C]/75 text-sm font-bold text-white">
               {s.ratio_b}%
             </motion.div>
           </div>
-          <div className="mt-2 flex justify-between text-xs text-slate-500">
-            <span className="text-emerald-400/80">{nameA}</span>
-            <span className="text-cyan-400/80">{nameB}</span>
+          <div className="mt-2 flex justify-between text-xs text-gray-400">
+            <span className="text-[#00D09C]">{nameA}</span>
+            <span className="text-[#00D09C]">{nameB}</span>
           </div>
         </motion.div>
 
@@ -593,40 +593,40 @@ export default function CouplesPlannerPage() {
           <Badge color={s.recommended === "proportional" ? "emerald" : "cyan"}>
             Recommended: {s.recommended === "proportional" ? "Proportional Split" : "Equal Split"}
           </Badge>
-          <p className="text-xs text-slate-400">{s.insight}</p>
+          <p className="text-xs text-gray-500">{s.insight}</p>
         </div>
 
         {/* Category table */}
-        <div className="overflow-x-auto rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-md">
+        <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-700/40">
-                <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Category</th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Total</th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-emerald-400/80">{nameA} (prop)</th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-cyan-400/80">{nameB} (prop)</th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">{nameA} (equal)</th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">{nameB} (equal)</th>
+              <tr className="border-b border-gray-200">
+                <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">Category</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">Total</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-[#00D09C]">{nameA} (prop)</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-[#00D09C]">{nameB} (prop)</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">{nameA} (equal)</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400">{nameB} (equal)</th>
               </tr>
             </thead>
             <tbody>
               {s.categories.map((c) => (
-                <tr key={c.category} className="border-b border-slate-700/20 hover:bg-slate-700/10 transition-colors">
-                  <td className="px-5 py-3 font-medium text-slate-300">{c.category}</td>
-                  <td className="px-3 py-3 tabular-nums text-white">{formatCurrency(c.total)}</td>
-                  <td className="px-3 py-3 tabular-nums text-emerald-300">{formatCurrency(c.prop_a)}</td>
-                  <td className="px-3 py-3 tabular-nums text-cyan-300">{formatCurrency(c.prop_b)}</td>
-                  <td className="px-3 py-3 tabular-nums text-slate-400">{formatCurrency(c.equal_a)}</td>
-                  <td className="px-3 py-3 tabular-nums text-slate-400">{formatCurrency(c.equal_b)}</td>
+                <tr key={c.category} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <td className="px-5 py-3 font-medium text-gray-700">{c.category}</td>
+                  <td className="px-3 py-3 tabular-nums text-gray-900">{formatCurrency(c.total)}</td>
+                  <td className="px-3 py-3 tabular-nums text-[#00D09C]">{formatCurrency(c.prop_a)}</td>
+                  <td className="px-3 py-3 tabular-nums text-[#00D09C]">{formatCurrency(c.prop_b)}</td>
+                  <td className="px-3 py-3 tabular-nums text-gray-500">{formatCurrency(c.equal_a)}</td>
+                  <td className="px-3 py-3 tabular-nums text-gray-500">{formatCurrency(c.equal_b)}</td>
                 </tr>
               ))}
-              <tr className="bg-slate-900/40 font-semibold">
-                <td className="px-5 py-3 text-white">Total</td>
-                <td className="px-3 py-3 tabular-nums text-white">{formatCurrency(s.total_monthly)}</td>
-                <td className="px-3 py-3 tabular-nums text-emerald-300">{formatCurrency(s.prop_a_total)}</td>
-                <td className="px-3 py-3 tabular-nums text-cyan-300">{formatCurrency(s.prop_b_total)}</td>
-                <td className="px-3 py-3 tabular-nums text-slate-400">{formatCurrency(s.equal_each)}</td>
-                <td className="px-3 py-3 tabular-nums text-slate-400">{formatCurrency(s.equal_each)}</td>
+              <tr className="bg-gray-50 font-semibold">
+                <td className="px-5 py-3 text-gray-900">Total</td>
+                <td className="px-3 py-3 tabular-nums text-gray-900">{formatCurrency(s.total_monthly)}</td>
+                <td className="px-3 py-3 tabular-nums text-[#00D09C]">{formatCurrency(s.prop_a_total)}</td>
+                <td className="px-3 py-3 tabular-nums text-[#00D09C]">{formatCurrency(s.prop_b_total)}</td>
+                <td className="px-3 py-3 tabular-nums text-gray-500">{formatCurrency(s.equal_each)}</td>
+                <td className="px-3 py-3 tabular-nums text-gray-500">{formatCurrency(s.equal_each)}</td>
               </tr>
             </tbody>
           </table>
@@ -635,16 +635,16 @@ export default function CouplesPlannerPage() {
         {/* Disposable income after split */}
         <div className="grid gap-4 sm:grid-cols-2">
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 backdrop-blur-md">
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-400/80">{nameA} — Disposable Income</p>
-            <p className="mt-2 text-2xl font-bold text-white">{formatCurrency(s.disposable_a)}<span className="text-sm text-slate-500">/mo</span></p>
-            <p className="mt-1 text-[11px] text-slate-500">After proportional expense share</p>
+            className="rounded-2xl border border-[#00D09C]/20 bg-[#00D09C]/5 p-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#00D09C]">{nameA} — Disposable Income</p>
+            <p className="mt-2 text-2xl font-bold text-gray-900">{formatCurrency(s.disposable_a)}<span className="text-sm text-gray-400">/mo</span></p>
+            <p className="mt-1 text-[11px] text-gray-400">After proportional expense share</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-            className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5 backdrop-blur-md">
-            <p className="text-xs font-semibold uppercase tracking-wide text-cyan-400/80">{nameB} — Disposable Income</p>
-            <p className="mt-2 text-2xl font-bold text-white">{formatCurrency(s.disposable_b)}<span className="text-sm text-slate-500">/mo</span></p>
-            <p className="mt-1 text-[11px] text-slate-500">After proportional expense share</p>
+            className="rounded-2xl border border-[#00D09C]/20 bg-[#00D09C]/5 p-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#00D09C]">{nameB} — Disposable Income</p>
+            <p className="mt-2 text-2xl font-bold text-gray-900">{formatCurrency(s.disposable_b)}<span className="text-sm text-gray-400">/mo</span></p>
+            <p className="mt-1 text-[11px] text-gray-400">After proportional expense share</p>
           </motion.div>
         </div>
       </div>
@@ -659,12 +659,12 @@ export default function CouplesPlannerPage() {
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500/30 to-cyan-500/20 ring-1 ring-pink-500/30">
-          <Users className="h-7 w-7 text-pink-400" />
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gray-100">
+          <Users className="h-7 w-7 text-[#00D09C]" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Couples Financial Planner</h1>
-          <p className="text-sm text-slate-400">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Couples Financial Planner</h1>
+          <p className="text-sm text-gray-500">
             Joint tax optimization, money compatibility score, FIRE projection, and fair expense splitting — all in one place.
           </p>
         </div>
@@ -673,27 +673,27 @@ export default function CouplesPlannerPage() {
       {/* Quick actions */}
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={() => { setA({ ...sampleA }); setB({ ...sampleB }); setMonthlyRent(40000); }}
-          className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-200 transition-colors hover:bg-emerald-500/20">
+          className="rounded-xl border border-[#00D09C]/40 bg-[#00D09C]/10 px-4 py-2.5 text-sm font-medium text-[#00D09C] transition-colors hover:bg-[#00D09C]/20">
           <Sparkles className="mr-1.5 inline h-3.5 w-3.5" />Load Sample (Priya & Arjun)
         </button>
         <button type="button" onClick={() => { setA({ ...defaultA }); setB({ ...defaultB }); setMonthlyRent(35000); setResult(null); }}
-          className="rounded-xl border border-slate-600/60 bg-slate-800/50 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800">
+          className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
           Reset Defaults
         </button>
         {profile && (
           <button type="button" onClick={() => void prefillFromProfile()}
-            className="rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2.5 text-sm font-medium text-cyan-200 transition-colors hover:bg-cyan-500/20">
+            className="rounded-xl border border-[#00D09C]/40 bg-[#00D09C]/10 px-4 py-2.5 text-sm font-medium text-[#00D09C] transition-colors hover:bg-[#00D09C]/20">
             <Users className="mr-1.5 inline h-3.5 w-3.5" />Pre-fill from My Profile
           </button>
         )}
       </div>
 
       {/* Partner setup */}
-      <section className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-xl backdrop-blur-md">
-        <h2 className="mb-6 text-lg font-semibold text-white">Partner Setup</h2>
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-6 text-lg font-semibold text-gray-900">Partner Setup</h2>
         <div className="grid gap-8 lg:grid-cols-2">
-          {renderPartnerCard("a", nameA, a, setA, "bg-emerald-500")}
-          {renderPartnerCard("b", nameB, b, setB, "bg-cyan-500")}
+          {renderPartnerCard("a", nameA, a, setA, "bg-[#00D09C]")}
+          {renderPartnerCard("b", nameB, b, setB, "bg-[#00D09C]/70")}
         </div>
 
         <div className="mt-6 max-w-md">
@@ -704,7 +704,7 @@ export default function CouplesPlannerPage() {
 
         <motion.button type="button" disabled={loading} onClick={optimize}
           whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.98 }}
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 to-cyan-500 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-pink-500/20 disabled:opacity-50">
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#00D09C] px-8 py-3.5 text-sm font-bold text-white shadow-sm disabled:opacity-50">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Heart className="h-4 w-4" />}
           {loading ? "Analyzing…" : "Analyze Together"}
         </motion.button>
@@ -723,14 +723,14 @@ export default function CouplesPlannerPage() {
             </div>
 
             {/* Tab bar */}
-            <div className="flex gap-1 overflow-x-auto rounded-xl bg-slate-800/60 p-1 ring-1 ring-slate-700/50 backdrop-blur-md">
+            <div className="flex gap-1 overflow-x-auto rounded-xl bg-gray-100 p-1 border border-gray-200">
               {TABS.map((tab) => (
                 <button key={tab.key} type="button" onClick={() => setActiveTab(tab.key)}
                   className={cn(
                     "flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-all",
                     activeTab === tab.key
-                      ? "bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-white ring-1 ring-emerald-500/30"
-                      : "text-slate-400 hover:text-white hover:bg-slate-700/40",
+                      ? "bg-[#00D09C]/15 text-gray-900"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-50",
                   )}>
                   <tab.icon className="h-4 w-4" />
                   {tab.label}
@@ -754,30 +754,30 @@ export default function CouplesPlannerPage() {
               <div className="flex flex-wrap items-center gap-3">
                 {isAuthenticated && !saved && (
                   <button type="button" onClick={handleSave} disabled={saving}
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-600/60 bg-slate-800/50 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50">
+                    className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 transition-all hover:bg-gray-50 disabled:opacity-50">
                     {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                     {saving ? "Saving…" : "Save Again"}
                   </button>
                 )}
                 {saved && (
-                  <span className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-5 py-2.5 text-sm font-semibold text-emerald-300">
+                  <span className="inline-flex items-center gap-2 rounded-xl border border-[#00D09C]/40 bg-[#00D09C]/10 px-5 py-2.5 text-sm font-semibold text-[#00D09C]">
                     <CheckCircle2 className="h-4 w-4" /> Saved to your account
                   </span>
                 )}
                 <button type="button" onClick={handleDownloadPDF}
-                  className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-200 transition-all hover:bg-cyan-500/20">
+                  className="inline-flex items-center gap-2 rounded-xl border border-[#00D09C]/40 bg-[#00D09C]/10 px-5 py-2.5 text-sm font-semibold text-[#00D09C] transition-all hover:bg-[#00D09C]/20">
                   <Download className="h-4 w-4" /> Download Report (PDF)
                 </button>
                 {history.length > 0 && (
                   <button type="button" onClick={() => setShowHistory((v) => !v)}
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-600/60 bg-slate-800/50 px-5 py-2.5 text-sm font-semibold text-slate-300 transition-all hover:bg-slate-800">
+                    className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50">
                     <Clock className="h-4 w-4" /> {showHistory ? "Hide" : "View"} History ({history.length})
                   </button>
                 )}
               </div>
               {saveMsg && (
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  className={cn("text-xs font-medium", saved ? "text-emerald-400" : "text-amber-400")}>
+                  className={cn("text-xs font-medium", saved ? "text-[#00D09C]" : "text-amber-600")}>
                   {saveMsg}
                 </motion.p>
               )}
@@ -788,10 +788,10 @@ export default function CouplesPlannerPage() {
               {showHistory && history.length > 0 && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                  <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 backdrop-blur-md">
+                  <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
                     <div className="mb-4 flex items-center gap-2">
-                      <FileText className="h-5 w-5 text-slate-400" />
-                      <h3 className="text-sm font-semibold text-white">Past Analyses</h3>
+                      <FileText className="h-5 w-5 text-gray-500" />
+                      <h3 className="text-sm font-semibold text-gray-900">Past Analyses</h3>
                     </div>
                     <div className="space-y-3">
                       {history.map((h, i) => {
@@ -808,36 +808,36 @@ export default function CouplesPlannerPage() {
                         return (
                           <motion.div key={h.id as string || i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.04 }}
-                            className="flex items-center gap-4 rounded-xl border border-slate-700/40 bg-slate-900/40 p-4 transition-colors hover:bg-slate-900/60">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/25">
+                            className="flex items-center gap-4 rounded-xl border border-gray-200 bg-gray-50 p-4 transition-colors hover:bg-gray-100">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#00D09C]/15 text-[#00D09C]">
                               <Heart className="h-4 w-4" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <p className="text-sm font-semibold text-white">{pAName} & {pBName}</p>
-                              <p className="text-xs text-slate-500">{dateStr}</p>
+                              <p className="text-sm font-semibold text-gray-900">{pAName} & {pBName}</p>
+                              <p className="text-xs text-gray-400">{dateStr}</p>
                             </div>
                             <div className="hidden gap-4 text-center sm:flex">
                               {score != null && (
                                 <div>
-                                  <p className="text-xs text-slate-500">Score</p>
-                                  <p className="text-sm font-bold text-emerald-400">{Math.round(score)}</p>
+                                  <p className="text-xs text-gray-400">Score</p>
+                                  <p className="text-sm font-bold text-[#00D09C]">{Math.round(score)}</p>
                                 </div>
                               )}
                               {taxSave != null && (
                                 <div>
-                                  <p className="text-xs text-slate-500">Tax Saved</p>
-                                  <p className="text-sm font-bold text-cyan-300">{formatCurrency(taxSave)}</p>
+                                  <p className="text-xs text-gray-400">Tax Saved</p>
+                                  <p className="text-sm font-bold text-[#00D09C]">{formatCurrency(taxSave)}</p>
                                 </div>
                               )}
                               {fireYrs != null && (
                                 <div>
-                                  <p className="text-xs text-slate-500">FIRE</p>
-                                  <p className="text-sm font-bold text-amber-300">{fireYrs < 50 ? `${fireYrs}y` : "50+"}</p>
+                                  <p className="text-xs text-gray-400">FIRE</p>
+                                  <p className="text-sm font-bold text-amber-700">{fireYrs < 50 ? `${fireYrs}y` : "50+"}</p>
                                 </div>
                               )}
                             </div>
                             <button type="button" onClick={() => loadHistory(h)}
-                              className="rounded-lg bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-300 ring-1 ring-emerald-500/25 transition-all hover:bg-emerald-500/25">
+                              className="rounded-lg bg-[#00D09C]/15 px-3 py-1.5 text-xs font-semibold text-[#00D09C] transition-all hover:bg-[#00D09C]/25">
                               Load
                             </button>
                           </motion.div>

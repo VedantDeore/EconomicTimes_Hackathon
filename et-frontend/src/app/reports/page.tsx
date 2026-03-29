@@ -353,16 +353,16 @@ export default function ReportsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6">
+    <div className="min-h-screen bg-gray-50 text-gray-900 p-6">
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold tracking-tight text-[#00D09C]">
           Reports
         </h1>
-        <p className="text-slate-400 mt-2 max-w-2xl">
+        <p className="text-gray-500 mt-2 max-w-2xl">
           Generate structured summaries from your Money Profile. Preview below; export CSV for spreadsheets.
         </p>
       </motion.div>
@@ -381,18 +381,18 @@ export default function ReportsPage() {
               key={r.id}
               variants={item}
               className={cn(
-                "rounded-2xl border p-5 backdrop-blur-xl transition-shadow",
-                "bg-white/[0.06] border-white/10 shadow-lg shadow-black/20",
-                selected && "ring-2 ring-emerald-500/50 border-emerald-500/30",
+                "rounded-2xl border p-5 transition-shadow shadow-sm",
+                "bg-white border-gray-200",
+                selected && "border-[#00D09C]/50",
               )}
             >
               <div className="flex items-start gap-3">
-                <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 p-3 border border-white/10">
-                  <Icon className="w-6 h-6 text-emerald-400" />
+                <div className="rounded-xl bg-[#00D09C]/10 p-3 border border-gray-200">
+                  <Icon className="w-6 h-6 text-[#00D09C]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="font-semibold text-white text-lg leading-tight">{r.title}</h2>
-                  <p className="text-sm text-slate-400 mt-1">{r.description}</p>
+                  <h2 className="font-semibold text-gray-900 text-lg leading-tight">{r.title}</h2>
+                  <p className="text-sm text-gray-500 mt-1">{r.description}</p>
                 </div>
               </div>
               <motion.button
@@ -400,7 +400,7 @@ export default function ReportsPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => runGenerate(r.id)}
-                className="mt-5 w-full rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-900/30 hover:from-emerald-500 hover:to-cyan-500"
+                className="mt-5 w-full rounded-xl bg-[#00D09C] py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#00D09C]/90"
               >
                 Generate
               </motion.button>
@@ -416,16 +416,16 @@ export default function ReportsPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            className="mt-10 rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-xl p-6 shadow-xl"
+            className="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
           >
             <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
               <div>
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-gray-900">
                   {activeReport?.title ?? "Preview"}
                 </h3>
                 {loading && (
-                  <p className="text-sm text-slate-400 flex items-center gap-2 mt-1">
-                    <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+                  <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
+                    <Loader2 className="w-4 h-4 animate-spin text-[#00D09C]" />
                     Generating preview…
                   </p>
                 )}
@@ -435,14 +435,14 @@ export default function ReportsPage() {
                   <button
                     type="button"
                     onClick={handlePdf}
-                    className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10"
+                    className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   >
                     Download PDF
                   </button>
                   <button
                     type="button"
                     onClick={handleCsv}
-                    className="rounded-lg bg-emerald-600/90 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
+                    className="rounded-lg bg-[#00D09C]/90 px-4 py-2 text-sm font-medium text-white hover:bg-[#00D09C]"
                   >
                     Download CSV
                   </button>
@@ -454,7 +454,7 @@ export default function ReportsPage() {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100"
+                className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
               >
                 PDF generation is coming soon. Your formatted preview below is ready to copy or export as CSV.
               </motion.div>
@@ -464,15 +464,15 @@ export default function ReportsPage() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="space-y-6 text-slate-200"
+                className="space-y-6 text-gray-700"
               >
-                <p className="text-emerald-300/90 font-medium">{preview.headline}</p>
+                <p className="text-[#00D09C] font-medium">{preview.headline}</p>
                 {preview.sections.map((sec) => (
-                  <div key={sec.title} className="rounded-xl border border-white/5 bg-black/20 p-4">
-                    <h4 className="text-sm font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                  <div key={sec.title} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    <h4 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-2">
                       {sec.title}
                     </h4>
-                    <ul className="list-disc list-inside space-y-1.5 text-sm leading-relaxed text-slate-300">
+                    <ul className="list-disc list-inside space-y-1.5 text-sm leading-relaxed text-gray-700">
                       {sec.lines.map((line, i) => (
                         <li key={i}>{line}</li>
                       ))}
@@ -483,7 +483,7 @@ export default function ReportsPage() {
             )}
 
             {loading && (
-              <div className="h-32 flex items-center justify-center text-slate-500 text-sm">
+              <div className="h-32 flex items-center justify-center text-gray-400 text-sm">
                 Preparing sections from your profile…
               </div>
             )}

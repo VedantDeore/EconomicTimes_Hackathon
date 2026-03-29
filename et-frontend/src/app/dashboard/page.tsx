@@ -139,7 +139,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-emerald-500/30 border-t-emerald-500" />
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#00D09C]/30 border-t-[#00D09C]" />
       </div>
     );
   }
@@ -151,11 +151,11 @@ export default function DashboardPage() {
     return (
       <div className="space-y-10">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-          <p className="text-sm font-medium text-emerald-400/90">Welcome to DhanGuru</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-white md:text-3xl">
+          <p className="text-sm font-medium text-[#00D09C]">Welcome to DhanGuru</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
             Hey {displayName}, let&apos;s get started!
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-400">
+          <p className="mt-2 max-w-2xl text-sm text-gray-500">
             Follow these steps to unlock your complete financial dashboard. Each step takes 2-5 minutes.
           </p>
         </motion.div>
@@ -167,32 +167,32 @@ export default function DashboardPage() {
           {ONBOARDING_STEPS.map((step) => (
             <motion.div key={step.step} variants={itemVariants}>
               <Link href={step.href}
-                className="group flex flex-col gap-4 rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 backdrop-blur-md transition-all hover:border-emerald-500/30 hover:bg-slate-800/80">
+                className="group flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:border-[#00D09C]/30 hover:bg-gray-50">
                 <div className="flex items-center gap-3">
                   <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.color} text-white shadow-lg`}>
                     <step.icon className="h-6 w-6" strokeWidth={1.75} />
                   </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-700/50 text-xs font-bold text-slate-400">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-500">
                     {step.step}
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white transition-colors group-hover:text-emerald-400">{step.title}</h3>
-                  <p className="mt-1 text-sm text-slate-500">{step.desc}</p>
+                  <h3 className="font-semibold text-gray-900 transition-colors group-hover:text-[#00D09C]">{step.title}</h3>
+                  <p className="mt-1 text-sm text-gray-400">{step.desc}</p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-slate-600 transition-colors group-hover:text-emerald-400 self-end" />
+                <ChevronRight className="h-5 w-5 text-gray-400 transition-colors group-hover:text-[#00D09C] self-end" />
               </Link>
             </motion.div>
           ))}
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-          className="rounded-2xl border border-amber-500/25 bg-gradient-to-br from-amber-500/10 via-slate-800/50 to-slate-900/80 p-6 backdrop-blur-md">
+          className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
           <div className="flex items-start gap-3">
-            <Sparkles className="h-6 w-6 text-amber-400 shrink-0 mt-0.5" />
+            <Sparkles className="h-6 w-6 text-amber-500 shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-amber-200">Pro tip</p>
-              <p className="mt-1 text-sm text-slate-300">
+              <p className="text-sm font-semibold text-amber-600">Pro tip</p>
+              <p className="mt-1 text-sm text-gray-600">
                 Start with your <strong>Money Profile</strong> — it powers all other features with personalized data.
                 You can also explore any tool with <strong>sample data</strong> to see how it works first!
               </p>
@@ -206,9 +206,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-10">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-        <p className="text-sm font-medium text-emerald-400/90">DhanGuru Dashboard</p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-white md:text-3xl">Welcome back, {displayName}</h1>
-        <p className="mt-2 max-w-2xl text-sm text-slate-400">
+        <p className="text-sm font-medium text-[#00D09C]">DhanGuru Dashboard</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">Welcome back, {displayName}</h1>
+        <p className="mt-2 max-w-2xl text-sm text-gray-500">
           Your consolidated view of net worth, savings, risk gaps, and where AI can move the needle next.
         </p>
       </motion.div>
@@ -244,13 +244,13 @@ export default function DashboardPage() {
       <div className="grid gap-8 lg:grid-cols-5">
         <motion.div className="lg:col-span-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.45 }}>
-          <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 backdrop-blur-md">
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
             <div className="mb-4 flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-white">Asset Allocation</h2>
-                <p className="text-xs text-slate-500">{allocation ? "From your Money Profile" : "Complete your profile to see real allocation"}</p>
+                <h2 className="text-lg font-semibold text-gray-900">Asset Allocation</h2>
+                <p className="text-xs text-gray-400">{allocation ? "From your Money Profile" : "Complete your profile to see real allocation"}</p>
               </div>
-              <PieChart className="h-5 w-5 text-emerald-400/80" aria-hidden />
+              <PieChart className="h-5 w-5 text-[#00D09C]" aria-hidden />
             </div>
             <DonutChart
               data={allocation || [
@@ -267,35 +267,35 @@ export default function DashboardPage() {
 
         <motion.div className="flex flex-col gap-4 lg:col-span-2" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.42, duration: 0.45 }}>
-          <div className="rounded-2xl border border-amber-500/25 bg-gradient-to-br from-amber-500/10 via-slate-800/50 to-slate-900/80 p-6 backdrop-blur-md">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-400 ring-1 ring-amber-500/30">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-500">
                 <Sparkles className="h-5 w-5" aria-hidden />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-amber-400/90">Proactive insight</p>
-                <p className="mt-1 text-sm font-medium leading-relaxed text-white">
+                <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">Proactive insight</p>
+                <p className="mt-1 text-sm font-medium leading-relaxed text-gray-900">
                   {taxSavings && taxSavings > 0
                     ? `You could save ${formatCurrency(taxSavings)} more in taxes this year. Open Tax Wizard for details.`
                     : "Complete your profile and run the Tax Wizard to discover potential tax savings."}
                 </p>
                 <Link href="/mentor"
-                  className="mt-4 inline-block w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 py-2.5 text-center text-sm font-semibold text-slate-900 transition-all hover:shadow-lg hover:shadow-emerald-500/25 sm:w-auto sm:px-5">
+                  className="mt-4 inline-block w-full rounded-xl bg-[#00D09C] py-2.5 text-center text-sm font-semibold text-white transition-all hover:shadow-md sm:w-auto sm:px-5">
                   Open AI Mentor
                 </Link>
               </div>
             </div>
           </div>
-          <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5 backdrop-blur-md">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Quick Stats</p>
-            <p className="mt-2 text-sm text-slate-400">
-              Annual Income: <span className="font-semibold text-white">{profile?.annual_income?.gross ? formatCurrency(profile.annual_income.gross) : "—"}</span>
+          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">Quick Stats</p>
+            <p className="mt-2 text-sm text-gray-500">
+              Annual Income: <span className="font-semibold text-gray-900">{profile?.annual_income?.gross ? formatCurrency(profile.annual_income.gross) : "—"}</span>
             </p>
-            <p className="mt-1 text-sm text-slate-400">
-              Risk Profile: <span className="font-semibold text-emerald-300 capitalize">{profile?.risk_profile || "—"}</span>
+            <p className="mt-1 text-sm text-gray-500">
+              Risk Profile: <span className="font-semibold text-[#00D09C] capitalize">{profile?.risk_profile || "—"}</span>
             </p>
-            <p className="mt-1 text-sm text-slate-400">
-              Tax Regime: <span className="font-semibold text-cyan-300 capitalize">{profile?.tax_regime || "—"}</span>
+            <p className="mt-1 text-sm text-gray-500">
+              Tax Regime: <span className="font-semibold text-[#00D09C] capitalize">{profile?.tax_regime || "—"}</span>
             </p>
           </div>
         </motion.div>
@@ -305,7 +305,7 @@ export default function DashboardPage() {
 
       <motion.section initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }} transition={{ duration: 0.45 }}>
-        <h2 className="mb-4 text-lg font-semibold text-white">Quick actions</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Quick actions</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {[
             { href: "/tax-wizard", title: "Tax Wizard", desc: "Regime comparison and missed deductions", icon: Receipt, gradient: "from-amber-500 to-orange-600" },
@@ -318,15 +318,15 @@ export default function DashboardPage() {
             <motion.div key={card.href} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: 0.05 * i, duration: 0.4 }}>
               <Link href={card.href}
-                className="group flex items-start gap-4 rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5 backdrop-blur-md transition-all hover:border-emerald-500/30 hover:bg-slate-800/80">
+                className="group flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:border-[#00D09C]/30 hover:bg-gray-50">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} text-white shadow-lg`}>
                   <card.icon className="h-6 w-6" strokeWidth={1.75} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-white transition-colors group-hover:text-emerald-400">{card.title}</h3>
-                  <p className="mt-1 text-sm text-slate-500">{card.desc}</p>
+                  <h3 className="font-semibold text-gray-900 transition-colors group-hover:text-[#00D09C]">{card.title}</h3>
+                  <p className="mt-1 text-sm text-gray-400">{card.desc}</p>
                 </div>
-                <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-slate-600 transition-colors group-hover:text-emerald-400" aria-hidden />
+                <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-gray-400 transition-colors group-hover:text-[#00D09C]" aria-hidden />
               </Link>
             </motion.div>
           ))}

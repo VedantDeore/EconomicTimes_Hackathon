@@ -70,7 +70,7 @@ export default function FanChart({ data, fireTarget }: FanChartProps) {
   const merged = mergeFanSeries(data);
 
   return (
-    <div className="h-[min(24rem,60vh)] w-full rounded-xl bg-slate-900/80 p-4 text-slate-100">
+    <div className="h-[min(24rem,60vh)] w-full rounded-xl bg-gray-50 p-4 text-gray-700">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={merged} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <defs>
@@ -88,34 +88,34 @@ export default function FanChart({ data, fireTarget }: FanChartProps) {
             </linearGradient>
             <linearGradient id="fanV3" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#facc15" stopOpacity={0.5} />
-              <stop offset="100%" stopColor="#4ade80" stopOpacity={0.45} />
+              <stop offset="100%" stopColor="#00D09C" stopOpacity={0.45} />
             </linearGradient>
             <linearGradient id="fanV4" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#34d399" stopOpacity={0.55} />
-              <stop offset="100%" stopColor="#059669" stopOpacity={0.65} />
+              <stop offset="0%" stopColor="#00D09C" stopOpacity={0.55} />
+              <stop offset="100%" stopColor="#00a882" stopOpacity={0.65} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="#334155" strokeDasharray="3 3" />
+          <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
           <XAxis
             dataKey="age"
-            tick={{ fill: "#cbd5e1", fontSize: 11 }}
-            tickLine={{ stroke: "#475569" }}
+            tick={{ fill: "#4b5563", fontSize: 11 }}
+            tickLine={{ stroke: "#d1d5db" }}
           />
           <YAxis
-            tick={{ fill: "#cbd5e1", fontSize: 11 }}
-            tickLine={{ stroke: "#475569" }}
+            tick={{ fill: "#4b5563", fontSize: 11 }}
+            tickLine={{ stroke: "#d1d5db" }}
             tickFormatter={(v) =>
               v >= 1e7 ? `${(v / 1e7).toFixed(1)}Cr` : v >= 1e5 ? `${(v / 1e5).toFixed(1)}L` : `${v}`
             }
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#0f172a",
-              border: "1px solid #334155",
+              backgroundColor: "#ffffff",
+              border: "1px solid #e5e7eb",
               borderRadius: "8px",
-              color: "#f8fafc",
+              color: "#1e2330",
             }}
-            labelStyle={{ color: "#e2e8f0" }}
+            labelStyle={{ color: "#374151" }}
             formatter={(value) => [
               (typeof value === "number" ? value : Number(value)).toLocaleString("en-IN"),
               "",

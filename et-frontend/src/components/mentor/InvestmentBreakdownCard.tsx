@@ -8,13 +8,13 @@ interface Props {
 }
 
 const COLORS = [
-  "#10b981",
-  "#06b6d4",
+  "#00D09C",
+  "#00D09C",
   "#f59e0b",
   "#8b5cf6",
   "#ec4899",
   "#f97316",
-  "#14b8a6",
+  "#00D09C",
   "#6366f1",
 ];
 
@@ -31,17 +31,17 @@ export default function InvestmentBreakdownCard({ data }: Props) {
 
   if (chartData.length === 0) {
     return (
-      <div className="mt-2 rounded-xl border border-violet-500/20 bg-slate-950/60 p-4 text-center text-xs text-slate-400">
+      <div className="mt-2 rounded-xl border border-violet-500/20 bg-gray-100 p-4 text-center text-xs text-gray-500">
         No investment data available
       </div>
     );
   }
 
   return (
-    <div className="mt-2 rounded-xl border border-violet-500/20 bg-gradient-to-br from-slate-950/80 to-violet-950/30 p-4">
+    <div className="mt-2 rounded-xl border border-violet-500/20 bg-gradient-to-br from-gray-50 to-violet-50/80 p-4">
       <div className="flex items-center gap-2 mb-3">
         <div className="h-1.5 w-1.5 rounded-full bg-violet-400" />
-        <span className="text-[10px] font-medium uppercase tracking-wider text-violet-300/80">
+        <span className="text-[10px] font-medium uppercase tracking-wider text-violet-700">
           Portfolio Breakdown
         </span>
       </div>
@@ -68,12 +68,13 @@ export default function InvestmentBreakdownCard({ data }: Props) {
                 ))}
               </Pie>
               <Tooltip
-                formatter={(v: number) => formatCurrency(v)}
+                formatter={(v) => formatCurrency(Number(v))}
                 contentStyle={{
-                  background: "#1e293b",
-                  border: "1px solid #334155",
+                  background: "#ffffff",
+                  border: "1px solid #e5e7eb",
                   borderRadius: "8px",
                   fontSize: "11px",
+                  color: "#1e2330",
                 }}
               />
             </PieChart>
@@ -88,9 +89,9 @@ export default function InvestmentBreakdownCard({ data }: Props) {
                   className="h-2 w-2 rounded-full"
                   style={{ backgroundColor: COLORS[idx % COLORS.length] }}
                 />
-                <span className="text-[11px] text-slate-300">{item.name}</span>
+                <span className="text-[11px] text-gray-600">{item.name}</span>
               </div>
-              <span className="text-[11px] font-medium text-slate-200">
+              <span className="text-[11px] font-medium text-gray-700">
                 {formatCurrency(item.value)}
               </span>
             </div>
@@ -98,20 +99,20 @@ export default function InvestmentBreakdownCard({ data }: Props) {
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-2 border-t border-slate-700/40 pt-3">
+      <div className="mt-3 grid grid-cols-3 gap-2 border-t border-gray-200 pt-3">
         <div className="text-center">
-          <p className="text-[9px] text-slate-500 uppercase">Total Value</p>
-          <p className="text-xs font-bold text-white">
+          <p className="text-[9px] text-gray-400 uppercase">Total Value</p>
+          <p className="text-xs font-bold text-gray-900">
             {formatCurrency(totalValue)}
           </p>
         </div>
         <div className="text-center">
-          <p className="text-[9px] text-slate-500 uppercase">Holdings</p>
-          <p className="text-xs font-bold text-white">{numInvestments}</p>
+          <p className="text-[9px] text-gray-400 uppercase">Holdings</p>
+          <p className="text-xs font-bold text-gray-900">{numInvestments}</p>
         </div>
         <div className="text-center">
-          <p className="text-[9px] text-slate-500 uppercase">Monthly SIP</p>
-          <p className="text-xs font-bold text-white">
+          <p className="text-[9px] text-gray-400 uppercase">Monthly SIP</p>
+          <p className="text-xs font-bold text-gray-900">
             {formatCurrency(totalSip)}
           </p>
         </div>

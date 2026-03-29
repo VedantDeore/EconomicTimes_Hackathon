@@ -16,45 +16,45 @@ export default function FireProgressCard({ data }: Props) {
   const successProb = Number(data.success_probability ?? 0);
 
   return (
-    <div className="mt-2 rounded-xl border border-orange-500/20 bg-gradient-to-br from-slate-950/80 to-orange-950/20 p-4">
+    <div className="mt-2 rounded-xl border border-orange-500/20 bg-gradient-to-br from-gray-50 to-orange-50/80 p-4">
       <div className="flex items-center gap-2 mb-3">
         <Flame size={13} className="text-orange-400" />
-        <span className="text-[10px] font-medium uppercase tracking-wider text-orange-300/80">
+        <span className="text-[10px] font-medium uppercase tracking-wider text-orange-700">
           FIRE Plan
         </span>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-lg bg-slate-800/50 p-3 text-center">
-          <p className="text-[9px] text-slate-500 uppercase mb-1">
+        <div className="rounded-lg bg-gray-100 p-3 text-center">
+          <p className="text-[9px] text-gray-400 uppercase mb-1">
             FIRE Number
           </p>
-          <p className="text-lg font-bold text-white">
+          <p className="text-lg font-bold text-gray-900">
             {formatCurrency(fireNumber)}
           </p>
         </div>
-        <div className="rounded-lg bg-slate-800/50 p-3 text-center">
-          <p className="text-[9px] text-slate-500 uppercase mb-1">
+        <div className="rounded-lg bg-gray-100 p-3 text-center">
+          <p className="text-[9px] text-gray-400 uppercase mb-1">
             Years to FIRE
           </p>
-          <p className="text-lg font-bold text-white">
+          <p className="text-lg font-bold text-gray-900">
             {yearsToFire}{" "}
-            <span className="text-xs text-slate-400 font-normal">yrs</span>
+            <span className="text-xs text-gray-500 font-normal">yrs</span>
           </p>
         </div>
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-3">
-        <div className="flex items-center justify-between rounded-lg bg-cyan-500/10 border border-cyan-500/20 px-3 py-2">
-          <span className="text-[10px] text-cyan-300/80">Monthly SIP</span>
-          <span className="text-xs font-bold text-cyan-300">
+        <div className="flex items-center justify-between rounded-lg bg-[#00D09C]/10 border border-[#00D09C]/20 px-3 py-2">
+          <span className="text-[10px] text-[#00D09C]/90">Monthly SIP</span>
+          <span className="text-xs font-bold text-[#00D09C]">
             {formatCurrency(monthlySip)}
           </span>
         </div>
         {successProb > 0 && (
-          <div className="flex items-center justify-between rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-3 py-2">
-            <span className="text-[10px] text-emerald-300/80">Success</span>
-            <span className="text-xs font-bold text-emerald-300">
+          <div className="flex items-center justify-between rounded-lg bg-[#00D09C]/10 border border-[#00D09C]/20 px-3 py-2">
+            <span className="text-[10px] text-[#00D09C]/90">Success</span>
+            <span className="text-xs font-bold text-[#00D09C]">
               {Math.round(successProb)}%
             </span>
           </div>

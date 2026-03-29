@@ -29,10 +29,10 @@ export function formatPercent(value: number): string {
  * Get color based on a health/score value (0-100)
  */
 export function getScoreColor(score: number): string {
-  if (score >= 80) return "#10b981"; // emerald
-  if (score >= 60) return "#f59e0b"; // amber
-  if (score >= 40) return "#f97316"; // orange
-  return "#ef4444"; // red
+  if (score >= 80) return "#00D09C";
+  if (score >= 60) return "#f59e0b";
+  if (score >= 40) return "#f97316";
+  return "#ef4444";
 }
 
 /**

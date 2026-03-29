@@ -28,7 +28,7 @@ export default function KPICard({
   return (
     <motion.div
       className={cn(
-        "rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5 backdrop-blur-md shadow-lg shadow-black/20",
+        "rounded-2xl border border-gray-200 bg-white p-5 shadow-sm",
         className,
       )}
       initial={{ opacity: 0, y: 8 }}
@@ -38,17 +38,17 @@ export default function KPICard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+          <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
             {title}
           </p>
           <div className="mt-2 flex flex-wrap items-baseline gap-2">
             {isNumeric ? (
               <AnimatedCounter
                 value={value}
-                className="text-2xl font-bold tracking-tight text-white"
+                className="text-2xl font-bold tracking-tight text-gray-900"
               />
             ) : (
-              <span className="text-2xl font-bold tracking-tight text-white">
+              <span className="text-2xl font-bold tracking-tight text-gray-900">
                 {value}
               </span>
             )}
@@ -56,7 +56,7 @@ export default function KPICard({
               <span
                 className={cn(
                   "inline-flex items-center gap-0.5 text-xs font-semibold",
-                  trend.isPositive ? "text-emerald-400" : "text-red-400",
+                  trend.isPositive ? "text-[#00D09C]" : "text-red-500",
                 )}
               >
                 {trend.isPositive ? (
@@ -69,11 +69,11 @@ export default function KPICard({
             ) : null}
           </div>
           {subtitle ? (
-            <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+            <p className="mt-1 text-xs text-gray-400">{subtitle}</p>
           ) : null}
         </div>
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/25"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#00D09C]/10 text-[#00D09C]"
           aria-hidden
         >
           {icon}

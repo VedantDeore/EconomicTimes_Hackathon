@@ -69,7 +69,7 @@ const FIELDS: FieldDef[][] = [
         profilePatch: { risk_profile: String(v) },
         moneyPatch: { risk_profile: String(v) },
       }),
-      color: "text-emerald-300",
+      color: "text-[#00D09C]",
     },
     {
       key: "tax_regime",
@@ -81,7 +81,7 @@ const FIELDS: FieldDef[][] = [
         profilePatch: { tax_regime: String(v) },
         moneyPatch: { tax_regime: String(v) },
       }),
-      color: "text-cyan-300",
+      color: "text-[#00D09C]",
     },
   ],
   // Right column — Emergency & Insurance
@@ -111,7 +111,7 @@ const FIELDS: FieldDef[][] = [
         return Object.values(p.existing_investments).reduce((s, v) => s + (typeof v === "number" ? v : 0), 0);
       },
       patch: () => ({}),
-      color: "text-emerald-300",
+      color: "text-[#00D09C]",
     },
     {
       key: "age",
@@ -159,7 +159,7 @@ function InlineField({
 
   return (
     <div className="flex items-center justify-between gap-3 group min-h-[32px]">
-      <span className="text-slate-400 text-sm">{field.label}</span>
+      <span className="text-gray-500 text-sm">{field.label}</span>
 
       {editing && !isComputed ? (
         <AnimatePresence mode="wait">
@@ -175,7 +175,7 @@ function InlineField({
                 ref={inputRef as React.RefObject<HTMLSelectElement>}
                 value={String(value)}
                 onChange={(e) => onChange(e.target.value)}
-                className="bg-slate-700/80 border border-emerald-500/40 rounded-lg px-3 py-1 text-sm text-white capitalize focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
+                className="rounded-lg border border-gray-300 bg-white px-3 py-1 text-sm capitalize text-gray-900 transition-all focus:border-[#00D09C]/50 focus:outline-none focus:ring-2 focus:ring-[#00D09C]/50"
               >
                 {field.options?.map((o) => (
                   <option key={o} value={o} className="capitalize">{o}</option>
@@ -188,16 +188,16 @@ function InlineField({
                 value={value === 0 ? "" : value}
                 placeholder="0"
                 onChange={(e) => onChange(e.target.value === "" ? 0 : Number(e.target.value))}
-                className="w-32 bg-slate-700/80 border border-emerald-500/40 rounded-lg px-3 py-1 text-sm text-white text-right focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-32 rounded-lg border border-gray-300 bg-white px-3 py-1 text-right text-sm text-gray-900 transition-all focus:border-[#00D09C]/50 focus:outline-none focus:ring-2 focus:ring-[#00D09C]/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
             )}
           </motion.div>
         </AnimatePresence>
       ) : (
-        <span className={`text-sm font-medium ${isComputed ? "text-slate-500 italic" : (field.color || "text-white")}`}>
+        <span className={`text-sm font-medium ${isComputed ? "italic text-gray-500" : (field.color || "text-gray-900")}`}>
           {displayValue()}
           {isComputed && editing && (
-            <span className="ml-1 text-[10px] text-slate-600">(auto)</span>
+            <span className="ml-1 text-[10px] text-gray-400">(auto)</span>
           )}
         </span>
       )}
@@ -279,12 +279,12 @@ export default function EditableProfileSummary({ className }: { className?: stri
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-md p-6 ${className || ""}`}
+      className={`rounded-2xl border border-gray-200 bg-white p-6 shadow-sm ${className || ""}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          <User size={18} className="text-emerald-400" />
+        <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+          <User size={18} className="text-[#00D09C]" />
           Financial Profile Summary
         </h3>
 
@@ -293,14 +293,14 @@ export default function EditableProfileSummary({ className }: { className?: stri
             <>
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-600 text-slate-400 text-xs font-medium hover:bg-slate-700/50 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-500 transition-colors hover:bg-gray-100"
               >
                 <X size={13} /> Cancel
               </button>
               <button
                 onClick={() => void handleSave()}
                 disabled={saving}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-medium hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-[#00D09C]/40 bg-[#00D09C]/10 text-xs font-medium text-[#00D09C] transition-colors hover:bg-[#00D09C]/15 disabled:opacity-50"
               >
                 {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
                 {saving ? "Saving…" : "Save"}
@@ -309,7 +309,7 @@ export default function EditableProfileSummary({ className }: { className?: stri
           ) : (
             <button
               onClick={handleEdit}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-600 text-slate-400 text-xs font-medium hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-300 transition-all"
+              className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-500 transition-all hover:border-[#00D09C]/40 hover:bg-[#00D09C]/10 hover:text-[#00D09C]"
             >
               <Pencil size={13} /> Quick Edit
             </button>
@@ -324,10 +324,10 @@ export default function EditableProfileSummary({ className }: { className?: stri
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className={`mb-4 text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-2 ${
+            className={`mb-4 flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium ${
               flash.includes("Failed")
-                ? "bg-red-500/10 text-red-300 border border-red-500/30"
-                : "bg-emerald-500/10 text-emerald-300 border border-emerald-500/30"
+                ? "border-red-200 bg-red-50 text-red-600"
+                : "border-[#00D09C]/20 bg-[#00D09C]/10 text-[#00D09C]"
             }`}
           >
             <Check size={13} /> {flash}
@@ -339,7 +339,7 @@ export default function EditableProfileSummary({ className }: { className?: stri
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {FIELDS.map((col, ci) => (
           <div key={ci} className="space-y-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
               {COLUMN_HEADERS[ci]}
             </p>
             <div className="space-y-2.5">
@@ -358,7 +358,7 @@ export default function EditableProfileSummary({ className }: { className?: stri
       </div>
 
       {editing && (
-        <p className="mt-4 text-[11px] text-slate-600 text-center">
+        <p className="mt-4 text-center text-[11px] text-gray-400">
           Months Covered & Total Investments are auto-calculated and cannot be edited here.
         </p>
       )}

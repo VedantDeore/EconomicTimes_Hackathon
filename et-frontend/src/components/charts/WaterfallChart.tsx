@@ -16,12 +16,12 @@ interface WaterfallChartProps {
 
 const typeColors: Record<string, string> = {
   income: "bg-blue-500",
-  deduction: "bg-emerald-500",
+  deduction: "bg-[#00D09C]",
   slab: "bg-red-400",
   tax: "bg-red-500",
   cess: "bg-orange-500",
-  rebate: "bg-emerald-400",
-  total: "bg-slate-400",
+  rebate: "bg-[#00D09C]",
+  total: "bg-gray-400",
 };
 
 export default function WaterfallChart({ steps }: WaterfallChartProps) {
@@ -40,12 +40,12 @@ export default function WaterfallChart({ steps }: WaterfallChartProps) {
     <div className="space-y-2">
       {steps.map((step, i) => {
         const width = Math.max(Math.abs(step.running_total) * scale, 2);
-        const color = typeColors[step.type] || "bg-slate-500";
+        const color = typeColors[step.type] || "bg-gray-500";
         const isNegative = step.amount < 0;
 
         return (
           <div key={i} className="flex items-center gap-3">
-            <div className="w-48 text-xs text-slate-400 text-right truncate flex-shrink-0">
+            <div className="w-48 text-xs text-gray-500 text-right truncate flex-shrink-0">
               {step.label}
             </div>
             <div className="flex-1 relative h-7">
@@ -60,7 +60,7 @@ export default function WaterfallChart({ steps }: WaterfallChartProps) {
                 </span>
               </motion.div>
             </div>
-            <div className="w-20 text-xs text-slate-300 text-right flex-shrink-0">
+            <div className="w-20 text-xs text-gray-600 text-right flex-shrink-0">
               {formatAmount(step.running_total)}
             </div>
           </div>

@@ -301,7 +301,7 @@ function computePortfolio(funds: FundRow[]): PortfolioComputed {
   if (totalReturnsPct < 8) score -= 8;
   if (totalReturnsPct >= 15) score += 4;
   if (highOverlapPairs.length > 0) score -= (highOverlapPairs.length * 6);
-  
+
   const highErCount = perFund.filter((f) => f.expense_ratio > 0.8).length;
   score -= (highErCount * 5);
   if (largeShare > 70) score -= 6;
@@ -313,31 +313,31 @@ function computePortfolio(funds: FundRow[]): PortfolioComputed {
     if (f.expense_ratio > 1.0) {
       if (f.category === "Large Cap") {
         switchRecs.push({
-           from: f.fund_name,
-           to: "Passive Nifty 50 Direct Index",
-           reason: `Your ER is ${f.expense_ratio}%. Active Large Caps rarely beat index funds (ER ~0.15%).`,
-           type: "expense",
-           impact: "Save ₹" + Math.round((f.expense_ratio - 0.15)/100 * f.current_value * 10) + " trailing fees over 10Y"
+          from: f.fund_name,
+          to: "Passive Nifty 50 Direct Index",
+          reason: `Your ER is ${f.expense_ratio}%. Active Large Caps rarely beat index funds (ER ~0.15%).`,
+          type: "expense",
+          impact: "Save ₹" + Math.round((f.expense_ratio - 0.15) / 100 * f.current_value * 10) + " trailing fees over 10Y"
         });
       } else if (f.category === "Mid Cap" || f.category === "Small Cap") {
         switchRecs.push({
-           from: f.fund_name,
-           to: `${f.category} Direct Plan`,
-           reason: `ER identical to Regular Plans. Switch to Direct to stop paying commissions.`,
-           type: "expense",
-           impact: "Stop leaking ~1% absolute returns annually"
+          from: f.fund_name,
+          to: `${f.category} Direct Plan`,
+          reason: `ER identical to Regular Plans. Switch to Direct to stop paying commissions.`,
+          type: "expense",
+          impact: "Stop leaking ~1% absolute returns annually"
         });
       }
     }
   });
-  
+
   if (highOverlapPairs.length > 0) {
     switchRecs.push({
-       from: highOverlapPairs[0].a,
-       to: highOverlapPairs[0].b,
-       reason: `These funds overlap significantly (~${Math.round(highOverlapPairs[0].score)}%). They buy the exact same underlying stocks.`,
-       type: "overlap",
-       impact: "Consolidate portfolio risk profile"
+      from: highOverlapPairs[0].a,
+      to: highOverlapPairs[0].b,
+      reason: `These funds overlap significantly (~${Math.round(highOverlapPairs[0].score)}%). They buy the exact same underlying stocks.`,
+      type: "overlap",
+      impact: "Consolidate portfolio risk profile"
     });
   }
 
@@ -389,7 +389,7 @@ export default function MFXRayPage() {
   const { profile } = useFinancialProfile();
   const { fetchProfile } = useProfileStore();
   const [funds, setFunds] = useState<FundRow[]>(DEMO_FUNDS);
-  
+
   // Use DB Profile data, else fallback inline
   const [localAge, setLocalAge] = useState<number>(30);
   const [localRisk, setLocalRisk] = useState<string>("moderate");
@@ -399,7 +399,7 @@ export default function MFXRayPage() {
     // For now, default to 30 unless we implement a dedicated age field
     if (profile?.risk_profile) {
       if (["conservative", "moderate", "aggressive"].includes(profile.risk_profile)) {
-         setLocalRisk(profile.risk_profile);
+        setLocalRisk(profile.risk_profile);
       }
     }
   }, [profile]);
@@ -619,26 +619,26 @@ export default function MFXRayPage() {
 
   const expenseBarData = analyzed
     ? [
-        { label: "10-year", value: analyzed.expenseDrag10y },
-        { label: "20-year", value: analyzed.expenseDrag20y },
-        { label: "30-year", value: analyzed.expenseDrag30y },
-      ]
+      { label: "10-year", value: analyzed.expenseDrag10y },
+      { label: "20-year", value: analyzed.expenseDrag20y },
+      { label: "30-year", value: analyzed.expenseDrag30y },
+    ]
     : [];
 
   return (
-    <div className="max-w-7xl space-y-8 text-white">
+    <div className="max-w-7xl space-y-8 text-gray-900">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center gap-3"
       >
-        <div className="rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 p-3 text-white shadow-lg shadow-emerald-500/20">
+        <div className="rounded-xl bg-[#00D09C] p-3 text-white shadow-sm">
           <LineChart size={24} aria-hidden />
         </div>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">MF Portfolio X-Ray</h1>
-          <p className="text-sm text-slate-400">
-            DhanGuru AI Money Mentor — allocation, overlap, expense drag, and rebalancing ideas
+          <p className="text-sm text-gray-500">
+            DhanGuru Money Mentor — allocation, overlap, expense drag, and rebalancing ideas
           </p>
         </div>
       </motion.div>
@@ -648,10 +648,10 @@ export default function MFXRayPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/20 backdrop-blur-md"
+        className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
       >
-        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-          <PieChart className="h-5 w-5 text-emerald-400" />
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+          <PieChart className="h-5 w-5 text-[#00D09C]" />
           Import or enter holdings
         </h2>
 
@@ -660,7 +660,7 @@ export default function MFXRayPage() {
             type="button"
             onClick={loadSamplePortfolio}
             disabled={parsing}
-            className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl border border-[#00D09C]/20 bg-[#00D09C]/8 px-4 py-2 text-sm font-medium text-[#00D09C] transition hover:bg-[#00D09C]/15 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Load Sample Portfolio
           </button>
@@ -668,7 +668,7 @@ export default function MFXRayPage() {
             type="button"
             onClick={() => void loadFromProfile()}
             disabled={parsing}
-            className="rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl border border-[#00D09C]/20 bg-[#00D09C]/8 px-4 py-2 text-sm font-medium text-[#00D09C] transition hover:bg-[#00D09C]/15 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Load from Profile
           </button>
@@ -676,7 +676,7 @@ export default function MFXRayPage() {
             type="button"
             onClick={clearAll}
             disabled={parsing}
-            className="rounded-xl border border-slate-600 bg-slate-800/50 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Clear All
           </button>
@@ -693,15 +693,15 @@ export default function MFXRayPage() {
             {pdfNotice ? (
               <p className={cn(
                 "mt-2 text-sm font-medium",
-                pdfNotice.startsWith("✅") ? "text-emerald-400" :
-                pdfNotice.startsWith("❌") ? "text-red-400" :
-                "text-amber-400"
+                pdfNotice.startsWith("✅") ? "text-[#00D09C]" :
+                  pdfNotice.startsWith("❌") ? "text-red-400" :
+                    "text-amber-500"
               )}>{pdfNotice}</p>
             ) : null}
           </div>
 
           <div className="space-y-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
               Manual rows
             </p>
             <AnimatePresence initial={false}>
@@ -712,10 +712,10 @@ export default function MFXRayPage() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="grid gap-2 rounded-xl border border-slate-700/60 bg-slate-900/50 p-3 sm:grid-cols-2 lg:grid-cols-6"
+                  className="grid gap-2 rounded-xl border border-gray-300 bg-white p-3 sm:grid-cols-2 lg:grid-cols-6"
                 >
                   <input
-                    className="rounded-lg border border-slate-700 bg-slate-950/80 px-2 py-1.5 text-sm text-white placeholder:text-slate-600 lg:col-span-2"
+                    className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder:text-gray-400 lg:col-span-2"
                     placeholder="Fund name"
                     value={row.fund_name}
                     onChange={(e) => {
@@ -726,7 +726,7 @@ export default function MFXRayPage() {
                     }}
                   />
                   <select
-                    className="rounded-lg border border-slate-700 bg-slate-950/80 px-2 py-1.5 text-sm text-white"
+                    className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900"
                     value={row.category}
                     onChange={(e) => {
                       const v = e.target.value;
@@ -743,7 +743,7 @@ export default function MFXRayPage() {
                   </select>
                   <input
                     type="number"
-                    className="rounded-lg border border-slate-700 bg-slate-950/80 px-2 py-1.5 text-sm text-white"
+                    className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900"
                     placeholder="Invested"
                     value={row.invested_amount || ""}
                     onChange={(e) => {
@@ -757,7 +757,7 @@ export default function MFXRayPage() {
                   />
                   <input
                     type="number"
-                    className="rounded-lg border border-slate-700 bg-slate-950/80 px-2 py-1.5 text-sm text-white"
+                    className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900"
                     placeholder="Current value"
                     value={row.current_value || ""}
                     onChange={(e) => {
@@ -773,7 +773,7 @@ export default function MFXRayPage() {
                     <input
                       type="number"
                       step="0.01"
-                      className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950/80 px-2 py-1.5 text-sm text-white"
+                      className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900"
                       placeholder="TER %"
                       value={row.expense_ratio || ""}
                       onChange={(e) => {
@@ -787,7 +787,7 @@ export default function MFXRayPage() {
                     />
                     <button
                       type="button"
-                      className="rounded-lg border border-red-500/30 p-2 text-red-400 hover:bg-red-500/10"
+                      className="rounded-lg border border-red-200 p-2 text-red-400 hover:bg-red-50"
                       aria-label="Remove row"
                       onClick={() =>
                         setFunds((prev) => prev.filter((f) => f.id !== row.id))
@@ -802,7 +802,7 @@ export default function MFXRayPage() {
             <button
               type="button"
               onClick={() => setFunds((prev) => [...prev, emptyFund()])}
-              className="flex items-center gap-2 rounded-xl border border-dashed border-emerald-500/40 px-4 py-2 text-sm font-medium text-emerald-400 transition hover:bg-emerald-500/10"
+              className="flex items-center gap-2 rounded-xl border border-dashed border-[#00D09C]/40 px-4 py-2 text-sm font-medium text-[#00D09C] transition hover:bg-[#00D09C]/10"
             >
               <Plus className="h-4 w-4" />
               Add fund
@@ -818,7 +818,7 @@ export default function MFXRayPage() {
             onClick={() => void analyzePortfolio()}
             disabled={parsing || funds.every((f) => !f.fund_name.trim() || f.invested_amount <= 0)}
             className={cn(
-              "relative overflow-hidden inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-emerald-500/25 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 border border-white/10"
+              "relative overflow-hidden inline-flex items-center gap-2 rounded-xl bg-[#00D09C] px-8 py-4 text-lg font-bold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300"
             )}
           >
             {parsing ? (
@@ -830,14 +830,14 @@ export default function MFXRayPage() {
           </motion.button>
           {parsing ? (
             <div className="flex min-w-[140px] flex-1 items-center gap-2">
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-800">
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-100">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400"
+                  className="h-full rounded-full bg-[#00D09C]"
                   initial={{ width: 0 }}
                   animate={{ width: `${parsePct}%` }}
                 />
               </div>
-              <span className="text-xs tabular-nums text-slate-400">{parsePct}%</span>
+              <span className="text-xs tabular-nums text-gray-500">{parsePct}%</span>
             </div>
           ) : null}
         </div>
@@ -858,7 +858,7 @@ export default function MFXRayPage() {
                   label: "Total Invested",
                   node: (
                     <AnimatedCounter
-                      className="text-xl font-semibold text-white"
+                      className="text-xl font-semibold text-gray-900"
                       prefix="₹"
                       value={Math.round(analyzed.totalInvested)}
                     />
@@ -868,7 +868,7 @@ export default function MFXRayPage() {
                   label: "Current Value",
                   node: (
                     <AnimatedCounter
-                      className="text-xl font-semibold text-emerald-300"
+                      className="text-xl font-semibold text-[#00D09C]"
                       prefix="₹"
                       value={Math.round(analyzed.totalCurrent)}
                     />
@@ -881,7 +881,7 @@ export default function MFXRayPage() {
                       <AnimatedCounter
                         className={cn(
                           "text-xl font-semibold",
-                          analyzed.totalReturns >= 0 ? "text-emerald-400" : "text-red-400"
+                          analyzed.totalReturns >= 0 ? "text-[#00D09C]" : "text-red-400"
                         )}
                         prefix="₹"
                         value={Math.round(analyzed.totalReturns)}
@@ -889,7 +889,7 @@ export default function MFXRayPage() {
                       <p
                         className={cn(
                           "mt-1 text-sm font-medium tabular-nums",
-                          analyzed.totalReturnsPct >= 0 ? "text-emerald-400/90" : "text-red-400/90"
+                          analyzed.totalReturnsPct >= 0 ? "text-[#00D09C]" : "text-red-400/90"
                         )}
                       >
                         {formatPercent(analyzed.totalReturnsPct)}
@@ -903,7 +903,7 @@ export default function MFXRayPage() {
                     <motion.p
                       initial={{ scale: 0.92 }}
                       animate={{ scale: 1 }}
-                      className="text-3xl font-bold tracking-tight text-emerald-400"
+                      className="text-3xl font-bold tracking-tight text-[#00D09C]"
                     >
                       {formatPercent(analyzed.portfolioXirr)}
                     </motion.p>
@@ -913,9 +913,9 @@ export default function MFXRayPage() {
                 <motion.div
                   key={k.label}
                   layout
-                  className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg backdrop-blur-md"
+                  className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
                 >
-                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     {k.label}
                   </p>
                   <div className="mt-2">{k.node}</div>
@@ -929,13 +929,13 @@ export default function MFXRayPage() {
                 <HealthScoreGauge score={analyzed.healthScore} />
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-                <AIMentorPersona 
-                  age={localAge} 
-                  risk={localRisk} 
-                  onAgeChange={setLocalAge} 
+                <AIMentorPersona
+                  age={localAge}
+                  risk={localRisk}
+                  onAgeChange={setLocalAge}
                   onRiskChange={setLocalRisk}
                   currentEquity={(analyzed.totalCurrent / (analyzed.totalCurrent || 1)) * 100} // Basic fallback
-                  currentDebt={0} 
+                  currentDebt={0}
                 />
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }}>
@@ -950,10 +950,10 @@ export default function MFXRayPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.08 }}
-                className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur-md"
+                className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
               >
                 <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                  <PieChart className="h-5 w-5 text-cyan-400" />
+                  <PieChart className="h-5 w-5 text-[#00D09C]" />
                   Asset allocation
                 </h3>
                 <DonutChart
@@ -979,18 +979,18 @@ export default function MFXRayPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl backdrop-blur-md"
+              className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
             >
-              <div className="border-b border-white/10 px-6 py-4">
+              <div className="border-b border-gray-200 px-6 py-4">
                 <h3 className="flex items-center gap-2 text-lg font-semibold">
-                  <BarChart3 className="h-5 w-5 text-emerald-400" />
+                  <BarChart3 className="h-5 w-5 text-[#00D09C]" />
                   Fund-wise breakdown
                 </h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[900px] text-left text-sm">
                   <thead>
-                    <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+                    <tr className="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-400">
                       {(
                         [
                           ["fund_name", "Fund Name"],
@@ -1006,7 +1006,7 @@ export default function MFXRayPage() {
                           <button
                             type="button"
                             onClick={() => toggleSort(key)}
-                            className="inline-flex items-center gap-1 text-slate-400 hover:text-white"
+                            className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-900"
                           >
                             {label}
                             {sortKey === key ? (
@@ -1025,30 +1025,30 @@ export default function MFXRayPage() {
                     {sortedRows.map((r) => (
                       <tr
                         key={r.id}
-                        className="border-b border-white/5 hover:bg-white/5"
+                        className="border-b border-gray-100 hover:bg-gray-50"
                       >
-                        <td className="max-w-[220px] px-4 py-3 font-medium text-slate-100">
+                        <td className="max-w-[220px] px-4 py-3 font-medium text-gray-900">
                           {r.fund_name}
                         </td>
-                        <td className="px-4 py-3 text-slate-300">{r.category}</td>
-                        <td className="px-4 py-3 font-mono text-slate-300">
+                        <td className="px-4 py-3 text-gray-600">{r.category}</td>
+                        <td className="px-4 py-3 font-mono text-gray-600">
                           {formatCurrency(r.invested_amount)}
                         </td>
-                        <td className="px-4 py-3 font-mono text-emerald-300">
+                        <td className="px-4 py-3 font-mono text-[#00D09C]">
                           {formatCurrency(r.current_value)}
                         </td>
                         <td
                           className={cn(
                             "px-4 py-3 font-mono font-medium",
-                            r.returns_pct >= 0 ? "text-emerald-400" : "text-red-400"
+                            r.returns_pct >= 0 ? "text-[#00D09C]" : "text-red-400"
                           )}
                         >
                           {formatPercent(r.returns_pct)}
                         </td>
-                        <td className="px-4 py-3 font-mono text-cyan-300">
+                        <td className="px-4 py-3 font-mono text-[#00D09C]">
                           {formatPercent(r.xirr)}
                         </td>
-                        <td className="px-4 py-3 font-mono text-slate-400">
+                        <td className="px-4 py-3 font-mono text-gray-500">
                           {r.expense_ratio.toFixed(2)}%
                         </td>
                       </tr>
@@ -1063,13 +1063,13 @@ export default function MFXRayPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.12 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur-md"
+              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
             >
               <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold">
-                <Layers className="h-5 w-5 text-amber-400" />
+                <Layers className="h-5 w-5 text-amber-500" />
                 Category overlap heatmap
               </h3>
-              <p className="mb-4 text-sm text-slate-400">
+              <p className="mb-4 text-sm text-gray-500">
                 Same-category funds show higher estimated overlap. Use this to spot redundant sleeves before adding new schemes.
               </p>
               <OverlapHeatmap
@@ -1077,11 +1077,11 @@ export default function MFXRayPage() {
                 matrix={analyzed.overlapMatrix}
               />
               {analyzed.highOverlapPairs.length > 0 ? (
-                <div className="mt-4 flex gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
-                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
+                <div className="mt-4 flex gap-2 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-600">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
                   <div>
-                    <p className="font-medium text-amber-100">High overlap pairs</p>
-                    <ul className="mt-2 list-inside list-disc space-y-1 text-amber-200/90">
+                    <p className="font-medium text-amber-700">High overlap pairs</p>
+                    <ul className="mt-2 list-inside list-disc space-y-1 text-amber-600">
                       {analyzed.highOverlapPairs.slice(0, 4).map((p) => (
                         <li key={`${p.a}-${p.b}`}>
                           {p.a} vs {p.b} — ~{Math.round(p.score)}% category similarity
@@ -1098,15 +1098,15 @@ export default function MFXRayPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.14 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur-md"
+              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
             >
               <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold">
-                <BarChart3 className="h-5 w-5 text-cyan-400" />
+                <BarChart3 className="h-5 w-5 text-[#00D09C]" />
                 Expense ratio drag
               </h3>
-              <p className="mb-4 text-sm text-slate-300">
+              <p className="mb-4 text-sm text-gray-600">
                 Your expense ratios will cost you approximately{" "}
-                <span className="font-semibold text-cyan-300">
+                <span className="font-semibold text-[#00D09C]">
                   {formatCurrency(analyzed.expenseDrag20y)}
                 </span>{" "}
                 over 20 years (illustrative, assuming fee drag scales with corpus growth).
@@ -1122,10 +1122,10 @@ export default function MFXRayPage() {
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid #334155",
+                        backgroundColor: "#ffffff",
+                        border: "1px solid #e5e7eb",
                         borderRadius: "8px",
-                        color: "#f8fafc",
+                        color: "#1e2330",
                       }}
                       formatter={(value) =>
                         formatCurrency(
@@ -1156,10 +1156,10 @@ export default function MFXRayPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.16 }}
             >
-              <SmartRebalancingSimulator 
-                 totalValue={analyzed.totalCurrent} 
-                 equityPct={90} // Approximated
-                 debtPct={10} 
+              <SmartRebalancingSimulator
+                totalValue={analyzed.totalCurrent}
+                equityPct={90} // Approximated
+                debtPct={10}
               />
             </motion.section>
 
@@ -1168,21 +1168,21 @@ export default function MFXRayPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.16 }}
-              className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 p-6 shadow-xl backdrop-blur-md"
+              className="rounded-2xl border border-[#00D09C]/20 bg-[#00D09C]/5 p-6 shadow-sm"
             >
-              <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-emerald-200">
-                <Sparkles className="h-5 w-5 text-emerald-400" />
+              <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-[#00D09C]">
+                <Sparkles className="h-5 w-5 text-[#00D09C]" />
                 AI-style rebalancing plan
               </h3>
-              <p className="text-sm leading-relaxed text-slate-200">{analyzed.rebalance.summary}</p>
-              <ul className="mt-4 list-inside list-disc space-y-2 text-sm text-slate-200">
+              <p className="text-sm leading-relaxed text-gray-700">{analyzed.rebalance.summary}</p>
+              <ul className="mt-4 list-inside list-disc space-y-2 text-sm text-gray-700">
                 {analyzed.rebalance.bullets.map((b, i) => (
-                  <li key={i} className="marker:text-emerald-500">
+                  <li key={i} className="marker:text-[#00D09C]">
                     {b}
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-xs text-slate-500">
+              <p className="mt-4 text-xs text-gray-400">
                 Educational only — not investment advice. Review with a qualified advisor before switching schemes.
               </p>
             </motion.section>
@@ -1194,37 +1194,37 @@ export default function MFXRayPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08 }}
-        className="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/20 backdrop-blur-md overflow-hidden"
+        className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden"
       >
         <button
           type="button"
           onClick={() => setHistoryOpen((o) => !o)}
-          className="flex w-full items-center justify-between px-6 py-4 text-left transition hover:bg-white/5"
+          className="flex w-full items-center justify-between px-6 py-4 text-left transition hover:bg-gray-50"
         >
           <div className="flex items-center gap-3">
-            <History className="h-5 w-5 text-cyan-400" aria-hidden />
-            <span className="text-sm font-semibold text-white">Previous Analyses</span>
+            <History className="h-5 w-5 text-[#00D09C]" aria-hidden />
+            <span className="text-sm font-semibold text-gray-900">Previous Analyses</span>
             {mfHistory.length > 0 ? (
-              <span className="rounded-full bg-slate-700/80 px-2 py-0.5 text-xs text-slate-300">
+              <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-600">
                 {mfHistory.length}
               </span>
             ) : null}
           </div>
           {historyOpen ? (
-            <ChevronUp className="h-5 w-5 shrink-0 text-slate-400" aria-hidden />
+            <ChevronUp className="h-5 w-5 shrink-0 text-gray-500" aria-hidden />
           ) : (
-            <ChevronDown className="h-5 w-5 shrink-0 text-slate-400" aria-hidden />
+            <ChevronDown className="h-5 w-5 shrink-0 text-gray-500" aria-hidden />
           )}
         </button>
         <div
           className={cn(
-            "overflow-hidden border-t border-white/10 transition-all duration-300",
+            "overflow-hidden border-t border-gray-200 transition-all duration-300",
             historyOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
           )}
         >
           <div className="p-6 pt-4">
             {mfHistory.length === 0 ? (
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-gray-500">
                 No saved analyses yet. Run &quot;Analyze Portfolio&quot; while signed in to store results here.
               </p>
             ) : (
@@ -1232,32 +1232,32 @@ export default function MFXRayPage() {
                 {mfHistory.map((row) => (
                   <li
                     key={row.id}
-                    className="rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3 text-sm"
+                    className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm"
                   >
-                    <p className="font-medium text-slate-200">
+                    <p className="font-medium text-gray-700">
                       {row.analyzed_at
                         ? new Date(row.analyzed_at).toLocaleString(undefined, {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                          })
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })
                         : "—"}
                     </p>
                     <div className="mt-2 grid gap-2 sm:grid-cols-3">
                       <div>
-                        <p className="text-xs uppercase tracking-wide text-slate-500">Total invested</p>
-                        <p className="font-mono text-emerald-300">
+                        <p className="text-xs uppercase tracking-wide text-gray-400">Total invested</p>
+                        <p className="font-mono text-[#00D09C]">
                           {formatCurrency(row.total_invested ?? 0)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-wide text-slate-500">Current value</p>
-                        <p className="font-mono text-cyan-300">
+                        <p className="text-xs uppercase tracking-wide text-gray-400">Current value</p>
+                        <p className="font-mono text-[#00D09C]">
                           {formatCurrency(row.current_value ?? 0)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-wide text-slate-500">XIRR</p>
-                        <p className="font-mono text-emerald-400">{formatPercent(row.xirr ?? 0)}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-400">XIRR</p>
+                        <p className="font-mono text-[#00D09C]">{formatPercent(row.xirr ?? 0)}</p>
                       </div>
                     </div>
                   </li>

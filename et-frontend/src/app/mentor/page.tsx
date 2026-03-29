@@ -328,10 +328,10 @@ function renderMarkdown(text: string) {
       const inner = line.slice(2);
       const parts = inner.split(/\*\*(.*?)\*\*/g);
       return (
-        <li key={j} className="ml-3 list-disc text-slate-300">
+        <li key={j} className="ml-3 list-disc text-gray-700">
           {parts.map((part, k) =>
             k % 2 === 1 ? (
-              <strong key={k} className="font-semibold text-white">{part}</strong>
+              <strong key={k} className="font-semibold text-gray-900">{part}</strong>
             ) : (
               <span key={k}>{part}</span>
             )
@@ -344,7 +344,7 @@ function renderMarkdown(text: string) {
       <p key={j} className={j > 0 ? "mt-1.5" : ""}>
         {parts.map((part, k) =>
           k % 2 === 1 ? (
-            <strong key={k} className="font-semibold text-white">{part}</strong>
+            <strong key={k} className="font-semibold text-gray-900">{part}</strong>
           ) : (
             <span key={k}>{part}</span>
           )
@@ -387,17 +387,17 @@ function FallbackToolCard({ data, toolUsed }: { data: Record<string, unknown>; t
   );
   if (entries.length === 0) return null;
   return (
-    <div className="mt-2 rounded-xl border border-cyan-500/20 bg-slate-950/60 p-3 text-xs">
+    <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs">
       {toolUsed && (
-        <div className="mb-2 font-mono text-[10px] uppercase tracking-wide text-cyan-400/90">
+        <div className="mb-2 font-mono text-[10px] uppercase tracking-wide text-[#00D09C]">
           {toolUsed}
         </div>
       )}
       <dl className="space-y-1.5">
         {entries.map(([key, val]) => (
-          <div key={key} className="flex justify-between gap-3 border-b border-slate-700/40 pb-1.5 last:border-0 last:pb-0">
-            <dt className="shrink-0 text-slate-500">{key.replace(/_/g, " ")}</dt>
-            <dd className="text-right text-slate-200">
+          <div key={key} className="flex justify-between gap-3 border-b border-gray-200 pb-1.5 last:border-0 last:pb-0">
+            <dt className="shrink-0 text-gray-400">{key.replace(/_/g, " ")}</dt>
+            <dd className="text-right text-gray-700">
               {typeof val === "number" ? val.toLocaleString("en-IN") : String(val)}
             </dd>
           </div>
@@ -422,10 +422,10 @@ function CopyButton({ text }: { text: string }) {
     <button
       type="button"
       onClick={handleCopy}
-      className="p-1 rounded hover:bg-slate-700/50 text-slate-500 hover:text-slate-300 transition-colors"
+      className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
       title="Copy"
     >
-      {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+      {copied ? <Check size={12} className="text-[#00D09C]" /> : <Copy size={12} />}
     </button>
   );
 }
@@ -617,23 +617,23 @@ export default function MentorPage() {
   return (
     <div className="flex flex-col flex-1 max-h-[calc(100vh-4rem)]">
       {/* ── TOP HEADER ── */}
-      <div className="flex items-center justify-between border-b border-slate-700/50 bg-slate-900/90 backdrop-blur-xl px-6 py-3 z-10">
+      <div className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3 z-10">
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 shadow-lg shadow-emerald-500/25">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-[#00D09C] shadow-sm">
             <Sparkles className="h-5 w-5 text-white" />
-            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-400 border-2 border-slate-900 animate-pulse" />
+            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-white border-2 border-gray-200 animate-pulse" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-white tracking-tight">DhanGuru AI Mentor</h1>
-            <p className="text-[11px] text-slate-400">Natural language interface to your finances</p>
+            <h1 className="text-base font-bold text-gray-900 tracking-tight">DhanGuru AI Mentor</h1>
+            <p className="text-[11px] text-gray-500">Natural language interface to your finances</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5">
-            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] font-medium text-emerald-300">Groq Mixtral-8x7B</span>
+          <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-[#00D09C]/30 bg-[#00D09C]/10 px-3 py-1.5">
+            <div className="h-2 w-2 rounded-full bg-[#00D09C] animate-pulse" />
+            <span className="text-[11px] font-medium text-[#00D09C]">Groq Mixtral-8x7B</span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-slate-500">
+          <div className="flex items-center gap-1 text-[10px] text-gray-400">
             <MessageSquare size={11} />
             <span>{messages.length - 1} msgs</span>
           </div>
@@ -642,22 +642,22 @@ export default function MentorPage() {
 
       <div className="flex flex-1 min-h-0">
         {/* ── LEFT SIDEBAR ── */}
-        <div className="w-72 shrink-0 border-r border-slate-700/50 bg-slate-900/60 backdrop-blur-sm hidden lg:flex flex-col overflow-y-auto">
+        <div className="w-72 shrink-0 border-r border-gray-200 bg-gray-50 hidden lg:flex flex-col overflow-y-auto">
           <div className="p-4 space-y-4 flex-1">
             {/* Profile card */}
             {mentorCtx && !ctxLoading && <ProfileSnapshotCard context={mentorCtx} />}
             {ctxLoading && (
-              <div className="rounded-xl border border-slate-700/40 bg-slate-800/40 p-6 text-center">
-                <div className="h-5 w-5 mx-auto mb-2 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
-                <p className="text-[11px] text-slate-500">Loading your profile...</p>
+              <div className="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+                <div className="h-5 w-5 mx-auto mb-2 rounded-full border-2 border-[#00D09C] border-t-transparent animate-spin" />
+                <p className="text-[11px] text-gray-400">Loading your profile...</p>
               </div>
             )}
 
             {/* Proactive insights */}
             {visibleInsights.length > 0 && (
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
-                  <AlertTriangle size={10} className="text-amber-400" />
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-2 flex items-center gap-1.5">
+                  <AlertTriangle size={10} className="text-amber-500" />
                   Insights & Alerts
                 </p>
                 <div className="space-y-2">
@@ -670,14 +670,14 @@ export default function MentorPage() {
                         exit={{ opacity: 0, height: 0 }}
                         className={`relative rounded-lg border p-3 text-[11px] leading-relaxed ${
                           insight.priority === "high"
-                            ? "border-rose-500/30 bg-rose-500/10 text-rose-200"
-                            : "border-amber-500/30 bg-amber-500/10 text-amber-200"
+                            ? "border-red-200 bg-red-50 text-red-600"
+                            : "border-amber-200 bg-amber-50 text-amber-900"
                         }`}
                       >
                         <button
                           type="button"
                           onClick={() => setDismissedInsights((prev) => new Set([...prev, insight.message]))}
-                          className="absolute top-1.5 right-1.5 p-0.5 rounded text-slate-500 hover:text-white transition-colors"
+                          className="absolute top-1.5 right-1.5 p-0.5 rounded text-gray-400 hover:text-gray-900 transition-colors"
                         >
                           <X size={10} />
                         </button>
@@ -685,7 +685,7 @@ export default function MentorPage() {
                         <button
                           type="button"
                           onClick={() => void sendMessage(insight.action)}
-                          className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-white hover:underline"
+                          className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-[#00D09C] hover:underline"
                         >
                           {insight.action} <ChevronRight size={10} />
                         </button>
@@ -698,7 +698,7 @@ export default function MentorPage() {
 
             {/* Quick actions */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-2">Quick Actions</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-2">Quick Actions</p>
               <div className="space-y-1">
                 {[
                   "What do you know about me?",
@@ -714,9 +714,9 @@ export default function MentorPage() {
                     key={label}
                     type="button"
                     onClick={() => void sendMessage(label)}
-                    className="w-full text-left rounded-lg border border-slate-700/40 bg-slate-800/50 px-3 py-2 text-[11px] text-slate-300 transition-all hover:border-emerald-400/40 hover:text-white hover:bg-slate-800/80 hover:translate-x-0.5"
+                    className="w-full text-left rounded-lg border border-gray-200 bg-white px-3 py-2 text-[11px] text-gray-700 transition-all hover:border-[#00D09C]/40 hover:text-gray-900 hover:bg-gray-50 hover:translate-x-0.5"
                   >
-                    <Zap size={10} className="inline mr-1.5 text-cyan-400" />
+                    <Zap size={10} className="inline mr-1.5 text-[#00D09C]" />
                     {label}
                   </button>
                 ))}
@@ -725,22 +725,22 @@ export default function MentorPage() {
           </div>
 
           {/* Session footer */}
-          <div className="p-4 border-t border-slate-700/40 bg-slate-900/40">
+          <div className="p-4 border-t border-gray-200 bg-white">
             <button
               type="button"
               onClick={clearChat}
-              className="flex items-center gap-2 text-[11px] text-slate-500 hover:text-red-400 transition-colors"
+              className="flex items-center gap-2 text-[11px] text-gray-400 hover:text-red-600 transition-colors"
             >
               <Trash2 size={12} /> Clear conversation
             </button>
-            <div className="flex items-center gap-1.5 mt-2 text-[10px] text-slate-600">
+            <div className="flex items-center gap-1.5 mt-2 text-[10px] text-gray-400">
               <History size={10} /> Chat history auto-saved to Supabase
             </div>
           </div>
         </div>
 
         {/* ── CHAT AREA ── */}
-        <div className="flex-1 flex flex-col min-w-0 bg-gradient-to-b from-slate-900/50 to-slate-950/50">
+        <div className="flex-1 flex flex-col min-w-0 bg-gray-50">
           <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6">
             <div className="max-w-3xl mx-auto space-y-5">
               <AnimatePresence initial={false}>
@@ -754,7 +754,7 @@ export default function MentorPage() {
                   >
                     {/* Bot avatar */}
                     {msg.role === "assistant" && (
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 mt-0.5 shadow-lg shadow-emerald-500/20">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#00D09C] mt-0.5 shadow-sm">
                         <Bot size={15} className="text-white" />
                       </div>
                     )}
@@ -763,8 +763,8 @@ export default function MentorPage() {
                       <div
                         className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                           msg.role === "user"
-                            ? "bg-gradient-to-r from-emerald-600 to-cyan-600 text-white shadow-lg shadow-emerald-900/20 rounded-br-md"
-                            : "border border-slate-700/50 bg-slate-800/90 backdrop-blur-sm text-slate-200 rounded-bl-md"
+                            ? "bg-[#00D09C] text-white shadow-sm rounded-br-md"
+                            : "border border-gray-200 bg-white text-gray-700 rounded-bl-md shadow-sm"
                         }`}
                       >
                         {msg.role === "user" ? (
@@ -790,13 +790,13 @@ export default function MentorPage() {
 
                             {/* Suggestion chips */}
                             {msg.suggestions && msg.suggestions.length > 0 && (
-                              <div className="mt-3 flex flex-wrap gap-1.5 border-t border-slate-700/40 pt-2.5">
+                              <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-200 pt-2.5">
                                 {msg.suggestions.map((s) => (
                                   <button
                                     key={s}
                                     type="button"
                                     onClick={() => void sendMessage(s)}
-                                    className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-[11px] text-emerald-200 transition-all hover:border-emerald-400/50 hover:bg-emerald-500/20 hover:scale-[1.02]"
+                                    className="rounded-full border border-[#00D09C]/25 bg-[#00D09C]/10 px-3 py-1 text-[11px] text-[#00D09C] transition-all hover:border-[#00D09C]/50 hover:bg-[#00D09C]/20 hover:scale-[1.02]"
                                   >
                                     {s}
                                   </button>
@@ -811,10 +811,10 @@ export default function MentorPage() {
                       {msg.role === "assistant" && i > 0 && (
                         <div className="flex items-center gap-0.5 mt-1 ml-1">
                           <CopyButton text={msg.content} />
-                          <button type="button" className="p-1 rounded hover:bg-slate-700/50 text-slate-500 hover:text-emerald-400 transition-colors" title="Helpful">
+                          <button type="button" className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-[#00D09C] transition-colors" title="Helpful">
                             <ThumbsUp size={12} />
                           </button>
-                          <button type="button" className="p-1 rounded hover:bg-slate-700/50 text-slate-500 hover:text-rose-400 transition-colors" title="Not helpful">
+                          <button type="button" className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-red-600 transition-colors" title="Not helpful">
                             <ThumbsDown size={12} />
                           </button>
                         </div>
@@ -827,15 +827,15 @@ export default function MentorPage() {
               {/* Typing indicator */}
               {isTyping && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex gap-2 justify-start">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 mt-0.5 shadow-lg shadow-emerald-500/20">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#00D09C] mt-0.5 shadow-sm">
                     <Bot size={15} className="text-white" />
                   </div>
-                  <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-slate-700/50 bg-slate-800/90 px-5 py-3">
-                    <span className="text-[11px] text-slate-400 mr-1">Thinking</span>
+                  <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-gray-200 bg-white px-5 py-3 shadow-sm">
+                    <span className="text-[11px] text-gray-500 mr-1">Thinking</span>
                     {[0, 1, 2].map((d) => (
                       <motion.span
                         key={d}
-                        className="h-1.5 w-1.5 rounded-full bg-emerald-400"
+                        className="h-1.5 w-1.5 rounded-full bg-[#00D09C]"
                         animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
                         transition={{ duration: 1, repeat: Infinity, delay: d * 0.2 }}
                       />
@@ -848,7 +848,7 @@ export default function MentorPage() {
           </div>
 
           {/* ── INPUT AREA ── */}
-          <div className="border-t border-slate-700/50 bg-slate-900/90 backdrop-blur-xl px-4 md:px-8 py-4">
+          <div className="border-t border-gray-200 bg-white px-4 md:px-8 py-4">
             {/* Suggestion pills (show early in conversation) */}
             {messages.length <= 3 && (
               <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2">
@@ -857,7 +857,7 @@ export default function MentorPage() {
                     key={pill}
                     type="button"
                     onClick={() => void sendMessage(pill)}
-                    className="rounded-full border border-slate-600/40 bg-slate-800/50 px-3 py-1.5 text-[11px] text-slate-300 transition-all hover:border-emerald-500/40 hover:bg-slate-700/60 hover:text-white hover:scale-[1.02]"
+                    className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-[11px] text-gray-700 transition-all hover:border-[#00D09C]/40 hover:bg-gray-100 hover:text-gray-900 hover:scale-[1.02]"
                   >
                     {pill}
                   </button>
@@ -869,7 +869,7 @@ export default function MentorPage() {
               onSubmit={(e) => { e.preventDefault(); void sendMessage(input); }}
               className="max-w-3xl mx-auto"
             >
-              <div className="relative flex items-end gap-2 rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm p-1.5 transition-all focus-within:border-emerald-500/40 focus-within:ring-2 focus-within:ring-emerald-500/10 focus-within:shadow-lg focus-within:shadow-emerald-500/5">
+              <div className="relative flex items-end gap-2 rounded-2xl border border-gray-200 bg-gray-50 p-1.5 transition-all focus-within:border-[#00D09C]/40 focus-within:shadow-sm">
                 <textarea
                   ref={inputRef}
                   value={input}
@@ -883,17 +883,17 @@ export default function MentorPage() {
                   placeholder="Ask DhanGuru anything about your finances..."
                   rows={1}
                   disabled={isTyping}
-                  className="min-h-10 max-h-32 flex-1 resize-none bg-transparent px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none disabled:opacity-50"
+                  className="min-h-10 max-h-32 flex-1 resize-none bg-transparent px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isTyping}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 text-white shadow-lg shadow-emerald-500/25 transition-all hover:brightness-110 hover:shadow-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-30 disabled:shadow-none"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#00D09C] text-white shadow-sm transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:shadow-none"
                 >
                   <SendHorizontal className="h-4 w-4" />
                 </button>
               </div>
-              <p className="mt-2 text-center text-[9px] text-slate-600">
+              <p className="mt-2 text-center text-[9px] text-gray-400">
                 Powered by Groq Mixtral-8x7B — Educational information only, not financial advice
               </p>
             </form>
@@ -902,7 +902,7 @@ export default function MentorPage() {
       </div>
 
       {/* Algorithm explanation */}
-      <div className="px-6 py-3 border-t border-slate-700/50 bg-slate-950/60">
+      <div className="px-6 py-3 border-t border-gray-200 bg-gray-50">
         <AlgorithmExplanation sections={ALGO_SECTIONS} />
       </div>
     </div>

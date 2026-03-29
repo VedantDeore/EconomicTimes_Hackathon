@@ -74,10 +74,10 @@ export default function FileUpload({
         onDrop={onDrop}
         className={cn(
           "relative w-full rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors",
-          "bg-slate-900/40 hover:bg-slate-900/60",
+          "bg-gray-50 hover:bg-gray-100",
           isDragging
-            ? "border-emerald-500/60 bg-emerald-500/5"
-            : "border-slate-600/70 hover:border-slate-500",
+            ? "border-[#00D09C]/60 bg-[#00D09C]/5"
+            : "border-gray-300 hover:border-gray-400",
           isLoading && "pointer-events-none opacity-70",
         )}
         whileHover={isLoading ? undefined : { scale: 1.01 }}
@@ -95,19 +95,19 @@ export default function FileUpload({
         <div className="flex flex-col items-center gap-3">
           {isLoading ? (
             <Loader2
-              className="h-10 w-10 text-emerald-400 animate-spin"
+              className="h-10 w-10 text-[#00D09C] animate-spin"
               aria-hidden
             />
           ) : (
             <Upload
-              className="h-10 w-10 text-slate-400"
+              className="h-10 w-10 text-gray-400"
               strokeWidth={1.5}
               aria-hidden
             />
           )}
-          <p className="text-sm text-slate-300">{label}</p>
+          <p className="text-sm text-gray-500">{label}</p>
           {fileName ? (
-            <p className="text-sm font-medium text-emerald-400 truncate max-w-full px-2">
+            <p className="text-sm font-medium text-[#00D09C] truncate max-w-full px-2">
               {fileName}
             </p>
           ) : null}

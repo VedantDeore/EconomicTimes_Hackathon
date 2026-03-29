@@ -32,31 +32,31 @@ export default function RadarChart({ dimensions }: RadarChartProps) {
   );
 
   return (
-    <div className="h-[min(28rem,70vh)] w-full rounded-xl bg-slate-900/80 p-4 text-white">
+    <div className="h-[min(28rem,70vh)] w-full rounded-xl bg-gray-50 p-4 text-gray-900">
       <ResponsiveContainer width="100%" height="100%">
         <ReRadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
           <defs>
             <linearGradient id="radarScoreFill" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#34d399" stopOpacity={0.55} />
-              <stop offset="100%" stopColor="#22d3ee" stopOpacity={0.35} />
+              <stop offset="0%" stopColor="#00D09C" stopOpacity={0.55} />
+              <stop offset="100%" stopColor="#00D09C" stopOpacity={0.35} />
             </linearGradient>
           </defs>
-          <PolarGrid stroke="#334155" strokeDasharray="3 3" />
+          <PolarGrid stroke="#e5e7eb" strokeDasharray="3 3" />
           <PolarAngleAxis
             dataKey="subject"
-            tick={{ fill: "#f8fafc", fontSize: 12 }}
+            tick={{ fill: "#1e2330", fontSize: 12 }}
           />
           <PolarRadiusAxis
             angle={90}
             domain={[0, maxRadius]}
-            tick={{ fill: "#94a3b8", fontSize: 10 }}
+            tick={{ fill: "#6b7280", fontSize: 10 }}
             axisLine={false}
             tickCount={5}
           />
           <Radar
             name="Score"
             dataKey="score"
-            stroke="#2dd4bf"
+            stroke="#00D09C"
             strokeWidth={2}
             fill="url(#radarScoreFill)"
             fillOpacity={1}

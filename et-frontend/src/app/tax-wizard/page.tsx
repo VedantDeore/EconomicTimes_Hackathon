@@ -212,7 +212,7 @@ async function extractPdfText(file: File): Promise<string> {
   return full;
 }
 
-const glass = "rounded-2xl border border-white/10 bg-slate-900/35 backdrop-blur-xl shadow-xl shadow-black/20";
+const glass = "rounded-2xl border border-gray-200 bg-white shadow-sm";
 
 const fadeIn = {
   initial: { opacity: 0, y: 12 },
@@ -514,7 +514,7 @@ export default function TaxWizardPage() {
   };
 
   return (
-    <div className="text-white">
+    <div className="text-gray-900">
       <div className="mx-auto max-w-6xl space-y-8">
         <motion.header
           className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
@@ -522,18 +522,18 @@ export default function TaxWizardPage() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-gradient-to-br from-emerald-500/30 to-cyan-500/20 p-3 ring-1 ring-emerald-500/30">
-              <Calculator className="h-7 w-7 text-emerald-400" />
+            <div className="rounded-xl bg-[#00D09C]/10 p-3">
+              <Calculator className="h-7 w-7 text-[#00D09C]" />
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Tax Wizard</h1>
-              <p className="text-sm text-slate-400">DhanGuru AI Money Mentor — Old vs New regime (FY {FY})</p>
+              <p className="text-sm text-gray-500">DhanGuru AI Money Mentor — Old vs New regime (FY {FY})</p>
             </div>
           </div>
           <button
             type="button"
             onClick={openAdvisor}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2.5 text-sm font-medium text-emerald-300 transition hover:bg-emerald-500/20"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00D09C]/20 bg-[#00D09C]/8 px-4 py-2.5 text-sm font-medium text-[#00D09C] transition hover:bg-[#00D09C]/12"
           >
             <MessageSquare className="h-4 w-4" />
             AI Tax Advisor
@@ -543,23 +543,23 @@ export default function TaxWizardPage() {
         {/* Input */}
         <motion.section {...fadeIn} transition={{ duration: 0.35 }} className={cn(glass, "p-6 md:p-8")}>
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-semibold text-white">Inputs</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Inputs</h2>
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={() => void handleLoadFromProfile()}
                 disabled={profileLoading}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20 disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#00D09C]/20 bg-[#00D09C]/8 px-4 py-2 text-sm font-medium text-[#00D09C] transition hover:bg-[#00D09C]/12 disabled:opacity-50"
               >
                 {profileLoading ? (
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-cyan-400/30 border-t-cyan-300" />
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#00D09C]/30 border-t-[#00D09C]" />
                 ) : null}
                 Load from Profile
               </button>
               <button
                 type="button"
                 onClick={handleTrySampleData}
-                className="inline-flex items-center justify-center rounded-xl border border-slate-600 bg-slate-800/50 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800"
+                className="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
               >
                 Try Sample Data
               </button>
@@ -567,7 +567,7 @@ export default function TaxWizardPage() {
           </div>
           <div className="grid gap-8 lg:grid-cols-2">
             <div className="space-y-4">
-              <p className="text-xs font-medium uppercase tracking-wider text-cyan-400/90">Salary structure</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-[#00D09C]">Salary structure</p>
               {(
                 [
                   ["gross_salary", "Gross salary"],
@@ -578,7 +578,7 @@ export default function TaxWizardPage() {
                 ] as const
               ).map(([key, label]) => (
                 <label key={key} className="block">
-                  <span className="mb-1.5 block text-xs text-slate-400">{label}</span>
+                  <span className="mb-1.5 block text-xs text-gray-500">{label}</span>
                   <input
                     type="number"
                     min={0}
@@ -587,18 +587,18 @@ export default function TaxWizardPage() {
                       const v = e.target.value === "" ? 0 : Number(e.target.value);
                       setIncome((prev) => ({ ...prev, [key]: v }));
                     }}
-                    className="w-full rounded-xl border border-slate-700/60 bg-slate-950/50 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/30"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-600 focus:border-[#00D09C]/40 focus:outline-none"
                     placeholder="0"
                   />
                 </label>
               ))}
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-gray-400">
                 Special allowance is for your reference; tax math uses gross salary as declared CTC.
               </p>
             </div>
 
             <div className="space-y-4">
-              <p className="text-xs font-medium uppercase tracking-wider text-cyan-400/90">Deductions and rent</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-[#00D09C]">Deductions and rent</p>
               {(
                 [
                   ["section_80c", "Section 80C (total)"],
@@ -609,7 +609,7 @@ export default function TaxWizardPage() {
                 ] as const
               ).map(([key, label]) => (
                 <label key={key} className="block">
-                  <span className="mb-1.5 block text-xs text-slate-400">{label}</span>
+                  <span className="mb-1.5 block text-xs text-gray-500">{label}</span>
                   <input
                     type="number"
                     min={0}
@@ -629,13 +629,13 @@ export default function TaxWizardPage() {
                       else if (key === "rent_paid") setIncome((p) => ({ ...p, rent_paid: v }));
                       else setDeductions((d) => ({ ...d, [key]: v }));
                     }}
-                    className="w-full rounded-xl border border-slate-700/60 bg-slate-950/50 px-3 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/30"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-600 focus:border-[#00D09C]/40 focus:outline-none"
                     placeholder="0"
                   />
                 </label>
               ))}
               <div>
-                <span className="mb-1.5 block text-xs text-slate-400">Metro city</span>
+                <span className="mb-1.5 block text-xs text-gray-500">Metro city</span>
                 <div className="flex gap-2">
                   {[true, false].map((m) => (
                     <button
@@ -645,8 +645,8 @@ export default function TaxWizardPage() {
                       className={cn(
                         "flex-1 rounded-xl border py-2.5 text-sm font-medium transition",
                         income.is_metro === m
-                          ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-300"
-                          : "border-slate-700/60 text-slate-400 hover:border-slate-600",
+                          ? "border-[#00D09C] bg-[#00D09C]/8 text-[#00D09C]"
+                          : "border-gray-300 text-gray-500 hover:border-gray-400",
                       )}
                     >
                       {m ? "Metro" : "Non-metro"}
@@ -657,8 +657,8 @@ export default function TaxWizardPage() {
             </div>
           </div>
 
-          <div className="mt-8 border-t border-white/10 pt-8">
-            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-slate-400">Form 16 (PDF)</p>
+          <div className="mt-8 border-t border-gray-200 pt-8">
+            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-500">Form 16 (PDF)</p>
             <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
               <div className="min-w-0 flex-1">
                 <FileUpload
@@ -671,26 +671,26 @@ export default function TaxWizardPage() {
               <button
                 type="button"
                 onClick={handleTrySampleForm16}
-                className="shrink-0 self-stretch rounded-xl border border-amber-500/40 bg-amber-500/10 px-5 py-3 text-sm font-medium text-amber-200 transition hover:bg-amber-500/20 lg:w-48"
+                className="shrink-0 self-stretch rounded-xl border border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-600 transition hover:bg-amber-100 lg:w-48"
               >
                 Try Sample Form 16
               </button>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-slate-900/80 to-slate-950/60 p-5 ring-1 ring-cyan-500/10">
-              <p className="mb-4 text-sm font-semibold text-cyan-200/95">What PDF analysis extracts:</p>
+            <div className="mt-6 rounded-2xl border border-[#00D09C]/20 bg-[#00D09C]/5 p-5">
+              <p className="mb-4 text-sm font-semibold text-[#00D09C]">What PDF analysis extracts:</p>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {PDF_EXTRACT_PREVIEW.map((row) => (
                   <div
                     key={row.key}
-                    className="rounded-xl border border-white/10 bg-slate-950/50 px-3 py-2.5 text-left"
+                    className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-left"
                   >
-                    <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">{row.label}</p>
-                    <p className="mt-1 font-mono text-sm text-emerald-300/90">{row.sample}</p>
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-gray-400">{row.label}</p>
+                    <p className="mt-1 font-mono text-sm text-[#00D09C]">{row.sample}</p>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-[11px] leading-relaxed text-slate-500">
+              <p className="mt-4 text-[11px] leading-relaxed text-gray-400">
                 Parsed values populate salary and deduction fields above; always verify against your Form 16 before filing.
               </p>
             </div>
@@ -700,8 +700,8 @@ export default function TaxWizardPage() {
                 className={cn(
                   "mt-3 text-sm",
                   uploadNote.includes("parsed") || uploadNote.includes("Sample Form 16")
-                    ? "text-emerald-400/90"
-                    : "text-amber-400/90",
+                    ? "text-[#00D09C]"
+                    : "text-amber-500",
                 )}
               >
                 {uploadNote}
@@ -714,10 +714,10 @@ export default function TaxWizardPage() {
               type="button"
               onClick={handleAnalyze}
               disabled={isAnalyzing}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:opacity-95 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#00D09C] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-95 disabled:opacity-50"
             >
               {isAnalyzing ? (
-                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-gray-900/25 border-t-gray-900" />
               ) : (
                 <Sparkles className="h-4 w-4" />
               )}
@@ -727,15 +727,15 @@ export default function TaxWizardPage() {
               type="button"
               onClick={() => void handleSaveToProfile()}
               disabled={savingToProfile || income.gross_salary <= 0}
-              className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#00D09C]/20 bg-[#00D09C]/8 px-5 py-3 text-sm font-medium text-[#00D09C] transition hover:bg-[#00D09C]/12 disabled:opacity-50"
             >
               <Save className="h-4 w-4" />
               {savingToProfile ? "Saving…" : "Save to Profile"}
             </button>
             {saveProfileMsg && (
-              <span className={cn("text-xs", saveProfileMsg.includes("Saved") ? "text-emerald-400" : "text-amber-400")}>{saveProfileMsg}</span>
+              <span className={cn("text-xs", saveProfileMsg.includes("Saved") ? "text-[#00D09C]" : "text-amber-500")}>{saveProfileMsg}</span>
             )}
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-gray-400">
               Leave gross salary empty to run a full demo scenario.
             </span>
           </div>
@@ -746,7 +746,7 @@ export default function TaxWizardPage() {
           <>
             <motion.section {...fadeIn} transition={{ duration: 0.4 }} className={cn(glass, "p-6 md:p-8")}>
               <div className="mb-6 flex items-center gap-2">
-                <Scale className="h-5 w-5 text-cyan-400" />
+                <Scale className="h-5 w-5 text-[#00D09C]" />
                 <h2 className="text-lg font-semibold">Regime comparison</h2>
               </div>
 
@@ -764,37 +764,37 @@ export default function TaxWizardPage() {
                       className={cn(
                         "rounded-xl border p-5 transition-colors",
                         isBest
-                          ? "border-emerald-500/60 bg-emerald-500/5 ring-1 ring-emerald-500/20"
-                          : "border-slate-700/50 bg-slate-950/40",
+                          ? "border-[#00D09C] bg-[#00D09C]/5"
+                          : "border-gray-200 bg-white",
                       )}
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                     >
                       <div className="mb-4 flex items-center justify-between gap-2">
-                        <h3 className="font-semibold text-white">{title}</h3>
+                        <h3 className="font-semibold text-gray-900">{title}</h3>
                         {isBest && (
-                          <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-300">
+                          <span className="flex items-center gap-1 rounded-full bg-[#00D09C]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#00D09C]">
                             <Check className="h-3 w-3" /> Recommended
                           </span>
                         )}
                       </div>
                       <dl className="space-y-2 text-sm">
                         <div className="flex justify-between gap-4">
-                          <dt className="text-slate-400">Taxable income</dt>
-                          <dd className="font-mono text-white">{formatCurrency(data.taxable_income)}</dd>
+                          <dt className="text-gray-500">Taxable income</dt>
+                          <dd className="font-mono text-gray-900">{formatCurrency(data.taxable_income)}</dd>
                         </div>
                         <div className="flex justify-between gap-4">
-                          <dt className="text-slate-400">Tax payable</dt>
-                          <dd className="font-mono text-slate-200">{formatCurrency(data.tax_payable)}</dd>
+                          <dt className="text-gray-500">Tax payable</dt>
+                          <dd className="font-mono text-gray-700">{formatCurrency(data.tax_payable)}</dd>
                         </div>
                         <div className="flex justify-between gap-4">
-                          <dt className="text-slate-400">Cess</dt>
-                          <dd className="font-mono text-slate-200">{formatCurrency(data.cess)}</dd>
+                          <dt className="text-gray-500">Cess</dt>
+                          <dd className="font-mono text-gray-700">{formatCurrency(data.cess)}</dd>
                         </div>
-                        <div className="flex justify-between gap-4 border-t border-white/10 pt-2">
-                          <dt className="text-slate-300">Total tax</dt>
-                          <dd className="font-mono text-lg font-semibold text-white">
-                            <AnimatedCounter value={data.total_tax} prefix="₹" className="text-white" />
+                        <div className="flex justify-between gap-4 border-t border-gray-200 pt-2">
+                          <dt className="text-gray-600">Total tax</dt>
+                          <dd className="font-mono text-lg font-semibold text-gray-900">
+                            <AnimatedCounter value={data.total_tax} prefix="₹" className="text-gray-900" />
                           </dd>
                         </div>
                       </dl>
@@ -804,12 +804,12 @@ export default function TaxWizardPage() {
               </div>
 
               <motion.p
-                className="mt-6 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-center text-sm text-emerald-200"
+                className="mt-6 rounded-xl border border-[#00D09C]/20 bg-[#00D09C]/8 px-4 py-3 text-center text-sm text-[#00D09C]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
                 You save{" "}
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-gray-900">
                   <AnimatedCounter value={rc.savings} prefix="₹" />
                 </span>{" "}
                 with the {rec === "old" ? "Old" : "New"} Regime
@@ -817,8 +817,8 @@ export default function TaxWizardPage() {
 
               <div className="mt-8 grid gap-8 lg:grid-cols-2">
                 <div>
-                  <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-300">
-                    <TrendingDown className="h-4 w-4 text-cyan-400" />
+                  <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-600">
+                    <TrendingDown className="h-4 w-4 text-[#00D09C]" />
                     Old regime waterfall
                   </h4>
                   <WaterfallChart
@@ -831,8 +831,8 @@ export default function TaxWizardPage() {
                   />
                 </div>
                 <div>
-                  <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-300">
-                    <TrendingDown className="h-4 w-4 text-cyan-400" />
+                  <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-600">
+                    <TrendingDown className="h-4 w-4 text-[#00D09C]" />
                     New regime waterfall
                   </h4>
                   <WaterfallChart
@@ -851,47 +851,47 @@ export default function TaxWizardPage() {
             {missedCards.length > 0 && (
               <motion.section {...fadeIn} className={cn(glass, "p-6 md:p-8")}>
                 <div className="mb-6 flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-400" />
+                  <AlertTriangle className="h-5 w-5 text-amber-500" />
                   <h2 className="text-lg font-semibold">Missed deduction opportunities</h2>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {missedCards.map((m, i) => (
                     <div
                       key={`${m.section}-${i}`}
-                      className="rounded-xl border border-slate-700/50 bg-slate-950/30 p-4"
+                      className="rounded-xl border border-gray-200 bg-white p-4"
                     >
                       <div className="mb-2 flex items-start justify-between gap-2">
-                        <span className="text-sm font-semibold text-white">Section {m.section}</span>
+                        <span className="text-sm font-semibold text-gray-900">Section {m.section}</span>
                         <span
                           className={cn(
                             "text-[10px] font-bold uppercase",
                             m.severity === "high"
                               ? "text-red-400"
                               : m.severity === "medium"
-                                ? "text-amber-400"
-                                : "text-slate-500",
+                                ? "text-amber-500"
+                                : "text-gray-400",
                           )}
                         >
                           {m.severity}
                         </span>
                       </div>
-                      <p className="text-xs leading-relaxed text-slate-400">{m.description}</p>
-                      <div className="mt-3 text-xs text-slate-500">
+                      <p className="text-xs leading-relaxed text-gray-500">{m.description}</p>
+                      <div className="mt-3 text-xs text-gray-400">
                         Utilized: {formatCurrency(m.current)} / {formatCurrency(m.max)}
                       </div>
-                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-800">
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100">
                         <div
                           className={cn(
                             "h-full rounded-full transition-all",
                             m.tone === "red" && "bg-red-500",
                             m.tone === "amber" && "bg-amber-500",
-                            m.tone === "green" && "bg-emerald-500",
+                            m.tone === "green" && "bg-[#00D09C]",
                           )}
                           style={{ width: `${Math.min(100, m.pct)}%` }}
                         />
                       </div>
                       {m.potential_saving > 0 && (
-                        <p className="mt-2 text-xs font-medium text-emerald-400/90">
+                        <p className="mt-2 text-xs font-medium text-[#00D09C]">
                           Potential tax saving: {formatCurrency(m.potential_saving)}
                         </p>
                       )}
@@ -914,8 +914,8 @@ export default function TaxWizardPage() {
                       className={cn(
                         "rounded-lg border px-3 py-1.5 text-xs font-medium capitalize",
                         riskProfile === p
-                          ? "border-cyan-500/50 bg-cyan-500/15 text-cyan-200"
-                          : "border-slate-700 text-slate-400 hover:border-slate-600",
+                          ? "border-[#00D09C] bg-[#00D09C]/8 text-[#00D09C]"
+                          : "border-gray-300 text-gray-500 hover:border-gray-400",
                       )}
                     >
                       {p}
@@ -923,13 +923,13 @@ export default function TaxWizardPage() {
                   ))}
                 </div>
               </div>
-              <p className="mb-4 text-xs text-slate-500">
+              <p className="mb-4 text-xs text-gray-400">
                 Ranked by fit for your selected risk profile; highlighted rows match your profile best.
               </p>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[640px] text-left text-sm">
                   <thead>
-                    <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+                    <tr className="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-400">
                       <th className="pb-3 pr-4 font-medium">Investment</th>
                       <th className="pb-3 pr-4 font-medium">Section</th>
                       <th className="pb-3 pr-4 font-medium">Max limit</th>
@@ -943,23 +943,23 @@ export default function TaxWizardPage() {
                       <tr
                         key={row.investment}
                         className={cn(
-                          "border-b border-slate-800/80",
-                          recommended && "bg-emerald-500/5",
+                          "border-b border-gray-200",
+                          recommended && "bg-[#00D09C]/5",
                         )}
                       >
-                        <td className="py-3 pr-4 font-medium text-white">
+                        <td className="py-3 pr-4 font-medium text-gray-900">
                           {row.investment}
                           {recommended && (
-                            <span className="ml-2 rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-300">
+                            <span className="ml-2 rounded bg-[#00D09C]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[#00D09C]">
                               Match
                             </span>
                           )}
                         </td>
-                        <td className="py-3 pr-4 text-slate-400">{row.section}</td>
-                        <td className="py-3 pr-4 font-mono text-slate-300">{formatCurrency(row.maxLimit)}</td>
-                        <td className="py-3 pr-4 text-slate-400">{row.lockIn}</td>
-                        <td className="py-3 pr-4 text-slate-400">{row.expectedReturn}</td>
-                        <td className="py-3 text-slate-300">{row.riskLevel}</td>
+                        <td className="py-3 pr-4 text-gray-500">{row.section}</td>
+                        <td className="py-3 pr-4 font-mono text-gray-600">{formatCurrency(row.maxLimit)}</td>
+                        <td className="py-3 pr-4 text-gray-500">{row.lockIn}</td>
+                        <td className="py-3 pr-4 text-gray-500">{row.expectedReturn}</td>
+                        <td className="py-3 text-gray-600">{row.riskLevel}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -968,9 +968,9 @@ export default function TaxWizardPage() {
             </motion.section>
 
             {analysis.ai_summary && (
-              <motion.section {...fadeIn} className={cn(glass, "border-amber-500/20 bg-amber-500/5 p-6")}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-amber-400/90">Summary</p>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300">{analysis.ai_summary}</p>
+              <motion.section {...fadeIn} className={cn(glass, "border-amber-200 bg-amber-50 p-6")}>
+                <p className="text-xs font-semibold uppercase tracking-wide text-amber-500">Summary</p>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{analysis.ai_summary}</p>
               </motion.section>
             )}
           </>
@@ -981,46 +981,46 @@ export default function TaxWizardPage() {
           <button
             type="button"
             onClick={() => setHistoryOpen((o) => !o)}
-            className="flex w-full items-center justify-between gap-3 px-6 py-4 text-left transition hover:bg-white/5"
+            className="flex w-full items-center justify-between gap-3 px-6 py-4 text-left transition hover:bg-gray-50"
           >
             <div className="flex items-center gap-3">
-              <History className="h-5 w-5 text-slate-400" />
-              <span className="text-sm font-semibold text-slate-200">Previous Analyses</span>
+              <History className="h-5 w-5 text-gray-500" />
+              <span className="text-sm font-semibold text-gray-700">Previous Analyses</span>
               {taxHistory.length > 0 && (
-                <span className="rounded-full bg-slate-700/80 px-2 py-0.5 text-[10px] font-medium text-slate-300">
+                <span className="rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-medium text-gray-600">
                   {taxHistory.length}
                 </span>
               )}
             </div>
-            {historyOpen ? <ChevronUp className="h-5 w-5 shrink-0 text-slate-400" /> : <ChevronDown className="h-5 w-5 shrink-0 text-slate-400" />}
+            {historyOpen ? <ChevronUp className="h-5 w-5 shrink-0 text-gray-500" /> : <ChevronDown className="h-5 w-5 shrink-0 text-gray-500" />}
           </button>
           <div
             className={cn(
-              "overflow-hidden border-t border-white/10 transition-all duration-300",
+              "overflow-hidden border-t border-gray-200 transition-all duration-300",
               historyOpen ? "max-h-[1200px] opacity-100" : "max-h-0 opacity-0",
             )}
           >
             <div className="space-y-3 px-6 pb-6 pt-2">
               {taxHistory.length === 0 ? (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-gray-400">
                   Sign in and run an analysis to see saved history here (or none saved yet).
                 </p>
               ) : (
                 taxHistory.map((row) => (
                   <div
                     key={row.id}
-                    className="flex flex-col gap-2 rounded-xl border border-slate-700/50 bg-slate-950/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
-                      <p className="text-xs text-slate-500">{formatHistoryDate(row)}</p>
-                      <p className="mt-0.5 text-sm font-medium text-white">
+                      <p className="text-xs text-gray-400">{formatHistoryDate(row)}</p>
+                      <p className="mt-0.5 text-sm font-medium text-gray-900">
                         Recommended:{" "}
-                        <span className="text-emerald-300">{row.recommended_regime === "old" ? "Old" : "New"} regime</span>
+                        <span className="text-[#00D09C]">{row.recommended_regime === "old" ? "Old" : "New"} regime</span>
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[11px] uppercase tracking-wide text-slate-500">Savings vs other regime</p>
-                      <p className="font-mono text-sm font-semibold text-cyan-200">
+                      <p className="text-[11px] uppercase tracking-wide text-gray-400">Savings vs other regime</p>
+                      <p className="font-mono text-sm font-semibold text-[#00D09C]">
                         {formatCurrency(row.savings_potential ?? 0)}
                       </p>
                     </div>

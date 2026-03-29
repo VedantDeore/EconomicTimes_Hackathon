@@ -9,14 +9,14 @@ export interface OverlapHeatmapProps {
 
 function cellClass(isDiagonal: boolean): string {
   if (isDiagonal) {
-    return "text-white ring-1 ring-slate-500/80";
+    return "text-gray-900 ring-1 ring-gray-300";
   }
   return "text-white";
 }
 
 function cellBackground(pct: number, isDiagonal: boolean): CSSProperties {
   if (isDiagonal) {
-    return { backgroundColor: "rgb(51 65 85 / 0.95)" };
+    return { backgroundColor: "#f3f4f6" };
   }
   const t = Math.max(0, Math.min(100, pct)) / 100;
   const r = Math.round(71 + t * (220 - 71));
@@ -27,15 +27,15 @@ function cellBackground(pct: number, isDiagonal: boolean): CSSProperties {
 
 export default function OverlapHeatmap({ funds, matrix }: OverlapHeatmapProps) {
   return (
-    <div className="overflow-x-auto rounded-xl bg-slate-900/80 p-4 text-slate-100">
+    <div className="overflow-x-auto rounded-xl bg-gray-50 p-4 text-gray-700">
       <table className="w-full min-w-70 border-collapse text-sm">
         <thead>
           <tr>
-            <th className="border border-slate-700 bg-slate-950 px-2 py-2 text-left font-medium text-slate-400" />
+            <th className="border border-gray-200 bg-gray-100 px-2 py-2 text-left font-medium text-gray-500" />
             {funds.map((f) => (
               <th
                 key={f}
-                className="max-w-32 border border-slate-700 bg-slate-950 px-2 py-2 text-center text-xs font-medium text-slate-300"
+                className="max-w-32 border border-gray-200 bg-gray-100 px-2 py-2 text-center text-xs font-medium text-gray-600"
               >
                 <span className="line-clamp-2">{f}</span>
               </th>
@@ -45,7 +45,7 @@ export default function OverlapHeatmap({ funds, matrix }: OverlapHeatmapProps) {
         <tbody>
           {funds.map((rowLabel, i) => (
             <tr key={rowLabel}>
-              <th className="max-w-40 border border-slate-700 bg-slate-950 px-2 py-2 text-left text-xs font-medium text-slate-300">
+              <th className="max-w-40 border border-gray-200 bg-gray-100 px-2 py-2 text-left text-xs font-medium text-gray-600">
                 <span className="line-clamp-2">{rowLabel}</span>
               </th>
               {funds.map((_, j) => {
@@ -55,7 +55,7 @@ export default function OverlapHeatmap({ funds, matrix }: OverlapHeatmapProps) {
                 return (
                   <td
                     key={`${i}-${j}`}
-                    className={`border border-slate-700 px-2 py-2 text-center font-mono text-xs ${cellClass(isDiagonal)}`}
+                    className={`border border-gray-200 px-2 py-2 text-center font-mono text-xs ${cellClass(isDiagonal)}`}
                     style={cellBackground(pct, isDiagonal)}
                   >
                     {pct.toFixed(0)}%

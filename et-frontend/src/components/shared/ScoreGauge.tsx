@@ -12,7 +12,7 @@ export interface ScoreGaugeProps {
 }
 
 function strokeForScore(score: number): string {
-  if (score >= 80) return "#10b981";
+  if (score >= 80) return "#00D09C";
   if (score >= 60) return "#f59e0b";
   if (score >= 40) return "#f97316";
   return "#ef4444";
@@ -34,7 +34,7 @@ export default function ScoreGauge({
   return (
     <div className={cn("flex flex-col items-center gap-2")}>
       {label ? (
-        <p className="text-xs font-medium text-slate-400">{label}</p>
+        <p className="text-xs font-medium text-gray-400">{label}</p>
       ) : null}
       <div className="relative" style={{ width: size, height: size }}>
         <svg
@@ -50,7 +50,7 @@ export default function ScoreGauge({
             fill="none"
             stroke="currentColor"
             strokeWidth={strokeWidth}
-            className="text-slate-700/80"
+            className="text-gray-200"
           />
           <motion.circle
             cx={size / 2}
@@ -68,7 +68,7 @@ export default function ScoreGauge({
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <motion.span
-            className="text-2xl font-bold text-white tabular-nums"
+            className="text-2xl font-bold text-gray-900 tabular-nums"
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
@@ -77,7 +77,7 @@ export default function ScoreGauge({
           </motion.span>
           {grade ? (
             <motion.span
-              className="text-xs font-semibold text-slate-400 mt-0.5 uppercase tracking-wide"
+              className="text-xs font-semibold text-gray-400 mt-0.5 uppercase tracking-wide"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.15, duration: 0.3 }}

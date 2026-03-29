@@ -204,7 +204,7 @@ function renderBoldLines(text: string) {
       <p key={j} className={j > 0 ? "mt-1.5" : ""}>
         {parts.map((part, k) =>
           k % 2 === 1 ? (
-            <strong key={k} className="font-semibold text-white">
+            <strong key={k} className="font-semibold text-gray-900">
               {part}
             </strong>
           ) : (
@@ -220,15 +220,15 @@ function ToolResultCard({ data, toolUsed }: { data: Record<string, unknown>; too
   const entries = Object.entries(data).filter(([, v]) => v !== undefined && v !== null);
   if (entries.length === 0) return null;
   return (
-    <div className="mt-2 rounded-lg border border-cyan-500/20 bg-slate-950/60 p-3 text-xs shadow-inner shadow-emerald-500/5">
+    <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs shadow-inner shadow-gray-900/5">
       {toolUsed && (
-        <div className="mb-2 font-mono text-[10px] uppercase tracking-wide text-cyan-400/90">{toolUsed}</div>
+        <div className="mb-2 font-mono text-[10px] uppercase tracking-wide text-[#00D09C]">{toolUsed}</div>
       )}
       <dl className="space-y-1.5">
         {entries.map(([key, val]) => (
-          <div key={key} className="flex justify-between gap-3 border-b border-slate-700/40 pb-1.5 last:border-0 last:pb-0">
-            <dt className="shrink-0 text-slate-500">{key.replace(/_/g, " ")}</dt>
-            <dd className="text-right text-slate-200">
+          <div key={key} className="flex justify-between gap-3 border-b border-gray-200 pb-1.5 last:border-0 last:pb-0">
+            <dt className="shrink-0 text-gray-400">{key.replace(/_/g, " ")}</dt>
+            <dd className="text-right text-gray-700">
               {typeof val === "number" ? val.toLocaleString("en-IN") : String(val)}
             </dd>
           </div>
@@ -363,28 +363,28 @@ export default function AIMentor({ isOpen, onClose }: AIMentorProps) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="dhanguru-mentor-title"
-            className="fixed right-0 top-0 z-50 flex h-full w-full flex-col border-l border-emerald-500/10 bg-slate-900/95 shadow-2xl shadow-emerald-950/40 backdrop-blur-xl sm:w-96"
+            className="fixed right-0 top-0 z-50 flex h-full w-full flex-col border-l border-gray-200 bg-white shadow-xl backdrop-blur-xl sm:w-96"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
           >
-            <header className="flex shrink-0 items-center justify-between border-b border-slate-800/80 bg-linear-to-r from-emerald-500/10 via-slate-900/90 to-cyan-500/10 px-4 py-3">
+            <header className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-cyan-600 shadow-lg shadow-emerald-500/20">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00D09C] shadow-lg shadow-gray-900/10">
                   <Sparkles className="h-5 w-5 text-white" aria-hidden />
                 </div>
                 <div>
-                  <h2 id="dhanguru-mentor-title" className="text-base font-semibold tracking-tight text-white">
+                  <h2 id="dhanguru-mentor-title" className="text-base font-semibold tracking-tight text-gray-900">
                     DhanGuru AI Mentor
                   </h2>
-                  <p className="text-[11px] text-emerald-400/90">Context-aware guidance</p>
+                  <p className="text-[11px] text-[#00D09C]">Context-aware guidance</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-xl p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+                className="rounded-xl p-2 text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-900"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -400,8 +400,8 @@ export default function AIMentor({ isOpen, onClose }: AIMentorProps) {
                     <div
                       className={`max-w-[92%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                         msg.role === "user"
-                          ? "bg-emerald-600/90 text-white shadow-md shadow-emerald-900/30"
-                          : "border border-slate-700/50 bg-slate-800 text-slate-200"
+                          ? "bg-[#00D09C] text-white shadow-md shadow-gray-900/15"
+                          : "border border-gray-200 bg-gray-50 text-gray-700"
                       }`}
                     >
                       {msg.role === "user" ? (
@@ -413,13 +413,13 @@ export default function AIMentor({ isOpen, onClose }: AIMentorProps) {
                             <ToolResultCard data={msg.tool_result} toolUsed={msg.tool_used ?? null} />
                           )}
                           {msg.suggestions && msg.suggestions.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-1.5 border-t border-slate-700/50 pt-2">
+                            <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-200 pt-2">
                               {msg.suggestions.map((s) => (
                                 <button
                                   key={s}
                                   type="button"
                                   onClick={() => void sendMessage(s)}
-                                  className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[11px] text-emerald-200 transition hover:border-emerald-400/50 hover:bg-emerald-500/20"
+                                  className="rounded-full border border-[#00D09C]/20 bg-[#00D09C]/8 px-2.5 py-1 text-[11px] text-[#00D09C] transition hover:border-[#00D09C]/40 hover:bg-[#00D09C]/15"
                                 >
                                   {s}
                                 </button>
@@ -434,11 +434,11 @@ export default function AIMentor({ isOpen, onClose }: AIMentorProps) {
 
                 {isTyping && (
                   <div className="flex justify-start">
-                    <div className="flex items-center gap-1 rounded-2xl border border-slate-700/50 bg-slate-800 px-4 py-3">
+                    <div className="flex items-center gap-1 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
                       {[0, 1, 2].map((d) => (
                         <motion.span
                           key={d}
-                          className="h-2 w-2 rounded-full bg-emerald-400"
+                          className="h-2 w-2 rounded-full bg-[#00D09C]"
                           animate={{ opacity: [0.35, 1, 0.35], y: [0, -3, 0] }}
                           transition={{ duration: 0.9, repeat: Infinity, delay: d * 0.15 }}
                         />
@@ -452,15 +452,15 @@ export default function AIMentor({ isOpen, onClose }: AIMentorProps) {
             </div>
 
             {showQuickChips && (
-              <div className="shrink-0 border-t border-slate-800/80 bg-slate-950/40 px-3 py-2.5">
-                <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-slate-500">Quick actions</p>
+              <div className="shrink-0 border-t border-gray-200 bg-gray-50 px-3 py-2.5">
+                <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-gray-400">Quick actions</p>
                 <div className="flex flex-wrap gap-1.5">
                   {QUICK_ACTIONS.map((label) => (
                     <button
                       key={label}
                       type="button"
                       onClick={() => void sendMessage(label)}
-                      className="rounded-lg border border-cyan-500/20 bg-slate-800/80 px-2.5 py-1.5 text-left text-[11px] text-slate-300 transition hover:border-emerald-400/40 hover:text-white"
+                      className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-left text-[11px] text-gray-600 transition hover:border-gray-200 hover:bg-gray-50 hover:text-gray-900"
                     >
                       {label}
                     </button>
@@ -469,7 +469,7 @@ export default function AIMentor({ isOpen, onClose }: AIMentorProps) {
               </div>
             )}
 
-            <form onSubmit={onSubmit} className="shrink-0 border-t border-slate-800/80 bg-slate-950/60 p-3">
+            <form onSubmit={onSubmit} className="shrink-0 border-t border-gray-200 bg-gray-50 p-3">
               <div className="flex gap-2">
                 <textarea
                   ref={inputRef}
@@ -479,17 +479,17 @@ export default function AIMentor({ isOpen, onClose }: AIMentorProps) {
                   placeholder="Ask DhanGuru anything..."
                   rows={2}
                   disabled={isTyping}
-                  className="min-h-11 flex-1 resize-none rounded-xl border border-slate-700/60 bg-slate-900/80 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30 disabled:opacity-60"
+                  className="min-h-11 flex-1 resize-none rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#00D09C]/50 focus:outline-none focus:ring-1 focus:ring-[#00D09C]/30 disabled:opacity-60"
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isTyping}
-                  className="flex h-11 w-11 shrink-0 items-center justify-center self-end rounded-xl bg-linear-to-br from-emerald-500 to-cyan-600 text-white shadow-md shadow-emerald-500/25 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center self-end rounded-xl bg-[#00D09C] text-white shadow-md shadow-gray-900/10 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <SendHorizontal className="h-5 w-5" />
                 </button>
               </div>
-              <p className="mt-2 text-center text-[9px] text-slate-600">
+              <p className="mt-2 text-center text-[9px] text-gray-500">
                 Educational information only. Consult a qualified professional for personal advice.
               </p>
             </form>

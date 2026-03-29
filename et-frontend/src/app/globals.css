@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #020617;
-  --color-foreground: #f1f5f9;
+  --color-background: #ffffff;
+  --color-foreground: #1e2330;
+  --color-primary: #00D09C;
+  --color-primary-dark: #00B386;
+  --color-surface: #F8F9FA;
+  --color-border: #E5E7EB;
+  --color-text-secondary: #6B7280;
   --font-sans: var(--font-inter);
 }
 
@@ -22,22 +27,22 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #d1d5db;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #9ca3af;
 }
 
 /* ===== Selection ===== */
 ::selection {
-  background: rgba(16, 185, 129, 0.3);
-  color: #fff;
+  background: rgba(0, 208, 156, 0.15);
+  color: #1e2330;
 }
 
 /* ===== Focus Styles ===== */
 *:focus-visible {
-  outline: 2px solid rgba(16, 185, 129, 0.5);
+  outline: 2px solid rgba(0, 208, 156, 0.5);
   outline-offset: 2px;
   border-radius: 8px;
 }
@@ -69,8 +74,8 @@ input[type="number"] {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
-  50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.2); }
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 208, 156, 0.06); }
+  50% { box-shadow: 0 0 40px rgba(0, 208, 156, 0.12); }
 }
 
 .animate-fade-in {
@@ -87,23 +92,12 @@ input[type="number"] {
 
 /* FIRE planner — generation pipeline */
 @keyframes fire-gen-orbit {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 @keyframes fire-gen-pulse {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.06);
-  }
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
 }
 .fire-gen-ring {
   animation: fire-gen-orbit 2.2s linear infinite;
@@ -112,30 +106,24 @@ input[type="number"] {
   animation: fire-gen-pulse 1.2s ease-in-out infinite;
 }
 @keyframes result-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .animate-result-reveal {
   animation: result-reveal 0.55s ease-out forwards;
 }
 
-/* ===== Glass Card ===== */
+/* ===== Card ===== */
 .glass-card {
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.5);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 /* ===== Gradient Text ===== */
 .gradient-text {
-  background: linear-gradient(135deg, #10b981, #06b6d4);
+  background: linear-gradient(135deg, #00D09C, #00B386);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

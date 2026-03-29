@@ -404,23 +404,23 @@ export default function FirePlannerPage() {
       >
         <aside
           className={cn(
-            "lg:w-[340px] shrink-0 rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-md p-5 shadow-xl shadow-black/20",
+            "lg:w-[340px] shrink-0 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm",
             "space-y-5"
           )}
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500/25 to-cyan-500/15 border border-emerald-500/30 text-emerald-300">
+              <div className="p-2.5 rounded-xl bg-[#00D09C]/10 border border-[#00D09C]/20 text-[#00D09C]">
                 <Flame size={22} />
               </div>
               <div>
                 <h1 className="text-lg font-bold leading-tight">FIRE Path Planner</h1>
-                <p className="text-xs text-slate-500">DhanGuru AI Money Mentor</p>
+                <p className="text-xs text-gray-400">DhanGuru AI Money Mentor</p>
               </div>
             </div>
             <button
               type="button"
-              className="lg:hidden p-2 rounded-lg border border-slate-700/60 text-slate-300"
+              className="lg:hidden p-2 rounded-lg border border-gray-300 text-gray-600"
               onClick={() => setInputsOpen((o) => !o)}
               aria-expanded={inputsOpen}
             >
@@ -434,7 +434,7 @@ export default function FirePlannerPage() {
                 type="button"
                 onClick={() => void fillFromProfile()}
                 disabled={isFilling}
-                className="flex-1 min-w-0 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/35 text-emerald-300 text-sm font-medium hover:bg-emerald-500/25 transition-colors disabled:opacity-50"
+                className="flex-1 min-w-0 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#00D09C]/8 border border-[#00D09C]/20 text-[#00D09C] text-sm font-medium hover:bg-[#00D09C]/15 transition-colors disabled:opacity-50"
               >
                 {isFilling ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
                 <span className="truncate">Sync from Money Profile</span>
@@ -442,23 +442,23 @@ export default function FirePlannerPage() {
               <button
                 type="button"
                 onClick={applySampleData}
-                className="flex-1 min-w-0 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 text-sm font-medium hover:bg-cyan-500/25 transition-colors"
+                className="flex-1 min-w-0 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#00D09C]/8 border border-[#00D09C]/20 text-[#00D09C] text-sm font-medium hover:bg-[#00D09C]/15 transition-colors"
               >
-                <Sparkles size={16} className="shrink-0 text-cyan-400" />
+                <Sparkles size={16} className="shrink-0 text-[#00D09C]" />
                 <span className="truncate">Try with Sample Data</span>
               </button>
             </div>
-            {syncMsg && <p className="text-xs text-amber-200/90">{syncMsg}</p>}
-            <p className="text-xs text-slate-500">
+            {syncMsg && <p className="text-xs text-amber-600">{syncMsg}</p>}
+            <p className="text-xs text-gray-400">
               Edit your full profile in{" "}
-              <Link href="/money-profile" className="text-cyan-400 hover:underline">
+              <Link href="/money-profile" className="text-[#00D09C] hover:underline">
                 Money Profile
               </Link>
               .
             </p>
 
             <div className="grid grid-cols-2 gap-3">
-              <label className="text-xs text-slate-400 space-y-1">
+              <label className="text-xs text-gray-500 space-y-1">
                 Current age
                 <input
                   type="number"
@@ -466,10 +466,10 @@ export default function FirePlannerPage() {
                   max={80}
                   value={form.age}
                   onChange={(e) => setForm((f) => ({ ...f, age: Number(e.target.value) }))}
-                  className="w-full rounded-xl bg-slate-900/70 border border-slate-700/50 px-3 py-2 text-white text-sm"
+                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2 text-gray-900 text-sm"
                 />
               </label>
-              <label className="text-xs text-slate-400 space-y-1">
+              <label className="text-xs text-gray-500 space-y-1">
                 Target FIRE age
                 <input
                   type="number"
@@ -477,13 +477,13 @@ export default function FirePlannerPage() {
                   max={85}
                   value={form.retirement_age}
                   onChange={(e) => setForm((f) => ({ ...f, retirement_age: Number(e.target.value) }))}
-                  className="w-full rounded-xl bg-slate-900/70 border border-slate-700/50 px-3 py-2 text-white text-sm"
+                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2 text-gray-900 text-sm"
                 />
               </label>
             </div>
 
             <div className="grid grid-cols-1 gap-3">
-              <label className="text-xs text-slate-400 space-y-1">
+              <label className="text-xs text-gray-500 space-y-1">
                 Monthly income ({formatCurrency(form.monthly_income)})
                 <input
                   type="range"
@@ -492,10 +492,10 @@ export default function FirePlannerPage() {
                   step={5000}
                   value={form.monthly_income}
                   onChange={(e) => setForm((f) => ({ ...f, monthly_income: Number(e.target.value) }))}
-                  className="w-full accent-emerald-500"
+                  className="w-full accent-[#00D09C]"
                 />
               </label>
-              <label className="text-xs text-slate-400 space-y-1">
+              <label className="text-xs text-gray-500 space-y-1">
                 Monthly expenses ({formatCurrency(form.monthly_expenses)})
                 <input
                   type="range"
@@ -504,10 +504,10 @@ export default function FirePlannerPage() {
                   step={5000}
                   value={form.monthly_expenses}
                   onChange={(e) => setForm((f) => ({ ...f, monthly_expenses: Number(e.target.value) }))}
-                  className="w-full accent-cyan-500"
+                  className="w-full accent-[#00D09C]"
                 />
               </label>
-              <label className="text-xs text-slate-400 space-y-1">
+              <label className="text-xs text-gray-500 space-y-1">
                 Current corpus ({formatCurrency(form.existing_corpus)})
                 <input
                   type="range"
@@ -522,9 +522,9 @@ export default function FirePlannerPage() {
             </div>
 
             <div className="space-y-2">
-              <div className="flex justify-between text-xs text-slate-400">
+              <div className="flex justify-between text-xs text-gray-500">
                 <span>Expected return</span>
-                <span className="text-emerald-300 tabular-nums">{formatPercent(form.expected_return_rate)}</span>
+                <span className="text-[#00D09C] tabular-nums">{formatPercent(form.expected_return_rate)}</span>
               </div>
               <input
                 type="range"
@@ -533,14 +533,14 @@ export default function FirePlannerPage() {
                 step={0.5}
                 value={form.expected_return_rate}
                 onChange={(e) => setForm((f) => ({ ...f, expected_return_rate: Number(e.target.value) }))}
-                className="w-full accent-emerald-400"
+                className="w-full accent-[#00D09C]"
               />
             </div>
 
             <div className="space-y-2">
-              <div className="flex justify-between text-xs text-slate-400">
+              <div className="flex justify-between text-xs text-gray-500">
                 <span>Inflation</span>
-                <span className="text-cyan-300 tabular-nums">{formatPercent(form.inflation_rate)}</span>
+                <span className="text-[#00D09C] tabular-nums">{formatPercent(form.inflation_rate)}</span>
               </div>
               <input
                 type="range"
@@ -549,12 +549,12 @@ export default function FirePlannerPage() {
                 step={0.5}
                 value={form.inflation_rate}
                 onChange={(e) => setForm((f) => ({ ...f, inflation_rate: Number(e.target.value) }))}
-                className="w-full accent-cyan-400"
+                className="w-full accent-[#00D09C]"
               />
             </div>
 
             <div>
-              <p className="text-xs text-slate-500 mb-2">Risk tolerance</p>
+              <p className="text-xs text-gray-400 mb-2">Risk tolerance</p>
               <div className="grid grid-cols-1 gap-2">
                 {RISK_PROFILES.map((rp) => {
                   const active = risk === rp.value;
@@ -566,12 +566,12 @@ export default function FirePlannerPage() {
                       className={cn(
                         "text-left rounded-xl border px-3 py-2.5 transition-all",
                         active
-                          ? "border-emerald-500/60 bg-emerald-500/15 text-white"
-                          : "border-slate-700/50 bg-slate-900/40 text-slate-300 hover:border-slate-600/60"
+                          ? "border-[#00D09C] bg-[#00D09C]/8 text-gray-900"
+                          : "border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-400"
                       )}
                     >
                       <p className="text-sm font-semibold">{rp.label}</p>
-                      <p className="text-[11px] text-slate-500 mt-0.5">{rp.description}</p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">{rp.description}</p>
                     </button>
                   );
                 })}
@@ -579,9 +579,9 @@ export default function FirePlannerPage() {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Goals</p>
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Goals</p>
               {goals.map((g, i) => (
-                <div key={i} className="rounded-xl border border-slate-700/40 bg-slate-900/40 p-3 space-y-2">
+                <div key={i} className="rounded-xl border border-gray-200 bg-gray-50 p-3 space-y-2">
                   <input
                     placeholder="Goal name"
                     value={g.name}
@@ -593,7 +593,7 @@ export default function FirePlannerPage() {
                         return n;
                       });
                     }}
-                    className="w-full bg-transparent border border-slate-700/50 rounded-lg px-2 py-1.5 text-sm"
+                    className="w-full bg-white border border-gray-300 rounded-lg px-2 py-1.5 text-sm"
                   />
                   <div className="grid grid-cols-2 gap-2">
                     <select
@@ -606,7 +606,7 @@ export default function FirePlannerPage() {
                           return n;
                         });
                       }}
-                      className="rounded-lg bg-slate-900/60 border border-slate-700/50 text-xs px-2 py-1.5"
+                      className="rounded-lg bg-gray-50 border border-gray-200 text-xs px-2 py-1.5"
                     >
                       {GOAL_CATEGORIES.map((c) => (
                         <option key={c.value} value={c.value}>
@@ -625,15 +625,15 @@ export default function FirePlannerPage() {
                           return n;
                         });
                       }}
-                      className="rounded-lg bg-slate-900/60 border border-slate-700/50 text-xs px-2 py-1.5"
+                      className="rounded-lg bg-gray-50 border border-gray-200 text-xs px-2 py-1.5"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <label className="text-slate-500">
+                    <label className="text-gray-400">
                       Target
                       <input
                         type="number"
-                        className="mt-1 w-full rounded-lg bg-slate-900/60 border border-slate-700/50 px-2 py-1"
+                        className="mt-1 w-full rounded-lg bg-gray-50 border border-gray-200 px-2 py-1"
                         value={g.target_amount}
                         onChange={(e) => {
                           const v = Number(e.target.value);
@@ -645,11 +645,11 @@ export default function FirePlannerPage() {
                         }}
                       />
                     </label>
-                    <label className="text-slate-500">
+                    <label className="text-gray-400">
                       Saved
                       <input
                         type="number"
-                        className="mt-1 w-full rounded-lg bg-slate-900/60 border border-slate-700/50 px-2 py-1"
+                        className="mt-1 w-full rounded-lg bg-gray-50 border border-gray-200 px-2 py-1"
                         value={g.current_savings}
                         onChange={(e) => {
                           const v = Number(e.target.value);
@@ -668,7 +668,7 @@ export default function FirePlannerPage() {
                 <button
                   type="button"
                   onClick={() => setGoals((g) => [...g, emptyGoal()])}
-                  className="text-xs text-cyan-400 hover:text-cyan-300"
+                  className="text-xs text-[#00D09C] hover:text-[#00D09C]"
                 >
                   + Add goal
                 </button>
@@ -676,20 +676,20 @@ export default function FirePlannerPage() {
                   type="button"
                   onClick={() => void handleSaveGoals()}
                   disabled={savingGoals}
-                  className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#00D09C] hover:text-[#00D09C] disabled:opacity-50"
                 >
                   <Save size={13} />
                   {savingGoals ? "Saving…" : "Save to Profile"}
                 </button>
               </div>
-              {saveGoalsMsg && <p className="text-xs text-emerald-300">{saveGoalsMsg}</p>}
+              {saveGoalsMsg && <p className="text-xs text-[#00D09C]">{saveGoalsMsg}</p>}
             </div>
 
             <button
               type="button"
               onClick={() => void runGenerate()}
               disabled={isGenerating}
-              className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-3 rounded-xl font-semibold text-white bg-[#00D09C] hover:bg-[#00B386] shadow-sm flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {isGenerating ? <Loader2 className="animate-spin" size={18} /> : <Sparkles size={18} />}
               Update plan
@@ -705,14 +705,14 @@ export default function FirePlannerPage() {
               animate="visible"
               className="space-y-6"
             >
-              <motion.div variants={gridItem} className="rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-md overflow-hidden">
+              <motion.div variants={gridItem} className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
                 <button
                   type="button"
-                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-900/40 text-left"
+                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-100 text-left"
                   onClick={() => setHistoryOpen((o) => !o)}
                 >
-                  <span className="font-semibold text-slate-200 text-sm">Previous Plans</span>
-                  <ChevronDown className={cn("transition-transform text-slate-400 shrink-0", historyOpen && "rotate-180")} size={18} />
+                  <span className="font-semibold text-gray-700 text-sm">Previous Plans</span>
+                  <ChevronDown className={cn("transition-transform text-gray-500 shrink-0", historyOpen && "rotate-180")} size={18} />
                 </button>
                 <AnimatePresence initial={false}>
                   {historyOpen && (
@@ -721,11 +721,11 @@ export default function FirePlannerPage() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="border-t border-slate-700/40 overflow-hidden"
+                      className="border-t border-gray-200 overflow-hidden"
                     >
                       <div className="p-4 max-h-64 overflow-auto space-y-2">
                         {fireHistory.length === 0 ? (
-                          <p className="text-xs text-slate-500">No saved plans yet. Generate a plan while signed in to build history.</p>
+                          <p className="text-xs text-gray-400">No saved plans yet. Generate a plan while signed in to build history.</p>
                         ) : (
                           fireHistory.map((row) => {
                             const when = row.generated_at
@@ -740,19 +740,19 @@ export default function FirePlannerPage() {
                             return (
                               <div
                                 key={String(row.id ?? row.generated_at)}
-                                className="rounded-xl border border-slate-700/40 bg-slate-900/50 px-3 py-2.5 text-xs text-slate-400 flex flex-wrap gap-x-4 gap-y-1"
+                                className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1"
                               >
-                                <span className="text-slate-300 min-w-[140px]">{when}</span>
+                                <span className="text-gray-600 min-w-[140px]">{when}</span>
                                 <span>
                                   FIRE:{" "}
-                                  <span className="text-emerald-300 tabular-nums">{fn != null ? formatCurrency(fn) : "—"}</span>
+                                  <span className="text-[#00D09C] tabular-nums">{fn != null ? formatCurrency(fn) : "—"}</span>
                                 </span>
                                 <span>
                                   SIP:{" "}
-                                  <span className="text-cyan-300 tabular-nums">{sip != null ? formatCurrency(sip) : "—"}</span>
+                                  <span className="text-[#00D09C] tabular-nums">{sip != null ? formatCurrency(sip) : "—"}</span>
                                 </span>
                                 <span>
-                                  Years: <span className="text-white tabular-nums">{yrs ?? "—"}</span>
+                                  Years: <span className="text-gray-900 tabular-nums">{yrs ?? "—"}</span>
                                 </span>
                               </div>
                             );
@@ -766,18 +766,18 @@ export default function FirePlannerPage() {
 
               <motion.div
                 variants={gridItem}
-                className="rounded-2xl border border-emerald-500/25 bg-slate-800/50 backdrop-blur-md p-6 md:p-8 text-center"
+                className="rounded-2xl border border-[#00D09C]/20 bg-white p-6 md:p-8 text-center"
               >
-                <p className="text-xs uppercase tracking-wide text-emerald-400/90 mb-2">FIRE number</p>
-                <p className="text-2xl md:text-3xl font-bold text-white mb-1">
+                <p className="text-xs uppercase tracking-wide text-[#00D09C] mb-2">FIRE number</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
                   You need{" "}
-                  <span className="text-emerald-400">
+                  <span className="text-[#00D09C]">
                     <AnimatedCounter value={Math.round(plan.fire_number)} prefix="₹" duration={1.2} />
                   </span>{" "}
                   to retire at{" "}
-                  <span className="text-cyan-300 tabular-nums">{form.retirement_age}</span>
+                  <span className="text-[#00D09C] tabular-nums">{form.retirement_age}</span>
                 </p>
-                <p className="text-sm text-slate-500 mt-2">
+                <p className="text-sm text-gray-400 mt-2">
                   About {fireCr.toFixed(2)} Cr (nominal target, model illustrative)
                 </p>
               </motion.div>
@@ -787,12 +787,12 @@ export default function FirePlannerPage() {
                   {
                     label: "Years to FIRE",
                     value: `${plan.years_to_fire} yrs`,
-                    icon: <TrendingUp className="text-emerald-400" size={20} />,
+                    icon: <TrendingUp className="text-[#00D09C]" size={20} />,
                   },
                   {
                     label: "Required monthly SIP (total)",
                     value: formatCurrency(plan.monthly_sip_total ?? plan.monthly_sip_needed ?? 0),
-                    icon: <Wallet className="text-cyan-400" size={20} />,
+                    icon: <Wallet className="text-[#00D09C]" size={20} />,
                   },
                   {
                     label: "Retirement SIP",
@@ -803,32 +803,32 @@ export default function FirePlannerPage() {
                     label: "Success probability",
                     value: `${successProb}% chance`,
                     sub: "Monte Carlo on total SIP (scaled)",
-                    icon: <Sparkles className="text-fuchsia-300" size={20} />,
+                    icon: <Sparkles className="text-purple-500" size={20} />,
                   },
                 ].map((card) => (
                   <div
                     key={card.label}
-                    className="rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-md p-4 flex flex-col gap-2"
+                    className="rounded-2xl border border-gray-200 bg-white p-4 flex flex-col gap-2"
                   >
-                    <div className="flex items-center gap-2 text-slate-500 text-xs">
+                    <div className="flex items-center gap-2 text-gray-400 text-xs">
                       {card.icon}
                       <span>{card.label}</span>
                     </div>
-                    <p className="text-xl font-bold text-white">{card.value}</p>
-                    {"sub" in card && card.sub && <p className="text-[11px] text-slate-500">{card.sub}</p>}
+                    <p className="text-xl font-bold text-gray-900">{card.value}</p>
+                    {"sub" in card && card.sub && <p className="text-[11px] text-gray-400">{card.sub}</p>}
                   </div>
                 ))}
               </motion.div>
 
               <motion.div
                 variants={gridItem}
-                className="rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-md p-5"
+                className="rounded-2xl border border-gray-200 bg-white p-5"
               >
-                <div className="flex items-center gap-2 mb-3 text-slate-200">
-                  <SlidersHorizontal size={18} className="text-cyan-400" />
+                <div className="flex items-center gap-2 mb-3 text-gray-700">
+                  <SlidersHorizontal size={18} className="text-[#00D09C]" />
                   <span className="font-semibold">What-if: SIP scale</span>
                 </div>
-                <p className="text-xs text-slate-500 mb-3">
+                <p className="text-xs text-gray-400 mb-3">
                   Multiplies the model total monthly SIP to stress-test success odds (goals + retirement bucket).
                 </p>
                 <input
@@ -838,36 +838,36 @@ export default function FirePlannerPage() {
                   step={0.05}
                   value={sipScale}
                   onChange={(e) => setSipScale(Number(e.target.value))}
-                  className="w-full accent-fuchsia-500"
+                  className="w-full accent-purple-500"
                 />
-                <div className="flex justify-between text-xs text-slate-400 mt-2">
+                <div className="flex justify-between text-xs text-gray-500 mt-2">
                   <span>0.5x</span>
-                  <span className="text-fuchsia-300 tabular-nums">{sipScale.toFixed(2)}x</span>
+                  <span className="text-purple-500 tabular-nums">{sipScale.toFixed(2)}x</span>
                   <span>1.5x</span>
                 </div>
               </motion.div>
 
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <motion.div variants={gridItem} className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-4">
-                  <h3 className="text-sm font-semibold text-slate-200 mb-3">Monte Carlo fan (percentile paths)</h3>
+                <motion.div variants={gridItem} className="rounded-2xl border border-gray-200 bg-white p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Monte Carlo fan (percentile paths)</h3>
                   {fanData && fanData.p50.length > 0 ? (
                     <FanChart data={fanData} fireTarget={plan.fire_number} />
                   ) : (
-                    <p className="text-sm text-slate-500 p-8 text-center">Generate a plan to see paths.</p>
+                    <p className="text-sm text-gray-400 p-8 text-center">Generate a plan to see paths.</p>
                   )}
                 </motion.div>
-                <motion.div variants={gridItem} className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-4">
-                  <h3 className="text-sm font-semibold text-slate-200 mb-3">Glide path (allocation)</h3>
+                <motion.div variants={gridItem} className="rounded-2xl border border-gray-200 bg-white p-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Glide path (allocation)</h3>
                   {glideRows.length > 0 ? (
                     <GlidePathChart data={glideRows} />
                   ) : (
-                    <p className="text-sm text-slate-500 p-8 text-center">No glide data.</p>
+                    <p className="text-sm text-gray-400 p-8 text-center">No glide data.</p>
                   )}
                 </motion.div>
               </div>
 
-              <motion.div variants={gridItem} className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-4">
-                <h3 className="text-sm font-semibold text-slate-200 mb-3">Starting allocation</h3>
+              <motion.div variants={gridItem} className="rounded-2xl border border-gray-200 bg-white p-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">Starting allocation</h3>
                 {donutSlices.length > 0 ? (
                   <DonutChart
                     data={donutSlices}
@@ -875,18 +875,18 @@ export default function FirePlannerPage() {
                     centerValue={`Eq ${plan.asset_allocation.equity ?? 0}%`}
                   />
                 ) : (
-                  <p className="text-sm text-slate-500">No allocation.</p>
+                  <p className="text-sm text-gray-400">No allocation.</p>
                 )}
               </motion.div>
 
-              <motion.div variants={gridItem} className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5">
+              <motion.div variants={gridItem} className="rounded-2xl border border-gray-200 bg-white p-5">
                 <div className="flex items-center gap-2 mb-4">
-                  <Table size={18} className="text-cyan-400" />
+                  <Table size={18} className="text-[#00D09C]" />
                   <h3 className="text-lg font-semibold">Goal breakdown</h3>
                 </div>
-                <div className="overflow-x-auto rounded-xl border border-slate-700/40">
+                <div className="overflow-x-auto rounded-xl border border-gray-200">
                   <table className="w-full text-sm text-left min-w-[640px]">
-                    <thead className="bg-slate-900/80 text-slate-500 text-xs uppercase">
+                    <thead className="bg-gray-50 text-gray-400 text-xs uppercase">
                       <tr>
                         <th className="px-3 py-2">Goal</th>
                         <th className="px-3 py-2">Category</th>
@@ -903,14 +903,14 @@ export default function FirePlannerPage() {
                               .join(", ")
                           : "—";
                         return (
-                          <tr key={i} className="border-t border-slate-800/80 text-slate-300">
-                            <td className="px-3 py-2 font-medium text-white">{g.name || g.category}</td>
+                          <tr key={i} className="border-t border-gray-200 text-gray-600">
+                            <td className="px-3 py-2 font-medium text-gray-900">{g.name || g.category}</td>
                             <td className="px-3 py-2">{CATEGORY_PLAIN[g.category] ?? g.category}</td>
-                            <td className="px-3 py-2 text-emerald-300">
+                            <td className="px-3 py-2 text-[#00D09C]">
                               {g.category === "retirement" ? "—" : formatCurrency(g.sip_required ?? 0)}
                             </td>
                             <td className="px-3 py-2">{g.months_to_goal ?? "—"} months</td>
-                            <td className="px-3 py-2 text-xs text-slate-400 max-w-[220px]">{alloc}</td>
+                            <td className="px-3 py-2 text-xs text-gray-500 max-w-[220px]">{alloc}</td>
                           </tr>
                         );
                       })}
@@ -919,27 +919,27 @@ export default function FirePlannerPage() {
                 </div>
               </motion.div>
 
-              <motion.div variants={gridItem} className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5">
+              <motion.div variants={gridItem} className="rounded-2xl border border-gray-200 bg-white p-5">
                 <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 flex-wrap">
                   Month-by-month roadmap
-                  <span className="text-xs font-normal text-slate-500">(sampled rows from engine)</span>
+                  <span className="text-xs font-normal text-gray-400">(sampled rows from engine)</span>
                 </h3>
                 {["y1", "y2", "y3"].map((key) => {
                   const label = key === "y1" ? "Year 1" : key === "y2" ? "Year 2" : "Year 3 and beyond";
                   const rows = key === "y1" ? buckets.y1 : key === "y2" ? buckets.y2 : buckets.y3;
                   const open = expanded[key];
                   return (
-                    <div key={key} className="border border-slate-700/40 rounded-xl overflow-hidden mb-3">
+                    <div key={key} className="border border-gray-200 rounded-xl overflow-hidden mb-3">
                       <button
                         type="button"
-                        className="w-full flex items-center justify-between px-4 py-3 bg-slate-900/50 hover:bg-slate-900/70 text-left"
+                        className="w-full flex items-center justify-between px-4 py-3 bg-white hover:bg-gray-100 text-left"
                         onClick={() => setExpanded((e) => ({ ...e, [key]: !e[key] }))}
                       >
-                        <span className="font-medium text-slate-200">
+                        <span className="font-medium text-gray-700">
                           {label}{" "}
-                          <span className="text-slate-500 text-xs font-normal">({rows.length} rows)</span>
+                          <span className="text-gray-400 text-xs font-normal">({rows.length} rows)</span>
                         </span>
-                        <ChevronDown className={cn("transition-transform text-slate-400", open && "rotate-180")} size={18} />
+                        <ChevronDown className={cn("transition-transform text-gray-500", open && "rotate-180")} size={18} />
                       </button>
                       <AnimatePresence initial={false}>
                         {open && (
@@ -947,11 +947,11 @@ export default function FirePlannerPage() {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            className="border-t border-slate-800/80 overflow-hidden"
+                            className="border-t border-gray-200 overflow-hidden"
                           >
                             <div className="max-h-64 overflow-auto">
                               <table className="w-full text-xs text-left">
-                                <thead className="sticky top-0 bg-slate-950/95 text-slate-500">
+                                <thead className="sticky top-0 bg-white text-gray-400">
                                   <tr>
                                     <th className="px-2 py-2">Month</th>
                                     <th className="px-2 py-2">Age</th>
@@ -963,10 +963,10 @@ export default function FirePlannerPage() {
                                 </thead>
                                 <tbody>
                                   {rows.map((r) => (
-                                    <tr key={r.month_index} className="border-t border-slate-800/60 text-slate-300">
+                                    <tr key={r.month_index} className="border-t border-gray-200 text-gray-600">
                                       <td className="px-2 py-1.5 whitespace-nowrap">{r.calendar_label}</td>
                                       <td className="px-2 py-1.5">{r.age_years}</td>
-                                      <td className="px-2 py-1.5 text-emerald-300/90">{formatCurrency(r.total_portfolio)}</td>
+                                      <td className="px-2 py-1.5 text-[#00D09C]">{formatCurrency(r.total_portfolio)}</td>
                                       <td className="px-2 py-1.5">{formatCurrency(r.retirement_bucket)}</td>
                                       <td className="px-2 py-1.5">{formatCurrency(r.sip_total)}</td>
                                       <td className="px-2 py-1.5">{r.recommended_equity_pct}%</td>
@@ -985,12 +985,12 @@ export default function FirePlannerPage() {
 
               <motion.div
                 variants={gridItem}
-                className="rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-slate-900/60 to-slate-900/30 p-6"
+                className="rounded-2xl border border-[#00D09C]/20 bg-[#00D09C]/5 p-6"
               >
-                <p className="text-xs font-medium text-cyan-400/90 mb-2">Plan summary</p>
-                <p className="text-sm text-slate-300 leading-relaxed">{plan.ai_summary}</p>
+                <p className="text-xs font-medium text-[#00D09C] mb-2">Plan summary</p>
+                <p className="text-sm text-gray-600 leading-relaxed">{plan.ai_summary}</p>
                 {!localMode && (
-                  <p className="text-[11px] text-slate-500 mt-3">
+                  <p className="text-[11px] text-gray-400 mt-3">
                     API mode: results from server when available; fallback uses the local engine.
                   </p>
                 )}
@@ -999,7 +999,7 @@ export default function FirePlannerPage() {
           )}
 
           {!plan && !isGenerating && (
-            <div className="rounded-2xl border border-slate-700/50 bg-slate-800/40 p-10 text-center text-slate-500">
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-10 text-center text-gray-400">
               Loading planner…
             </div>
           )}

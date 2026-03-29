@@ -30,10 +30,10 @@ function StatBox({
   color: string;
 }) {
   return (
-    <div className="rounded-lg bg-slate-800/60 border border-slate-700/30 p-2.5 text-center">
+    <div className="rounded-lg bg-gray-100 border border-gray-200 p-2.5 text-center">
       <Icon size={14} className={`mx-auto mb-1 ${color}`} />
-      <p className="text-[9px] text-slate-500 uppercase tracking-wide">{label}</p>
-      <p className="text-xs font-bold text-white mt-0.5">{value}</p>
+      <p className="text-[9px] text-gray-400 uppercase tracking-wide">{label}</p>
+      <p className="text-xs font-bold text-gray-900 mt-0.5">{value}</p>
     </div>
   );
 }
@@ -57,25 +57,25 @@ export default function ProfileSnapshotInlineCard({ data }: Props) {
   const monthlySurplus = Number(data.monthly_surplus ?? 0);
 
   return (
-    <div className="mt-3 rounded-xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/50 to-slate-900/70 p-4 space-y-3">
+    <div className="mt-3 rounded-xl border border-indigo-500/20 bg-gradient-to-br from-gray-50 to-indigo-50/70 p-4 space-y-3">
       {/* Header */}
-      <div className="flex items-center gap-3 pb-2 border-b border-slate-700/40">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 text-white font-bold text-lg shadow-lg shadow-violet-500/20">
+      <div className="flex items-center gap-3 pb-2 border-b border-gray-200">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-pink-500 text-white font-bold text-lg shadow-sm">
           {name.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-white">{name}</p>
-          <div className="flex items-center gap-2 text-[11px] text-slate-400 flex-wrap">
+          <p className="text-sm font-bold text-gray-900">{name}</p>
+          <div className="flex items-center gap-2 text-[11px] text-gray-500 flex-wrap">
             {age && <span className="flex items-center gap-0.5"><User size={10} /> {age} yrs</span>}
             {city && (
               <>
-                <span className="text-slate-600">|</span>
+                <span className="text-gray-400">|</span>
                 <span className="flex items-center gap-0.5"><MapPin size={10} /> {city}</span>
               </>
             )}
-            <span className="text-slate-600">|</span>
+            <span className="text-gray-400">|</span>
             <span className="flex items-center gap-0.5 capitalize"><Briefcase size={10} /> {employment}</span>
-            <span className="text-slate-600">|</span>
+            <span className="text-gray-400">|</span>
             <span className="flex items-center gap-0.5 capitalize"><Shield size={10} /> {riskProfile}</span>
           </div>
         </div>
@@ -87,13 +87,13 @@ export default function ProfileSnapshotInlineCard({ data }: Props) {
           icon={Wallet}
           label="Net Worth"
           value={formatCurrency(netWorth)}
-          color={netWorth >= 0 ? "text-emerald-400" : "text-rose-400"}
+          color={netWorth >= 0 ? "text-[#00D09C]" : "text-rose-400"}
         />
         <StatBox
           icon={IndianRupee}
           label="Annual Income"
           value={grossSalary > 0 ? formatCurrency(grossSalary) : "—"}
-          color="text-cyan-400"
+          color="text-[#00D09C]"
         />
         <StatBox
           icon={Heart}
@@ -105,32 +105,32 @@ export default function ProfileSnapshotInlineCard({ data }: Props) {
 
       {/* Details rows */}
       <div className="grid grid-cols-2 gap-2">
-        <div className="rounded-lg bg-slate-800/40 border border-slate-700/20 px-3 py-2">
+        <div className="rounded-lg bg-gray-100 border border-gray-200 px-3 py-2">
           <div className="flex items-center justify-between text-[10px]">
-            <span className="text-slate-500">Investments</span>
-            <span className="text-white font-medium">
+            <span className="text-gray-400">Investments</span>
+            <span className="text-gray-900 font-medium">
               {formatCurrency(totalInvestments)} ({numInvestments})
             </span>
           </div>
         </div>
-        <div className="rounded-lg bg-slate-800/40 border border-slate-700/20 px-3 py-2">
+        <div className="rounded-lg bg-gray-100 border border-gray-200 px-3 py-2">
           <div className="flex items-center justify-between text-[10px]">
-            <span className="text-slate-500">Debts</span>
-            <span className={`font-medium ${totalDebt > 0 ? "text-rose-300" : "text-emerald-300"}`}>
+            <span className="text-gray-400">Debts</span>
+            <span className={`font-medium ${totalDebt > 0 ? "text-rose-600" : "text-[#00D09C]"}`}>
               {totalDebt > 0 ? formatCurrency(totalDebt) : "Debt Free"}
             </span>
           </div>
         </div>
-        <div className="rounded-lg bg-slate-800/40 border border-slate-700/20 px-3 py-2">
+        <div className="rounded-lg bg-gray-100 border border-gray-200 px-3 py-2">
           <div className="flex items-center justify-between text-[10px]">
-            <span className="text-slate-500 flex items-center gap-1"><Target size={9} /> Goals</span>
-            <span className="text-white font-medium">{numGoals} set</span>
+            <span className="text-gray-400 flex items-center gap-1"><Target size={9} /> Goals</span>
+            <span className="text-gray-900 font-medium">{numGoals} set</span>
           </div>
         </div>
-        <div className="rounded-lg bg-slate-800/40 border border-slate-700/20 px-3 py-2">
+        <div className="rounded-lg bg-gray-100 border border-gray-200 px-3 py-2">
           <div className="flex items-center justify-between text-[10px]">
-            <span className="text-slate-500 flex items-center gap-1"><TrendingUp size={9} /> Surplus</span>
-            <span className={`font-medium ${monthlySurplus >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+            <span className="text-gray-400 flex items-center gap-1"><TrendingUp size={9} /> Surplus</span>
+            <span className={`font-medium ${monthlySurplus >= 0 ? "text-[#00D09C]" : "text-rose-600"}`}>
               {formatCurrency(monthlySurplus)}/mo
             </span>
           </div>
@@ -141,10 +141,10 @@ export default function ProfileSnapshotInlineCard({ data }: Props) {
       <div className="flex gap-2">
         {(lifeCover > 0 || healthCover > 0) && (
           <div className="flex-1 rounded-lg bg-blue-500/10 border border-blue-500/20 px-3 py-2">
-            <p className="text-[9px] text-blue-300/80 uppercase mb-1">Insurance Cover</p>
+            <p className="text-[9px] text-blue-800 uppercase mb-1">Insurance Cover</p>
             <div className="flex gap-3 text-[10px]">
-              <span className="text-slate-300">Life: <strong className="text-white">{formatCurrency(lifeCover)}</strong></span>
-              <span className="text-slate-300">Health: <strong className="text-white">{formatCurrency(healthCover)}</strong></span>
+              <span className="text-gray-600">Life: <strong className="text-gray-900">{formatCurrency(lifeCover)}</strong></span>
+              <span className="text-gray-600">Health: <strong className="text-gray-900">{formatCurrency(healthCover)}</strong></span>
             </div>
           </div>
         )}
@@ -152,9 +152,9 @@ export default function ProfileSnapshotInlineCard({ data }: Props) {
           <div className="flex-1 rounded-lg bg-orange-500/10 border border-orange-500/20 px-3 py-2">
             <div className="flex items-center gap-1">
               <Flame size={10} className="text-orange-400" />
-              <p className="text-[9px] text-orange-300/80 uppercase">FIRE Number</p>
+              <p className="text-[9px] text-orange-800 uppercase">FIRE Number</p>
             </div>
-            <p className="text-xs font-bold text-white mt-0.5">{formatCurrency(fireNumber)}</p>
+            <p className="text-xs font-bold text-gray-900 mt-0.5">{formatCurrency(fireNumber)}</p>
           </div>
         )}
       </div>

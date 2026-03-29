@@ -1,5 +1,6 @@
 import json
-from fastapi import APIRouter
+import io
+from fastapi import APIRouter, UploadFile, File as FastAPIFile
 from pydantic import BaseModel
 from typing import Optional
 
@@ -19,6 +20,7 @@ from app.calculators.monte_carlo import run_fire_simulation
 from app.agent import run_agent
 from app.parsers.form16_parser import parse_form16_text
 from app.parsers.cams_parser import parse_cams_csv
+from app.parsers.pdf_parser import parse_pdf_file
 
 router = APIRouter()
 
@@ -577,6 +579,36 @@ async def parse_form16(req: Form16ParseRequest):
 @router.post("/ai/mf/parse-cams")
 async def parse_cams(req: CAMSParseRequest):
     return parse_cams_csv(req.rows)
+
+
+@router.post("/ai/mf/parse-statement")
+async def parse_statement(file: UploadFile = FastAPIFile(...)):
+    """Parse an uploaded CAMS/KFintech PDF or CSV file into fund holdings.
+
+    Accepts multipart/form-data with a single file.
+    Returns structured holdings data with fuzzy column matching.
+    """
+    filename = (file.filename or "").lower()
+    content = await file.read()
+
+    if filename.endswith(".pdf"):
+        # PDF parsing via pdfplumber
+        result = parse_pdf_file(io.BytesIO(content))
+        return result
+    elif filename.endswith(".csv"):
+        # CSV parsing with fuzzy matching
+        import csv as csv_module
+        text = content.decode("utf-8", errors="ignore")
+        reader = csv_module.DictReader(io.StringIO(text))
+        rows = [dict(row) for row in reader]
+        result = parse_cams_csv(rows)
+        return result
+    else:
+        return {
+            "error": f"Unsupported file type: {filename}. Please upload a .csv or .pdf file.",
+            "holdings": [],
+            "summary": {},
+        }
 
 
 # ── Direct Calculator Endpoints ──────────────────────────────────────

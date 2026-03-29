@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import Papa from "papaparse";
+import { parseCSVToFunds, parsePDFToFunds, inferCategory } from "@/lib/statementParser";
 import {
   AlertTriangle,
   ArrowDownAZ,
@@ -38,7 +38,16 @@ import FileUpload from "@/components/shared/FileUpload";
 import AnimatedCounter from "@/components/shared/AnimatedCounter";
 import AlgorithmExplanation from "@/components/shared/AlgorithmExplanation";
 import { getMfHistory, saveMfPortfolio } from "@/lib/supabaseHistory";
+import { useFinancialProfile } from "@/hooks/useFinancialProfile";
 import { useProfileStore } from "@/store/profileStore";
+import {
+  HealthScoreGauge,
+  AIMentorPersona,
+  ExpenseLeakage,
+  SwitchRecommendations,
+  FutureScenarioSimulator,
+  type SwitchRec,
+} from "@/components/mfxray/AIFeatures";
 
 // --- Types ---
 
@@ -81,6 +90,8 @@ type PortfolioComputed = {
     summary: string;
     bullets: string[];
   };
+  healthScore: number;
+  switchRecs: SwitchRec[];
 };
 
 const CATEGORY_OPTIONS = [
@@ -284,6 +295,51 @@ function computePortfolio(funds: FundRow[]): PortfolioComputed {
 
   const rebalance = { summary, bullets };
 
+  // Calculate Gamified Health Score
+  let score = 100;
+  if (totalReturnsPct < 8) score -= 8;
+  if (totalReturnsPct >= 15) score += 4;
+  if (highOverlapPairs.length > 0) score -= (highOverlapPairs.length * 6);
+  
+  const highErCount = perFund.filter((f) => f.expense_ratio > 0.8).length;
+  score -= (highErCount * 5);
+  if (largeShare > 70) score -= 6;
+  score = Math.max(10, Math.min(100, score));
+
+  // Build Actionable Switch Recommendations
+  const switchRecs: SwitchRec[] = [];
+  perFund.forEach((f) => {
+    if (f.expense_ratio > 1.0) {
+      if (f.category === "Large Cap") {
+        switchRecs.push({
+           from: f.fund_name,
+           to: "Passive Nifty 50 Direct Index",
+           reason: `Your ER is ${f.expense_ratio}%. Active Large Caps rarely beat index funds (ER ~0.15%).`,
+           type: "expense",
+           impact: "Save ₹" + Math.round((f.expense_ratio - 0.15)/100 * f.current_value * 10) + " trailing fees over 10Y"
+        });
+      } else if (f.category === "Mid Cap" || f.category === "Small Cap") {
+        switchRecs.push({
+           from: f.fund_name,
+           to: `${f.category} Direct Plan`,
+           reason: `ER identical to Regular Plans. Switch to Direct to stop paying commissions.`,
+           type: "expense",
+           impact: "Stop leaking ~1% absolute returns annually"
+        });
+      }
+    }
+  });
+  
+  if (highOverlapPairs.length > 0) {
+    switchRecs.push({
+       from: highOverlapPairs[0].a,
+       to: highOverlapPairs[0].b,
+       reason: `These funds overlap significantly (~${Math.round(highOverlapPairs[0].score)}%). They buy the exact same underlying stocks.`,
+       type: "overlap",
+       impact: "Consolidate portfolio risk profile"
+    });
+  }
+
   return {
     funds,
     totalInvested,
@@ -300,46 +356,20 @@ function computePortfolio(funds: FundRow[]): PortfolioComputed {
     highOverlapPairs,
     perFund,
     rebalance,
+    healthScore: score,
+    switchRecs,
   };
 }
 
-function parseCsvToFunds(text: string): FundRow[] {
-  const parsed = Papa.parse<Record<string, string>>(text, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: (h) => h.trim().toLowerCase().replace(/\s+/g, "_"),
-  });
-
-  const rows = parsed.data.filter((r) => Object.values(r).some((v) => String(v).trim()));
-  const out: FundRow[] = [];
-
-  const pick = (row: Record<string, string>, keys: string[]) => {
-    for (const k of keys) {
-      if (row[k] != null && String(row[k]).trim() !== "") return String(row[k]).trim();
-    }
-    return "";
-  };
-
-  for (const row of rows) {
-    const fund_name = pick(row, ["fund_name", "scheme", "scheme_name", "name"]);
-    const category = pick(row, ["category", "type", "asset_class"]) || "Flexi Cap";
-    const invested = Number(pick(row, ["invested_amount", "invested", "cost", "amount_invested"]).replace(/,/g, "")) || 0;
-    const current = Number(pick(row, ["current_value", "current", "market_value", "value"]).replace(/,/g, "")) || 0;
-    const er =
-      Number(pick(row, ["expense_ratio", "ter", "expense"]).replace(/,/g, "")) || 1.0;
-
-    if (!fund_name) continue;
-    out.push({
-      id: uid(),
-      fund_name,
-      category,
-      invested_amount: invested,
-      current_value: current || invested * 1.08,
-      expense_ratio: er > 0 && er < 0.5 ? er * 100 : er > 3 ? er / 100 : er,
-    });
-  }
-
-  return out;
+function parsedToFundRows(parsed: ReturnType<typeof parseCSVToFunds>): FundRow[] {
+  return parsed.map((p) => ({
+    id: uid(),
+    fund_name: p.fund_name,
+    category: p.category || inferCategory(p.fund_name),
+    invested_amount: p.invested_amount,
+    current_value: p.current_value,
+    expense_ratio: p.expense_ratio,
+  }));
 }
 
 function emptyFund(): FundRow {
@@ -355,8 +385,24 @@ function emptyFund(): FundRow {
 
 export default function MFXRayPage() {
   useAuth();
+  const { profile } = useFinancialProfile();
   const { fetchProfile } = useProfileStore();
   const [funds, setFunds] = useState<FundRow[]>(DEMO_FUNDS);
+  
+  // Use DB Profile data, else fallback inline
+  const [localAge, setLocalAge] = useState<number>(30);
+  const [localRisk, setLocalRisk] = useState<string>("moderate");
+
+  useEffect(() => {
+    // If we wanted exact age we'd fetch the user's Date of Birth from auth
+    // For now, default to 30 unless we implement a dedicated age field
+    if (profile?.risk_profile) {
+      if (["conservative", "moderate", "aggressive"].includes(profile.risk_profile)) {
+         setLocalRisk(profile.risk_profile);
+      }
+    }
+  }, [profile]);
+
   const [analyzed, setAnalyzed] = useState<PortfolioComputed | null>(() =>
     computePortfolio(DEMO_FUNDS)
   );
@@ -514,21 +560,55 @@ export default function MFXRayPage() {
   const onFile = useCallback(
     async (file: File) => {
       setPdfNotice(null);
-      if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
-        setPdfNotice(
-          "PDF statements are not parsed in the browser. Export to CSV from your RTA/AMC portal or use manual entry."
-        );
-        return;
-      }
       setParsing(true);
       setParsePct(5);
-      const text = await file.text();
-      setParsePct(40);
-      const parsed = parseCsvToFunds(text);
-      setParsePct(85);
-      if (parsed.length > 0) {
-        setFunds(parsed);
+
+      try {
+        const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+
+        if (isPdf) {
+          // ── PDF parsing via pdfjs-dist ──
+          setParsePct(15);
+          const parsedFunds = await parsePDFToFunds(file);
+          setParsePct(80);
+
+          if (parsedFunds.length > 0) {
+            const fundRows = parsedToFundRows(parsedFunds);
+            setFunds(fundRows);
+            setPdfNotice(
+              `✅ Extracted ${fundRows.length} fund(s) from PDF. Review and click Analyze.`
+            );
+          } else {
+            setPdfNotice(
+              "⚠️ Could not extract fund data from this PDF. It may use an unsupported format. Try exporting as CSV from your CAMS/KFintech portal, or enter holdings manually."
+            );
+          }
+        } else {
+          // ── CSV parsing with smart fuzzy column matching ──
+          const text = await file.text();
+          setParsePct(40);
+          const parsedFunds = parseCSVToFunds(text);
+          setParsePct(80);
+
+          if (parsedFunds.length > 0) {
+            const fundRows = parsedToFundRows(parsedFunds);
+            setFunds(fundRows);
+            setPdfNotice(
+              `✅ Parsed ${fundRows.length} fund(s) from CSV. Review and click Analyze.`
+            );
+          } else {
+            setPdfNotice(
+              "⚠️ No fund data found in this CSV. Make sure it contains scheme/fund name and value columns."
+            );
+          }
+        }
+      } catch (err) {
+        console.error("File parsing error:", err);
+        setPdfNotice(
+          "❌ Error parsing file. Please check the file format and try again."
+        );
       }
+
       setParsePct(100);
       setParsing(false);
       setAnalyzed(null);
@@ -610,7 +690,12 @@ export default function MFXRayPage() {
               onFileSelect={onFile}
             />
             {pdfNotice ? (
-              <p className="mt-2 text-sm text-amber-400">{pdfNotice}</p>
+              <p className={cn(
+                "mt-2 text-sm font-medium",
+                pdfNotice.startsWith("✅") ? "text-emerald-400" :
+                pdfNotice.startsWith("❌") ? "text-red-400" :
+                "text-amber-400"
+              )}>{pdfNotice}</p>
             ) : null}
           </div>
 
@@ -837,6 +922,41 @@ export default function MFXRayPage() {
               ))}
             </section>
 
+            {/* Smart Gamification: Health Score, Advisor, & Leakage */}
+            <section className="grid gap-6 lg:grid-cols-3">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.04 }}
+                className="col-span-1 rounded-2xl border border-white/10 bg-[#070b14] shadow-xl backdrop-blur-md"
+              >
+                <HealthScoreGauge score={analyzed.healthScore} />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 }}
+                className="col-span-1"
+              >
+                <ExpenseLeakage expenseDrag10y={analyzed.expenseDrag10y} />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.06 }}
+                className="col-span-1"
+              >
+                <AIMentorPersona 
+                  age={localAge} 
+                  risk={localRisk} 
+                  onAgeChange={setLocalAge} 
+                  onRiskChange={setLocalRisk}
+                  currentEquity={(analyzed.totalCurrent / (analyzed.totalCurrent || 1)) * 100} // Basic fallback
+                  currentDebt={0} 
+                />
+              </motion.div>
+            </section>
+
             {/* Donut */}
             <motion.section
               initial={{ opacity: 0 }}
@@ -1020,6 +1140,28 @@ export default function MFXRayPage() {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+            </motion.section>
+
+            {/* AI Action Engine / Switch Recommendations */}
+            <motion.section
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.15 }}
+            >
+              <SwitchRecommendations recs={analyzed.switchRecs} />
+            </motion.section>
+
+            {/* Future Scenario Simulator */}
+            <motion.section
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.16 }}
+            >
+              <FutureScenarioSimulator 
+                 totalValue={analyzed.totalCurrent} 
+                 equityPct={90} // Approximated
+                 debtPct={10} 
+              />
             </motion.section>
 
             {/* AI Rebalancing */}

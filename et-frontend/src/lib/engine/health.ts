@@ -35,18 +35,35 @@ const defaultInputs: HealthInputs = {
 export function profileToHealthInputs(profile: ProfileLike): HealthInputs {
   if (!profile) return { ...defaultInputs };
 
-  const months = profile.emergency_fund?.months_covered ?? defaultInputs.emergency_months;
+  /* --- Emergency months: prefer months_covered, else compute from amount/expenses --- */
+  let months = profile.emergency_fund?.months_covered ?? 0;
+  if (months <= 0) {
+    const efAmt = profile.emergency_fund?.current_amount ?? 0;
+    const expTotal = profile.monthly_expenses?.total ?? 0;
+    if (efAmt > 0 && expTotal > 0) {
+      months = Math.round((efAmt / expTotal) * 10) / 10;
+    } else if (efAmt > 0) {
+      // If we know the amount but not expenses, estimate ~3 months as baseline
+      months = 3;
+    } else {
+      months = defaultInputs.emergency_months;
+    }
+  }
+
   const inv = profile.existing_investments || {};
   const investment_types_count = Math.max(1, Object.keys(inv).filter((k) => (inv[k] ?? 0) > 0).length);
 
-  const netAnnual = profile.annual_income?.net || 0;
+  const grossAnnual = profile.annual_income?.gross || 0;
+  const netAnnual = profile.annual_income?.net || grossAnnual;
   const debtTotal = (profile.debts || []).reduce((s, d) => {
     const fromEmi = (Number(d.emi) || 0) * 12;
     const fromOut = Number(d.outstanding) || 0;
-    const v = fromEmi > 0 ? fromEmi : fromOut * 0.15;
+    const v = fromEmi > 0 ? fromEmi : fromOut > 0 ? fromOut * 0.15 : 0;
     return s + (Number.isFinite(v) ? v : 0);
   }, 0);
-  const debt_to_income_pct = netAnnual > 0 ? Math.min(100, Math.round((debtTotal / netAnnual) * 100)) : defaultInputs.debt_to_income_pct;
+  const debt_to_income_pct = netAnnual > 0
+    ? Math.min(100, Math.round((debtTotal / netAnnual) * 100))
+    : (debtTotal > 0 ? 50 : defaultInputs.debt_to_income_pct);
 
   const life = profile.insurance?.life || {};
   const has_term_insurance = Boolean(

@@ -45,7 +45,8 @@ import {
   AIMentorPersona,
   ExpenseLeakage,
   SwitchRecommendations,
-  FutureScenarioSimulator,
+  SmartRebalancingSimulator,
+  HiddenRiskDetection,
   type SwitchRec,
 } from "@/components/mfxray/AIFeatures";
 
@@ -812,12 +813,12 @@ export default function MFXRayPage() {
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <motion.button
             type="button"
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, boxShadow: "0px 0px 15px rgba(16, 185, 129, 0.4)" }}
             whileTap={{ scale: 0.98 }}
             onClick={() => void analyzePortfolio()}
             disabled={parsing || funds.every((f) => !f.fund_name.trim() || f.invested_amount <= 0)}
             className={cn(
-              "inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 disabled:cursor-not-allowed disabled:opacity-50"
+              "relative overflow-hidden inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-emerald-500/25 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 border border-white/10"
             )}
           >
             {parsing ? (
@@ -825,7 +826,7 @@ export default function MFXRayPage() {
             ) : (
               <TrendingUp className="h-5 w-5" />
             )}
-            Analyze Portfolio
+            Generate AI X-Ray Insights
           </motion.button>
           {parsing ? (
             <div className="flex min-w-[140px] flex-1 items-center gap-2">
@@ -922,30 +923,12 @@ export default function MFXRayPage() {
               ))}
             </section>
 
-            {/* Smart Gamification: Health Score, Advisor, & Leakage */}
-            <section className="grid gap-6 lg:grid-cols-3">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.04 }}
-                className="col-span-1 rounded-2xl border border-white/10 bg-[#070b14] shadow-xl backdrop-blur-md"
-              >
+            {/* AI Insights Dashboard */}
+            <section className="grid gap-6 lg:grid-cols-3 items-stretch">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}>
                 <HealthScoreGauge score={analyzed.healthScore} />
               </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 }}
-                className="col-span-1"
-              >
-                <ExpenseLeakage expenseDrag10y={analyzed.expenseDrag10y} />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.06 }}
-                className="col-span-1"
-              >
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
                 <AIMentorPersona 
                   age={localAge} 
                   risk={localRisk} 
@@ -955,25 +938,41 @@ export default function MFXRayPage() {
                   currentDebt={0} 
                 />
               </motion.div>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }}>
+                <ExpenseLeakage expenseDrag10y={analyzed.expenseDrag10y} />
+              </motion.div>
             </section>
 
-            {/* Donut */}
-            <motion.section
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.08 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur-md"
-            >
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                <PieChart className="h-5 w-5 text-cyan-400" />
-                Asset allocation
-              </h3>
-              <DonutChart
-                data={analyzed.donut}
-                centerLabel="Asset Mix"
-                centerValue={formatCurrency(analyzed.totalCurrent)}
-              />
-            </motion.section>
+            {/* Visuals & Risks Bento Layout */}
+            <section className="grid gap-6 lg:grid-cols-2">
+              {/* Donut */}
+              <motion.section
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.08 }}
+                className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur-md"
+              >
+                <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                  <PieChart className="h-5 w-5 text-cyan-400" />
+                  Asset allocation
+                </h3>
+                <DonutChart
+                  data={analyzed.donut}
+                  centerLabel="Asset Mix"
+                  centerValue={formatCurrency(analyzed.totalCurrent)}
+                />
+              </motion.section>
+
+              {/* Hidden Risk Detection */}
+              <motion.section
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.09 }}
+                className="h-full flex flex-col"
+              >
+                <HiddenRiskDetection funds={analyzed.funds.map(f => ({ name: f.fund_name, category: f.category }))} />
+              </motion.section>
+            </section>
 
             {/* Table */}
             <motion.section
@@ -1151,13 +1150,13 @@ export default function MFXRayPage() {
               <SwitchRecommendations recs={analyzed.switchRecs} />
             </motion.section>
 
-            {/* Future Scenario Simulator */}
+            {/* Smart Rebalancing Simulator */}
             <motion.section
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.16 }}
             >
-              <FutureScenarioSimulator 
+              <SmartRebalancingSimulator 
                  totalValue={analyzed.totalCurrent} 
                  equityPct={90} // Approximated
                  debtPct={10} 

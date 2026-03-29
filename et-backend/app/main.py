@@ -1,22 +1,20 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from flask import Flask
+from flask_cors import CORS
 from app.config import get_settings
-from app.routes import router
+from app.routes import bp
 
 settings = get_settings()
 
-app = FastAPI(title="ET AI Service", version="1.0.0")
+app = Flask(__name__)
+CORS(app, origins=settings.CORS_ORIGINS)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],
-)
-
-app.include_router(router)
+app.register_blueprint(bp)
 
 
-@app.get("/health")
-async def health():
+@app.route("/health")
+def health():
     return {"status": "healthy", "service": "ai"}
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8000, debug=True)

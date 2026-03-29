@@ -2,6 +2,9 @@
 .env
 .env.*
 !.env.example
+et-frontend/.env.local
+et-frontend/.env
+et-backend/.env
 
 # ── Python ──
 __pycache__/
